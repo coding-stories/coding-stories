@@ -2,7 +2,7 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://www.coding-stories.com
+url: http://coding-stories.github.com
 title: Coding Stories
 subtitle: Singe savant en ingénierie logicielle
 author: Jean-Christophe Sirot
@@ -89,7 +89,7 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name: codingst
+disqus_short_name: #codingst
 disqus_show_comment_count: false
 
 # Google Analytics

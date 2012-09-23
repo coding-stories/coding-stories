@@ -3,7 +3,7 @@ layout: post
 title: "Code comparé : SHA-1 sur Android &amp; iOS"
 date: 2011-07-07 17:57
 comments: true
-categories:
+categories: [android, code, iOS, java, objective-c]
 ---
 Problème : on dispose d’un bloc de données dont on désire calculer l’empreinte SHA-1. Deux solutions, sur Android et iOS.
 
