@@ -1,0 +1,13 @@
+---
+layout: post
+title: "Scala 2.8.0"
+date: 2010-07-14 07:37
+comments: true
+categories: [scala]
+---
+
+Il aura fallu attendre sept _release candidates_, 3 mois depuis la sortie de la RC1 et presque 6 mois depuis la première beta, mais la version finale 2.8.0 du langage Scala est finalement disponible au téléchargement.
+
+Heureusement pour nous remercier de notre patiente les nouveautés sont nombreuses : meilleure API pour les collections, amélioration du support des annotations, amélioration de la bibliothèque XML, spécialisation des types, ajout d’un décompilateur, l’outil scaladoc en version 2…
+
+Pour voir la liste complète des améliorations, nouveautés et corrections ou télécharger c’est ici : [http://www.scala-lang.org/node/7009](http://www.scala-lang.org/node/7009)
