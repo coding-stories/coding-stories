@@ -48,7 +48,7 @@ On peut également annoter nos propres annotations avec les meta-annotations dé
 - `Target` indique sur quels éléments on peut placer l'annotation (classes, méthodes...). Par défaut on peut mettre une annotation partout.
 - `Retention` indique la durée de vie de l'annotation : présence uniquement dans le code source, dans le bytecode de la classe ou également au runtime.
 - `Documented` indique si l'annotation apparaitra dans la javadoc.
-- `Inherited` indique si l'annotation est héritée par les sous-classes des classes ou elle est définie. Limitation : on ne peut pas hériter d'une annotation placée sur un interface en implémentant cette interface.
+- `Inherited indique si l'annotation est héritée par les sous-classes des classes ou elle est définie. Limitation : on ne peut pas hériter d'une annotation placée sur un interface en implémentant cette interface.
 
 Finalement Olivier est passé à des exemples concrets d'utilisation des annotations.
 
