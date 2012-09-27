@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Couverture des tests d’intégration avec JaCoCo"
+title: "Couverture des tests d’intégration avec JaCoCo, Maven et Sonar"
 date: 2012-01-23 07:16
 comments: true
 categories: [cobertura, code coverage, JaCoCo, maven, maven-failsafe-plugin, maven-jacoco-plugin, sonar, test]
