@@ -1,3 +1,9 @@
+require 'r18n-core'
+
+include R18n::Helpers
+#R18n.default_places = './i18n'
+R18n.set(Jekyll.configuration({})['lang'])
+
 module Octopress
   module Date
 
@@ -41,6 +47,11 @@ module Octopress
       end
       date_formatted
     end
+    
+    def format_date_i18n(date, format)
+        l date, format
+    end
+    
 
   end
 end
@@ -61,7 +72,7 @@ module Jekyll
         "url"               => self.url,
         "date"              => self.date,
         # Monkey patch
-        "date_formatted"    => format_date(self.date, date_format),
+        "date_formatted"    => format_date_i18n(self.date, date_format),
         "updated_formatted" => self.data.has_key?('updated') ? format_date(self.data['updated'], date_format) : nil,
         "id"                => self.id,
         "categories"        => self.categories,
