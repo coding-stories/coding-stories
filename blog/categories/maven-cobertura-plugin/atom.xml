@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: maven-cobertura-plugin | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/maven-cobertura-plugin/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Exclure certaines classes de la couverture des tests unitaires]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/"/>
+    <updated>2012-01-30T21:39:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires</id>
+    <content type="html"><![CDATA[<p>Dans nos projets on rencontre souvent ce cas de figure : certaines portions de code se prêtent mal au test unitaire. Ce sont les interfaces graphiques, le code qui manipule des fichiers, les connexions réseaux… Cela peut poser problème lorsqu’on configure Sonar pour lever des alertes quand la couverture de code est trop faible.</p>
+
+<!--more-->
+
+
+<p>Le problème a déjà été posé car Il y a un ticket dans le JIRA de Sonar (<a href="http://jira.codehaus.org/browse/SONAR-766">SONAR-766</a>). Quand il aura été résolu Sonar devrait permettre de configurer ce qui doit être exclu de l’analyse de couverture des tests.</p>
+
+<p>En attendant comment faire ? En posant la question il y a quelques mois sur Twitter j’avais reçu une réponse de Damien Gouyette :</p>
+
+<p><img class="center" src="/images/posts/sonar-cobertura-tweet-20120130.png"></p>
+
+<p>J’ai fini par trouver le temps de tester et ça fonctionne ! Il est possible de régler ces règles d’exclusion en adaptant par la configuration du plugin cobertura dans le POM de notre projet :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.codehaus.mojo<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>cobertura-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;configuration&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>instrumentation<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>excludes<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>exclude<span class="ni">&amp;gt;</span>com/mycompany/gui/**/*.class<span class="ni">&amp;lt;</span>/exclude<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>exclude<span class="ni">&amp;gt;</span>com/mycompany/nontestable/**/*.class<span class="ni">&amp;lt;</span>/exclude<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/excludes<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/instrumentation<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plugin&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>De cette façon les classes correspondant au <em>pattern</em> indiqué sont exclues de l’analyse par cobertura et ainsi ignorées par Sonar. Le taux de couverture est donc calculé sur le code considéré comme testable. La métrique devient alors beaucoup plus intéressante pour l’évaluation de la qualité globale du projet.</p>
+
+<p><strong>Note</strong> : Attention, je parle bien sûr de test unitaire ; il ne faut pas confondre un code qui ne peut pas être testé unitairement avec un code pour lequel les tests sont possibles mais difficiles à écrire. En outre il est toujours possible de tester autrement, avec des tests d’intégration ou des tests de <em>user experience</em> par exemple.</p>
+]]></content>
+  </entry>
+  
+</feed>

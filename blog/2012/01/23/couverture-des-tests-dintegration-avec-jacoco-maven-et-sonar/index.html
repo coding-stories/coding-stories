@@ -1,0 +1,682 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Couverture des tests d’intégration avec JaCoCo, Maven et Sonar - Coding Stories</title>
+  <meta name="author" content="Jean-Christophe Sirot">
+
+  
+  <meta name="description" content="Sur certains de mes projets maven j’aimerai pouvoir séparer les tests unitaires des tests d’intégration. Les tests d’intégration sont souvent moins &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://coding-stories.github.com/coding-stories/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Coding Stories" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">cs</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">Coding Stories</a></h1>
+  
+    <h2>Singe savant en ingénierie logicielle</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:coding-stories.github.com/coding-stories" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/digest-js">digest.js</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/a-propos/">À Propos</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Couverture Des Tests D’intégration Avec JaCoCo, Maven Et Sonar</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-23T07:16:00+01:00" pubdate data-updated="true">23 jan 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Sur certains de mes projets maven j’aimerai pouvoir séparer les tests unitaires des tests d’intégration. Les tests d’intégration sont souvent moins stables, pas toujours reproductibles et ils prennent souvent trop de temps pour être exécutés par les développeurs à chaque compilation.</p>
+
+<!-- more -->
+
+
+<h1>Déplacer les tests dans un module dédié</h1>
+
+<p>Première chose à faire, créer un module dédié dans le projet maven pour y mettre uniquement les tests d’intégration. Voilà la structure globale du projet :</p>
+
+<p>Error processing input, expected syntax: {% img [class name(s)] [http[s]:/]/path/to/image [width [height]] [title text | &#8220;title text&#8221; [&#8220;alt text&#8221;]] %}</p>
+
+<p>Ensuite pour empêcher que le module <code>libfoo-it</code> ne se lance à chaque compilation on crée un profil maven dédié aux test d’intégration dans le fichier <code>pom.xml</code> principal.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;id&gt;</span>run-its<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;modules&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;module&gt;</span>libfoo-it<span class="nt">&lt;/module&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/modules&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Utiliser maven-failsafe-plugin</h1>
+
+<p>Le <a href="http://maven.apache.org/plugins/maven-failsafe-plugin/">plugin failsafe</a> permet de lancer les test d’intégration lors d’un build maven tout comme le plugin surefire le fait avec les tests unitaires. Le plugin failsafe s’attache aux phases <em>integration-test</em> et <em>verify</em> du <a href="http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">cycle de vie du build</a>.</p>
+
+<p>Comme il n’est pas possible de configurer plusieurs répertoires contenant les tests dans maven, la discrimination entre tests unitaires et d’intégration se fait sur le nom des classes. Il ne faudra donc pas oublier de nommer correctement ses classes de test.</p>
+
+<p>Les <em>templates</em> par défaut sont les suivants :</p>
+
+<ul>
+<li><strong>tests unitaires</strong> : <strong>/*Test.java, </strong>/Test<em>.java, **/</em>TestCase.java</li>
+<li><strong>tests d’intégration</strong> : <strong>/*IT.java, </strong>/IT<em>.java, **/</em>ITCase.java</li>
+</ul>
+
+
+<p>On ajoute ensuite la configuration du plugin failsafe dans notre profil.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;id&gt;</span>run-its<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;modules&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;module&gt;</span>libfoo-it<span class="nt">&lt;/module&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/modules&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;pluginManagement&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.11<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>integration-test<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/pluginManagement&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/build&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le POM du sous-projet libfoo-it est également à mettre à jour. De cette façon, petite optimisation, le plugin failsafe ne sera lancé que dans le module qui contient les tests d’intégration.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[/~]$ mvn -Prun-its clean verify</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Couverture de code avec JaCoCo</h1>
+
+<p>Avoir des tests c’est bien, calculer la couverture de ces tests c’est mieux. Pour cela nous allons utiliser le moteur de couverture de code <a href="http://www.eclemma.org/jacoco/">JaCoCo</a> (Java Code Coverage), plus adapté aux tests d’intégration que le bien connu Cobertura.</p>
+
+<p>JaCoCo est fournit sous la forme d’un agent à lancer avec la JVM. Heureusement, il existe un plugin maven pour JaCoCo qui va nous aider à l’intégrer dans le build. Le plugin maven JaCoCo dispose d’un goal <em>prepare-agent</em> qui va dans un premier temps télécharger l’agent et dans un second temps créer une variable maven contenant la configuration de l’agent qu’il suffira de passer en paramètre au plugin failsafe.</p>
+
+<p>Voilà ce que donne la configuration du plugin (<strong>Nota</strong>: j’utilise la version 5.3 du plugin JaCoCo car les versions suivantes ne semblent pas fonctionner avec maven 2.2.1) :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;id&gt;</span>run-its<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;modules&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;module&gt;</span>libfoo-it<span class="nt">&lt;/module&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/modules&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;pluginManagement&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.jacoco<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-jacoco-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>0.5.3.201107060350<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;phase&gt;</span>pre-integration-test<span class="nt">&lt;/phase&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>prepare-agent<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;propertyName&gt;</span>it.failsafe.argLine<span class="nt">&lt;/propertyName&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;destFile&gt;</span>${it.jacoco.destFile}<span class="nt">&lt;/destFile&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.11<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>integration-test<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;argLine&gt;</span>${it.failsafe.argLine}<span class="nt">&lt;/argLine&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/pluginManagement&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/build&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;properties&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;it.jacoco.destFile&gt;</span>${java.io.tmpdir}/jacoco-foo.dump<span class="nt">&lt;/it.jacoco.destFile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/properties&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le plugin JaCoCo va générer la configuration de l’agent pour lancer les tests et la placer dans variable <code>it.failsafe.argLine</code>. Ensuite on configure le paramètre <code>argLine du plugin failsafe avec cette variable. On définit également le fichier qui va collecter les données de couverture (avec paramètre</code>destFile).</p>
+
+<p>Il faut également mettre à jour le POM du module contenant les tests :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;build&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.jacoco<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>maven-jacoco-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'><span class="nt">&lt;/build&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Couverture avec Sonar</h1>
+
+<p>Maintenant que nous avons nos données de couverture dans un fichier, il serait intéressant de les faire digérés à Sonar lors de son analyse. Depuis la version 2.12, <a href="http://www.sonarsource.org/">Sonar</a> est livré avec le plugin JaCoCo ; pour les précédentes il faudra l’installer depuis l’<em>update center</em>.</p>
+
+<p>Le plugin JaCoCo de Sonar attend à trouver le chemin vers le fichier de collecte des données dans la variable `sonar.jacoco.itReportPath. Il est possible de configurer ce chemin dans l’interface web de Sonar (menu <em>settings</em>, catégorie <em>JaCoCo</em>, paramètre <em>File with execution data for integration tests</em>) mais cette variable peut également être configurée dans le POM.</p>
+
+<p>Voilà donc la version définitive du profil :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;id&gt;</span>run-its<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;modules&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;module&gt;</span>libfoo-it<span class="nt">&lt;/module&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/modules&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;pluginManagement&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.jacoco<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-jacoco-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>0.5.3.201107060350<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;phase&gt;</span>pre-integration-test<span class="nt">&lt;/phase&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>prepare-agent<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;propertyName&gt;</span>it.failsafe.argLine<span class="nt">&lt;/propertyName&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;destFile&gt;</span>${it.jacoco.destFile}<span class="nt">&lt;/destFile&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.11<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>integration-test<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;argLine&gt;</span>${it.failsafe.argLine}<span class="nt">&lt;/argLine&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/pluginManagement&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/build&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;properties&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;it.jacoco.destFile&gt;</span>${java.io.tmpdir}/jacoco-foo.dump<span class="nt">&lt;/it.jacoco.destFile&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;sonar.jacoco.itReportPath&gt;</span>${it.jacoco.destFile}<span class="nt">&lt;/sonar.jacoco.itReportPath&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/properties&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Il ne reste plus qu’à lancer l’analyse avec Sonar :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[/~]$ mvn -Prun-its clean verify sonar:sonar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finalement, après avoir ajouté le widget Integration test coverage dans le dashboard, on obtient ce résultat :</p>
+
+<p><img class="center" src="/images/posts/sonar-coverage-it-20120123.png" title="'Code coverage avec Sonar'" ></p>
+
+<h1>Pistes d’améliorations</h1>
+
+<p>Cette solution est un peu brute de décoffrage et pour dire vrai entre le début de l’écriture de ce post et maintenant j’ai eu quelques idées pour l’améliorer :</p>
+
+<ul>
+<li>Passer la configuration du profil dans un super POM dont héritent tous les projets. En effet, mis à part le paramètre `destFile il n’y a rien de spécifique dans cette configuration. On pourrait même imaginer la génération d’un nom de fichier aléatoire à chaque lancement.</li>
+<li>Utiliser plusieurs modules de tests d’intégration. Pour cela il faut mettre le paramètre supplémentaire <code>append</code> à <em>true</em> dans le plugin maven JaCoCo afin que les données d’exécution de tous les modules soient collectées dans le même fichier.</li>
+</ul>
+
+
+<p>Et si vous avez d’autres idées, n’hésitez pas à les poster dans les commentaires.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jean-Christophe Sirot</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-23T07:16:00+01:00" pubdate data-updated="true">23 jan 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/jacoco/'>JaCoCo</a>, <a class='category' href='/blog/categories/cobertura/'>cobertura</a>, <a class='category' href='/blog/categories/code-coverage/'>code coverage</a>, <a class='category' href='/blog/categories/maven/'>maven</a>, <a class='category' href='/blog/categories/maven-failsafe-plugin/'>maven-failsafe-plugin</a>, <a class='category' href='/blog/categories/maven-jacoco-plugin/'>maven-jacoco-plugin</a>, <a class='category' href='/blog/categories/sonar/'>sonar</a>, <a class='category' href='/blog/categories/test/'>test</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://coding-stories.github.com/coding-stories/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar/" data-via="jcsirot" data-counturl="http://coding-stories.github.com/coding-stories/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <script type="in/share" data-counter="right" data-showzero="true"></script>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java/" title="Previous Post: Les classes internes ou la tambouille du compilateur Java">&laquo; Les classes internes ou la tambouille du compilateur Java</a>
+      
+      
+        <a class="basic-alignment right articlenav" href="/blog/2012/01/26/presentation-de-dart-par-gilad-bracha/" title="Next Post: Présentation de Dart par Gilad Bracha">Présentation de Dart par Gilad Bracha &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/code-story-2013/">Code Story 2013 : la phase de sélection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/">Un mois avec IntelliJ - début de l'expérience</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/">Migration du blog vers Octopress/Github</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/">Mocker un serveur de mail avec Dumbster et JUnit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/">Exclure certaines classes de la couverture des tests unitaires</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("jcsirot", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/jcsirot" class="twitter-follow-button" data-show-count="false">Follow @jcsirot</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/jcsirot?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Category Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 121.81818181818181%'>android</a> <a href='/blog/categories/bytecode' style='font-size: 105.45454545454545%'>bytecode</a> <a href='/blog/categories/chess' style='font-size: 110.9090909090909%'>chess</a> <a href='/blog/categories/cobertura' style='font-size: 110.9090909090909%'>cobertura</a> <a href='/blog/categories/code' style='font-size: 116.36363636363636%'>code</a> <a href='/blog/categories/code-coverage' style='font-size: 105.45454545454545%'>code coverage</a> <a href='/blog/categories/compiler' style='font-size: 105.45454545454545%'>compiler</a> <a href='/blog/categories/conference' style='font-size: 121.81818181818181%'>conference</a> <a href='/blog/categories/confluence' style='font-size: 105.45454545454545%'>confluence</a> <a href='/blog/categories/cryptography' style='font-size: 105.45454545454545%'>cryptography</a> <a href='/blog/categories/dart' style='font-size: 105.45454545454545%'>dart</a> <a href='/blog/categories/devoxx' style='font-size: 110.9090909090909%'>devoxx</a> <a href='/blog/categories/dvcs' style='font-size: 110.9090909090909%'>DVCS</a> <a href='/blog/categories/ecc' style='font-size: 105.45454545454545%'>ECC</a> <a href='/blog/categories/elliptic-curve' style='font-size: 105.45454545454545%'>elliptic curve</a> <a href='/blog/categories/framework' style='font-size: 110.9090909090909%'>framework</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git</a> <a href='/blog/categories/google' style='font-size: 127.27272727272728%'>google</a> <a href='/blog/categories/hero' style='font-size: 105.45454545454545%'>hero</a> <a href='/blog/categories/htc' style='font-size: 105.45454545454545%'>htc</a> <a href='/blog/categories/html5' style='font-size: 105.45454545454545%'>html5</a> <a href='/blog/categories/http' style='font-size: 105.45454545454545%'>HTTP</a> <a href='/blog/categories/https' style='font-size: 110.9090909090909%'>HTTPS</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE</a> <a href='/blog/categories/intellij' style='font-size: 105.45454545454545%'>IntelliJ</a> <a href='/blog/categories/ios' style='font-size: 105.45454545454545%'>iOS</a> <a href='/blog/categories/jacoco' style='font-size: 105.45454545454545%'>JaCoCo</a> <a href='/blog/categories/java' style='font-size: 160.0%'>java</a> <a href='/blog/categories/java7' style='font-size: 105.45454545454545%'>java7</a> <a href='/blog/categories/javascript' style='font-size: 110.9090909090909%'>javascript</a> <a href='/blog/categories/jira' style='font-size: 105.45454545454545%'>jira</a> <a href='/blog/categories/jschessboard' style='font-size: 105.45454545454545%'>jsChessboard</a> <a href='/blog/categories/jug' style='font-size: 110.9090909090909%'>JUG</a> <a href='/blog/categories/junit' style='font-size: 105.45454545454545%'>junit</a> <a href='/blog/categories/keynote' style='font-size: 105.45454545454545%'>keynote</a> <a href='/blog/categories/ldap' style='font-size: 105.45454545454545%'>ldap</a> <a href='/blog/categories/log' style='font-size: 105.45454545454545%'>log</a> <a href='/blog/categories/maven' style='font-size: 116.36363636363636%'>maven</a> <a href='/blog/categories/maven-cobertura-plugin' style='font-size: 105.45454545454545%'>maven-cobertura-plugin</a> <a href='/blog/categories/maven-enforcer-plugin' style='font-size: 105.45454545454545%'>maven-enforcer-plugin</a> <a href='/blog/categories/maven-failsafe-plugin' style='font-size: 105.45454545454545%'>maven-failsafe-plugin</a> <a href='/blog/categories/maven-jacoco-plugin' style='font-size: 105.45454545454545%'>maven-jacoco-plugin</a> <a href='/blog/categories/maven-jarsigner-plugin' style='font-size: 105.45454545454545%'>maven-jarsigner-plugin</a> <a href='/blog/categories/maven-release-plugin' style='font-size: 110.9090909090909%'>maven-release-plugin</a> <a href='/blog/categories/mock' style='font-size: 105.45454545454545%'>mock</a> <a href='/blog/categories/netbeans' style='font-size: 105.45454545454545%'>NetBeans</a> <a href='/blog/categories/objective-c' style='font-size: 105.45454545454545%'>objective-c</a> <a href='/blog/categories/parleys' style='font-size: 116.36363636363636%'>parleys</a> <a href='/blog/categories/pgn' style='font-size: 105.45454545454545%'>PGN</a> <a href='/blog/categories/play' style='font-size: 110.9090909090909%'>play</a> <a href='/blog/categories/proxy' style='font-size: 105.45454545454545%'>proxy</a> <a href='/blog/categories/qualite' style='font-size: 105.45454545454545%'>qualite</a> <a href='/blog/categories/quality' style='font-size: 110.9090909090909%'>quality</a> <a href='/blog/categories/rsa' style='font-size: 105.45454545454545%'>RSA</a> <a href='/blog/categories/scala' style='font-size: 121.81818181818181%'>scala</a> <a href='/blog/categories/security' style='font-size: 127.27272727272728%'>security</a> <a href='/blog/categories/software-craftsmanship' style='font-size: 105.45454545454545%'>software craftsmanship</a> <a href='/blog/categories/sonar' style='font-size: 110.9090909090909%'>sonar</a> <a href='/blog/categories/spring' style='font-size: 105.45454545454545%'>spring</a> <a href='/blog/categories/ssl' style='font-size: 116.36363636363636%'>SSL</a> <a href='/blog/categories/test' style='font-size: 121.81818181818181%'>test</a> <a href='/blog/categories/tls' style='font-size: 116.36363636363636%'>TLS</a> <a href='/blog/categories/uncle-bob' style='font-size: 105.45454545454545%'>Uncle Bob</a> <a href='/blog/categories/video' style='font-size: 105.45454545454545%'>video</a> <a href='/blog/categories/web' style='font-size: 116.36363636363636%'>web</a> <a href='/blog/categories/wiki' style='font-size: 105.45454545454545%'>wiki</a> </span>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Jean-Christophe Sirot -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> -
+  Theme <a href="https://github.com/amelandri/darkstripes">DarkStripes</a> by Alessandro Melandri
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'codingst';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://coding-stories.github.com/coding-stories/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar/';
+        var disqus_url = 'http://coding-stories.github.com/coding-stories/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'http://platform.linkedin.com/in.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

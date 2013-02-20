@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: chess | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/chess/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Parser des parties d’échecs avec Scala Parser Combinators]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/01/12/parser-des-parties-dechecs-avec-scala-parser-combinators/"/>
+    <updated>2011-01-12T07:51:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/01/12/parser-des-parties-dechecs-avec-scala-parser-combinators</id>
+    <content type="html"><![CDATA[<p>Un morceau de code scala écrit il y a quelques mois quand j’ai commencé à jouer avec scala. Il utilise l’API <a href="http://www.scala-lang.org/api/current/scala/util/parsing/combinator/Parsers.html">parser combinators</a> de scala pour décoder des parties d’échecs au format [PGN].</p>
+
+<p><div><script src='https://gist.github.com/774261.js?file=PGNParser.scala'></script>
+<noscript><pre><code>import scala.util.parsing.combinator._
+
+object Termination extends Enumeration {
+  type Termination = Value
+  val white, black, draw = Value
+}
+import Termination._
+
+case class Game(tags: List[Tag], moves:List[MoveElement], termination: Termination)
+case class Tag(name: String, value: String)
+case class MoveElement(move: SAN, comment: String)
+case class SAN(value: String)
+
+class PGNParser extends JavaTokenParsers with ImplicitConversions {
+
+  def moveNumberParser: Parser[Int] = (&quot;&quot;&quot;\d+&quot;&quot;&quot;.r &lt;~ &quot;&quot;&quot;\.+&quot;&quot;&quot;.r) ^^ (_.toInt)
+
+  def tagSectionToken: Parser[List[Tag]] =
+    (tagPairParser +) ^^ (List() ++ _)
+
+  def tagPairParser: Parser[Tag] = {
+    def toTag(name: String, value: String): Tag = Tag(name, value)
+    &quot;[&quot; ~&gt; ident ~ stringLiteral &lt;~ &quot;]&quot; ^^ toTag
+  }
+
+  def gameTerminationParser: Parser[Termination] = {
+    def toGameTermination (t: String): Termination = {
+      t match {
+        case &quot;0-1&quot; =&gt; black
+        case &quot;1-0&quot; =&gt; white
+        case &quot;1/2-1/2&quot; =&gt; draw
+      }
+    }
+    (&quot;0-1&quot; | &quot;1-0&quot; | &quot;1/2-1/2&quot;) ^^ toGameTermination
+  }
+
+  def moveTextSectionParser: Parser[List[MoveElement]] =
+    (elementParser +) ^^ (List() ++ _)
+
+  def elementParser: Parser[MoveElement] = {
+    def toMoveElement(move: SAN, comment: Option[String]): MoveElement =
+      MoveElement(move, comment.getOrElse(null))
+    (moveNumberParser ?) ~&gt; sanMoveParser ~ (commentParser ?) ^^ toMoveElement
+  }
+
+  def commentParser: Parser[String] = &quot;\\{.*\\}&quot;.r
+
+  def sanMoveParser: Parser[SAN] = {
+    ((pawnMoveWithPromotionParser |
+      pawnCaptureWithPromotionParser |
+      pawnMoveParser |
+      pawnCaptureParser |
+      pieceMoveParser |
+      pieceCaptureParser |
+      castelingParser ) &lt;~ &quot;&quot;&quot;[+#]?&quot;&quot;&quot;.r) ^^ (SAN(_))
+  }
+
+  def pawnMoveParser: Parser[String] = &quot;&quot;&quot;[a-h][1-8]&quot;&quot;&quot;.r
+  def pawnCaptureParser: Parser[String] = &quot;&quot;&quot;[a-h]x[a-h][1-8]&quot;&quot;&quot;.r
+  def pieceMoveParser: Parser[String] = &quot;&quot;&quot;[KQBNR][a-h]?[1-8]?[a-h][1-8]&quot;&quot;&quot;.r
+  def pieceCaptureParser: Parser[String] = &quot;&quot;&quot;[KQBNR][a-h]?[1-8]?x[a-h][1-8]&quot;&quot;&quot;.r
+  def pawnMoveWithPromotionParser: Parser[String] = &quot;&quot;&quot;[a-h][18]=[QBNR]&quot;&quot;&quot;.r
+  def pawnCaptureWithPromotionParser: Parser[String] = &quot;&quot;&quot;[a-h]x[a-h][18]=[QBNR]&quot;&quot;&quot;.r
+  def castelingParser: Parser[String] = &quot;&quot;&quot;O-O-O&quot;&quot;&quot; | &quot;&quot;&quot;O-O&quot;&quot;&quot;
+
+  def gameParser: Parser[Game] = {
+    def toGame(tags: List[Tag], moves: List[MoveElement], termination: Termination) = Game(tags, moves, termination)
+    (tagSectionToken ~ moveTextSectionParser ~ gameTerminationParser) ^^ toGame
+  }
+
+  def value: Parser[List[Game]] = (gameParser +) ^^ (List() ++ _)
+}
+</code></pre></noscript></div>
+</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[jsChessboard 0.2 est disponible]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/06/09/jschessboard-0-2-est-disponible/"/>
+    <updated>2010-06-09T15:24:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/06/09/jschessboard-0-2-est-disponible</id>
+    <content type="html"><![CDATA[<p>J’ai procédé à la release de la bibliothèque jsChessboard en version 0.2. jsChessboard est une bibliothèque qui permet d’interpréter des parties d’échecs et de dessiner des échiquiers, le tout entièrement en javascript en utilisant le tag <code>&lt;canvas&gt;</code>.</p>
+
+<p>Les objectifs fixés pour la version 0.3 :</p>
+
+<ul>
+<li>fournir un plugin jQuery ;</li>
+<li>permettre d’afficher les numéros de rangées/colonnes ;</li>
+<li>permettre la personnalisation des pièces, des couleurs ;</li>
+<li>avoir un <em>vrai viewer</em> <a href="http://fr.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> en HTML5/javascript</li>
+<li><strong>ajouter des tests unitaires !</strong></li>
+</ul>
+
+
+<p>Le site du projet : <a href="http://jschessboard.com">http://jschessboard.com</a></p>
+
+<p>Pour voir la bibliothèque en action, il y quelques démos sur le site du projet <a href="http://jschessboard.com/svn/trunk/examples/operagame.html">ici</a>, <a href="http://jschessboard.com/svn/trunk/examples/checkmate.html">là</a> ou encore <a href="http://jschessboard.com/svn/trunk/examples/fen.html">là</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: google | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/google/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Présentation de Dart par Gilad Bracha]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/01/26/presentation-de-dart-par-gilad-bracha/"/>
+    <updated>2012-01-26T23:00:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/01/26/presentation-de-dart-par-gilad-bracha</id>
+    <content type="html"><![CDATA[<p>À l’occasion d’une rencontre des utilisateurs de Javascript dans la région de San Fransisco, Gilad Bracha est venu présenter Dart, le nouveau langage pour web conçu par Google.</p>
+
+<p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/Ka2iDlhBwYM "></iframe></div></p>
+
+<p>Gilad Bracha est ingénieur logiciel chez Google, co-auteur de la spécification du langage Dart. Chez Sun, il a également été co-auteur et mainteneur de la spécification du langage Java ainsi que de la JVM.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Video : Deep Dive into Android Security]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/26/video-deep-dive-into-android-security/"/>
+    <updated>2011-11-26T09:24:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/26/video-deep-dive-into-android-security</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/posts/android-security-20111126.jpg"></p>
+
+<p>Si vous chercher à mieux comprendre le fonctionnement du modèle de sécurité Android je vous conseille fortement de regarder cette vidéo. Dans cette excellente session de la conférence <a href="http://www.andevcon.com/">AndDevCon II</a> <a href="http://marakana.com/expert/aleksandar_gargenta,1.html">Aleksandar Gargenta</a> présente différents aspects liés à la sécurité sur Android (le <em>sandboxing</em> des applications, le fonctionnement du système de permissions, le chiffrement et la protection des données, etc) mais il parle également des limites du modèle et des contre-mesures contre les menaces (signature des applications, <em>rooting</em> &amp; <em>rootkits</em>, SE-Linux, etc).</p>
+
+<p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/tKJiSjVk8NA "></iframe></div></p>
+
+<p><iframe src="http://fr.slideshare.net/slideshow/embed_code/10123665 " width="599" height="487" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[GTAC 2011 : les vidéos sont en ligne]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/24/gtac-2011-les-videos-sont-en-ligne/"/>
+    <updated>2011-11-24T08:54:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/24/gtac-2011-les-videos-sont-en-ligne</id>
+    <content type="html"><![CDATA[<p>Intéressés par la qualité et le test logiciel ? Les vidéos des différentes sessions de la conférence GTAC 2011 sont désormais disponibles sur <a href="http://www.gtac.biz/talks">http://www.gtac.biz/talks</a> ou sur la chaîne Youtube <a href="http://www.youtube.com/user/GoogleTechTalks">Google Tech Talks</a>. Bon visionnage !</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Android 2.1 tient la moitié du parc]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/06/26/android-2-1-tient-la-moitie-du-parc/"/>
+    <updated>2010-06-26T15:14:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/06/26/android-2-1-tient-la-moitie-du-parc</id>
+    <content type="html"><![CDATA[<p>Nouvelle <a href="http://developer.android.com/resources/dashboard/platform-versions.html">mise à jour</a> bimensuelle de la part de Google concernant la répartition des différentes versions d’android :</p>
+
+<p><img class="center" src="/images/posts/android_fragmentation-20100617.png"></p>
+
+<p>Cette fois, c’est fait, android 2.1 passe la barre des 50%. Toutefois il faudra compter avec le déploiement d’android 2.2, aka Froyo, dans les prochains mois (si ce n’est les prochaines semaines).</p>
+
+<p>Et pendant ce temps les possesseurs du HTC Hero (dont fait partie votre serviteur) attendent avec une impatience non feinte la mise à jour vers la version 2.1. Elle a été promise, annoncée de nombreuses fois et reportée tout autant… Elle est maintenant prévue pour le 29 juin. J’attends…</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Android 2.1 passe en tête]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/05/19/android-2-1-passe-en-tete/"/>
+    <updated>2010-05-19T22:51:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/05/19/android-2-1-passe-en-tete</id>
+    <content type="html"><![CDATA[<p>Google vient de <a href="http://developer.android.com/resources/dashboard/platform-versions.html">mettre à jour</a> ses données concernant la répartition des différentes versions d’android :</p>
+
+<p><img class="center" src="/images/posts/android_fragmentation-20100519.png" width="370" title="Répartition des version Android" alt="Répartition des version Android"></p>
+
+<p>Ces chiffres ont été collectés à partir des statistiques de connexion à l’Android Market. Voilà ce que cela donne :</p>
+
+<table>
+    <tr><th>Android Platform</th><th>Percent of Devices</th></tr>
+    <tr><td>Android 1.1</td><td>0.1%</td></tr>
+    <tr><td>Android 1.5</td><td>34.1%</td></tr>
+    <tr><td>Android 1.6</td><td>28.0%</td></tr>
+    <tr><td>Android 2.0</td><td>0.2%</td></tr>
+    <tr><td>Android 2.0.1</td><td>0.4%</td></tr>
+    <tr><td>Android 2.1</td><td>37.2%</td></tr>
+</table>
+
+
+<p>C’est en comparant avec les même données du mois dernier que cela devient intéressant : Android 2.1 passe de 27,3% à 37,2% de part de marché, soit une augmentation de presque 10%. À l’opposé, les versions 1.5 et 1.6 perdent respectivement 3,8% et 3,6%. Cela veut surtout dire que la version 2.1 est désormais la version majoritairement déployée sur l’ensemble des terminaux Android.</p>
+
+<p>En supposant que ces chiffres soit représentatifs du parc (<a href="http://www.sosandroid.fr/andropress/2010/05/18/android-eclair-2-1-devient-la-principale-version-deployee-3821/">et SOS Android a fait quelques comparaisons et semble le croire</a>), on assiste, lentement mais sûrement, à une concentration des versions diffusées. Les améliorations entre 1.x et les 2.x ayant réellement amélioré la qualité de l’OS, cette concentration est plutôt une bonne nouvelle.</p>
+
+<p>À moins que la version 2.2, alias <em>Froyo</em>, ne vienne changer la donne.</p>
+
+<p><strong>Update</strong> Après plusieurs mois de rumeurs HTC vient de publier la première mise à jour officielle du Hero (Uniquement chez Sprint pour le moment).</p>
+]]></content>
+  </entry>
+  
+</feed>

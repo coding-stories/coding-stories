@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: security | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/security/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Video : Deep Dive into Android Security]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/26/video-deep-dive-into-android-security/"/>
+    <updated>2011-11-26T09:24:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/26/video-deep-dive-into-android-security</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/posts/android-security-20111126.jpg"></p>
+
+<p>Si vous chercher à mieux comprendre le fonctionnement du modèle de sécurité Android je vous conseille fortement de regarder cette vidéo. Dans cette excellente session de la conférence <a href="http://www.andevcon.com/">AndDevCon II</a> <a href="http://marakana.com/expert/aleksandar_gargenta,1.html">Aleksandar Gargenta</a> présente différents aspects liés à la sécurité sur Android (le <em>sandboxing</em> des applications, le fonctionnement du système de permissions, le chiffrement et la protection des données, etc) mais il parle également des limites du modèle et des contre-mesures contre les menaces (signature des applications, <em>rooting</em> &amp; <em>rootkits</em>, SE-Linux, etc).</p>
+
+<p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/tKJiSjVk8NA "></iframe></div></p>
+
+<p><iframe src="http://fr.slideshare.net/slideshow/embed_code/10123665 " width="599" height="487" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Améliorer la sécurité du développement avec Git]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/21/ameliorer-la-securite-du-developpement-avec-git/"/>
+    <updated>2011-11-21T09:01:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/21/ameliorer-la-securite-du-developpement-avec-git</id>
+    <content type="html"><![CDATA[<p>Quand on développe un produit de sécurité (firewall, VPN, application de chiffrement…) on cherche a donner confiance dans son produit et on est bien souvent amené pour cela à passer des certifications (<a href="http://www.ssi.gouv.fr/fr/certification-qualification/cspn/">CSPN</a>, <a href="http://www.commoncriteriaportal.org/">Critères Communs</a>, etc) et à ainsi prouver qu’on applique de «bonnes pratiques» de matière développement : gestion des bugs, tests, utilisation d’un SCM. Un point important est de montrer que le code source du produit est maîtrisé, c’est à dire qu’aucune modification, intentionnelle ou non, ne peut être intégrée au produit sans avoir été validé. Et pour cela <a href="http://git-scm.com/">Git</a> est un outil qui peut réellement aider.</p>
+
+<!-- more -->
+
+
+<p>Subversion, probablement le SCM le plus utilisé aujourd’hui, impose un modèle de développement centralisé. Tous les développeurs poussent leurs modifications vers un unique dépôt central partagé. Ce modèle a plusieurs inconvénients quand on désire tracer les modifications dans la base de code.</p>
+
+<p>D’abord il faut donner aux développeurs des droits d’accès suffisamment fins pour qu’ils puissent <em>commiter</em> dans le dépôt, sans pour autant les autoriser à avoir accès à toute la base de code, tant en écriture qu’en lecture. Ensuite il faut suivre les modifications apportées au code par les équipes de développement. Il est possible de développer les nouvelles fonctionnalités ou corriger les bugs dans des branches, avec tous les problèmes de <em>merge</em> qui peuvent survenir. On peut également forcer l’utilisation du numéros de référence d’un ticket du <em>bugtracker</em> dans les messages de commits. Dans ce cas il faudra bien sûr compter avec les erreurs sur le numéro du ticket ou les oublis mais également avec la relecture de complexes et multiples <em>diff</em>… Et je ne parle pas de l’historique du dépôt qui devient simplement illisible.</p>
+
+<p>Avec Git, le problème du workflow disparaît car vous pouvez l’adapter à votre façon de développer. On peut illustrer ça avec l’exemple du <a href="http://fr.wikipedia.org/wiki/Processus_de_d%C3%A9veloppement_de_Linux">modèle de développement du noyau Linux</a> (schéma ci-dessous) : un développeur privilégié (le dictateur) est autorisé à écrire dans le dépôt de référence (<em>blessed repository</em>). Les développeurs clonent ce dépôt, et poussent leurs patchs vers des «développeurs de confiance» (les lieutenants). Les lieutenants valident ces modifications, le dictateur peut alors venir les chercher auprès des lieutenants. Le dictateur décide alors d’intégrer ou non ces modifications dans le dépôt de référence.</p>
+
+<p><img class="center" src="/images/posts/workflow-git-20111121.png"></p>
+
+<p>En outre, avec Git finis les multiples <em>commits</em> pour implémenter une fonctionnalité : grâce au merge de branches et au rebase, le développeur est en mesure de ne livrer qu’un unique <em>commit</em>. De cette façon l’historique du dépôt est clair et propre mais surtout cela simplifie énormément la revue de code.</p>
+
+<p>Pour finir j’ajoute également que Git permet de signer les <em>tags</em> permettant ainsi de garantir l’origine de toutes les modifications du code importées dans le dépôt de référence.</p>
+
+<p>En conclusion je terminerai sur le fait que ce que je raconte ici sur Git est également vrai pour d’autres DVCS tels que <a href="http://mercurial.selenic.com/">Mercurial</a> ou <a href="http://bazaar.canonical.com/">Bazaar</a> (à vérifier tout de même pour la signature des tags).</p>
+
+<p>Quelques références :</p>
+
+<ul>
+<li><a href="http://nvie.com/posts/a-successful-git-branching-model/">A successful Git branching model</a></li>
+<li><a href="http://fr.whygitisbetterthanx.com/">Pourquoi Git est Meilleur Que X</a> (d’où est issu le schéma d’exemple de workflow)</li>
+<li><a href="http://fr.wikipedia.org/wiki/Processus_de_d%C3%A9veloppement_de_Linux">Processus de développement de Linux</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[La cryptographie à clé publique par ses inventeurs]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/08/06/la-cryptographie-a-cle-publique-par-ses-inventeurs/"/>
+    <updated>2011-08-06T16:53:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/08/06/la-cryptographie-a-cle-publique-par-ses-inventeurs</id>
+    <content type="html"><![CDATA[<p><a href="http://fr.wikipedia.org/wiki/Ronald_Rivest">Ron Rivest</a>, <a href="http://fr.wikipedia.org/wiki/Adi_Shamir">Adi Shamir</a>, <a href="http://fr.wikipedia.org/wiki/Leonard_Adleman">Leonard Adleman</a>, <a href="http://fr.wikipedia.org/wiki/Whitfield_Diffie">Whitfield Diffie</a>, <a href="http://fr.wikipedia.org/wiki/Martin_Hellman">Martin Hellman</a>, <a href="http://fr.wikipedia.org/wiki/Ralph_Merkle">Ralph Merkle</a>. Dans les années 70 en découvrant la cryptographie à clé publique ils ont révolutionné le monde. Télécommunications, commerce électronique, cartes bancaires, téléphonie mobile, VIGIK®… Nous utilisons tous et tous les jours leurs découvertes, souvent même sans le savoir.</p>
+
+<p>Dans cette courte vidéo diffusée à l’ouverture de la <a href="http://www.rsaconference.com/2011/usa/">conférence RSA 2011</a>, les acteurs de cette révolution en racontent la genèse.</p>
+
+<p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/mvOsb9vNIWM "></iframe></div></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Java 7 : les nouveautés côté sécurité]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/14/java-7-les-nouveautes-cote-securite/"/>
+    <updated>2011-07-14T17:35:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/14/java-7-les-nouveautes-cote-securite</id>
+    <content type="html"><![CDATA[<p>La sortie de Java 7 est imminente et on a déjà beaucoup parlé des grandes nouveautés de cette version (multi-catch, opérateur diamant, Fork/Join, opcode <em>invokedynamic</em>…). Mais Java 7 arrive également des tas de petites améliorations, nouveautés et corrections de bugs. Voilà donc un petit résumé des principales nouveautés de Java 7, côté sécurité.</p>
+
+<!-- more -->
+
+
+<h1>Cryptographie sur les Courbes Elliptiques</h1>
+
+<p>Java 7 est désormais livré avec le provider <code>SunEC</code> (<code>sun.security.ec.SunEC</code>) dédie à la cryptographie sur courbes elliptiques et fournissant un support natif à travers la bibliothèque <code>sunecc</code>. Jusqu’à présent la cryptographie sur courbes elliptique n’était disponible que par le provider <code>SunPKCS11</code> sous réserve de posséder un dispositif supportant ces algorithmes (carte à puce…) ou en utilisant le provider <a href="http://www.bouncycastle.org/">Bouncy Castle</a>.</p>
+
+<p>Par exemple, obtenir un objet <code>Signature</code> pour l’algorithme ECDSA se fait de la façon suivante :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Signature</span> <span class="n">sg</span> <span class="o">=</span> <span class="n">Signature</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;SHA1withECDSA&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sg</span><span class="o">.</span><span class="na">getProvider</span><span class="o">());</span> <span class="c1">// affiche &quot;SunEC version 1.7&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>SSL/TLS</h1>
+
+<h2>Attaque contre les algorithmes en mode CBC</h2>
+
+<p>L’implémentation TLS 1.1 a été mise à jour pour se protéger contre l’attaque décrite dans ce <a href="http://www.openssl.org/~bodo/tls-cbc.txt">document</a>.</p>
+
+<h2>Contrôle de la session TLS</h2>
+
+<p>De nouvelles classes et méthodes donnent un contrôle plus fin sur la connection TLS :</p>
+
+<ul>
+<li><a href="http://download.java.net/jdk7/docs/api/index.html?javax/net/ssl/X509ExtendedTrustManager.html">X509ExtendedTrustManager</a> (une implémentation de <code>TrsutManager</code>) permet d’accéder aux paramètres de la connection TLS pendant le <em>handshake</em>.</li>
+<li><a href="http://download.java.net/jdk7/docs/api/javax/net/ssl/SSLParameters.html#setEndpointIdentificationAlgorithm(java.lang.String">SSLParameters.setEndpointIdentificationAlgorithm</a>) permet de définir un algorithme de vérification de l’identité du serveur lors du <em>handshake</em>. Dans les versions précédentes, cette vérification ne se faisait que pour le protocole HTTPS et passait par l’interface <code>HostnameVerifier</code>. Désormais on peut l’effectuer au niveau de la couche TLS ; la bibliothèque standard fournit deux algorithmes de vérification : <code>HTTPS</code> et <code>LDAPS</code>. Malheureusement il ne semble pas possible d’ajouter d’autres algorithmes de vérification.</li>
+<li>L’utilisation des algorithmes rendus obsolètes (et déconseillés) dans les <a href="http://www.ietf.org/rfc/rfc4346.txt">RFC 4346</a>, <a href="http://www.ietf.org/rfc/rfc5246.txt">RFC 5246</a> et <a href="http://www.ietf.org/rfc/rfc5469.txt">RFC 5469</a> est désormais désactivée par défaut.</li>
+</ul>
+
+
+<h2>Support de SNI</h2>
+
+<p>SNI (Server Name Indication) est une extension ajoutée au protocole TLS et définie dans la <a href="http://www.ietf.org/rfc/rfc6066.txt">RFC 6066</a>. Cette extension contient le nom du serveur auquel le client veut accéder dans le message <em>ClientHello</em>. De cette façon le serveur sait immédiatement quel nom a été demandé et peut donc choisir quel certificat envoyer au client. Cela permet de configurer des <em>VirtuatHosts</em> en HTTPS comme on le fait en HTTP. Auparavant chaque serveur HTTPS devait posséder sa propre adresse IP.</p>
+
+<p>Il est facile de vérifier si l’extension SNI est supportée en envoyant une requête à l’URL <a href="https://sni.velox.ch">https://sni.velox.ch</a> :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="s">&quot;https://alice.sni.velox.ch&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">HttpsURLConnection</span> <span class="n">con</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpsURLConnection</span><span class="o">)</span><span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
+</span><span class='line'><span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">con</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()));</span>
+</span><span class='line'><span class="n">FileWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWriter</span><span class="o">(</span><span class="s">&quot;index.html&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">line</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">writer</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">line</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">writer</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Ouvrez ensuite le fichier <code>index.html</code> dans votre navigateur. On change l’URL de la requête en <code>bob.sni.velox.ch</code> ; avec Java 7 cela fonctionne correctement mais Java 6 lève une exception :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception in thread "main" javax.net.ssl.SSLHandshakeException: java.security.cert.CertificateException: No subject alternative DNS name matching bob.sni.velox.ch found.</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>En effet, <code>bob.sni.velox.ch</code> est un hôte virtuel, si l’extension SNI n’est pas envoyée lors du <em>handshake</em> alors le serveur utilise l’hôte par défaut qui est <code>alice.sni.velox.ch</code> ; avec java 6 le code client échoue car le nom de l'hôte ne correspond pas au nom dans le certificat, ce qui explique l’erreur obtenue.</p>
+
+<p>Des questions, des remarques, des éclaircissements ? N’hésitez pas poster un commentaire.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Security Stack Exchange]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/12/security-stack-exchange/"/>
+    <updated>2011-07-12T17:52:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/12/security-stack-exchange</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/posts/ITSecurity-e1310503676421-300x135-20110712.png"></p>
+
+<p>Le site de questions/réponses <a href="http://security.stackexchange.com/">Security Stack Exchange</a> vient de sortir de sa phase de béta test et devient donc officiellement le 28e site du réseau <a href="http://stackexchange.com/sites">Stack Exchange</a> (dont la tête de pont est le célèbre <a href="http://stackoverflow.com/">Stack Overflow</a>, le site de questions/réponses dédié aux programmeurs de tout poil).</p>
+
+<p>Nouveau design donc pour le site qui abandonne les couleurs de la béta, mais également ouverture d’un <a href="http://security.blogoverflow.com/">blog</a> et d’un <a href="https://twitter.com/StackSecurity">compte twitter</a>. Si vous avez des questions sur la sécurité des applications web, sur la certification des PKI, sur les cartes à puce, sur les standards cryptographiques… vous êtes au bon endroit.</p>
+
+<p>À noter également l’ouverture (mais pour le moment en béta privée) d’un autre site dédié spécifiquement aux questions touchant la cryptographie.</p>
+]]></content>
+  </entry>
+  
+</feed>

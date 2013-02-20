@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Les classes internes ou la tambouille du compilateur Java - Coding Stories</title>
+  <meta name="author" content="Jean-Christophe Sirot">
+
+  
+  <meta name="description" content="Il y a quelques mois Olivier Croisier a publié sur son blog The Coder’s Breakfast (que tout développeur Java se doit de suivre) un article intitulé &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://coding-stories.github.com/coding-stories/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Coding Stories" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">cs</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">Coding Stories</a></h1>
+  
+    <h2>Singe savant en ingénierie logicielle</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:coding-stories.github.com/coding-stories" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/digest-js">digest.js</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/a-propos/">À Propos</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Les Classes Internes Ou La Tambouille Du Compilateur Java</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-26T23:54:00+01:00" pubdate data-updated="true">26 déc 2011</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Il y a quelques mois Olivier Croisier a publié sur son blog <a href="http://thecodersbreakfast.net/">The Coder’s Breakfast</a> (que tout développeur Java se doit de suivre) un article intitulé <a href="Inner%20classes%20and%20the%20myth%20of%20the%20default%20constructor">Inner classes and the myth of the default constructor</a>. Dans cet article il est question des classes internes et des constructeurs « cachés » ajoutés lors de la phase de compilation.</p>
+
+<!--more-->
+
+
+<p>Prenons ce morceau de code :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">new</span> <span class="nf">Inner</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Et regardons le bytecode des constructeurs généré par le compilateur :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    4: new Outer$Inner
+</span><span class='line'>    7: dup
+</span><span class='line'>    8: aload $0
+</span><span class='line'>    9: invokespecial Outer$Inner.&lt;init> {(Outer) -> void}
+</span><span class='line'>   12: pop
+</span><span class='line'>   13: return
+</span><span class='line'>
+</span><span class='line'>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>    5: aload $0
+</span><span class='line'>    6: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    9: return</span></code></pre></td></tr></table></div></figure>
+
+
+<p>La class <code>Inner</code> s’est vue ajouter un constructeur qui prend un paramètre de type <code>Outer</code> et quand <code>Outer</code> appelle ce constructeur il passe this en paramètre (l’instruction <code>aload $0</code> charge <code>this</code> sur la pile juste avant l’appel du constructeur).</p>
+
+<p>En fait la classe interne est vue comme n’importe quelle autre classe. Pour lui permettre d’accès à la classe englobante il lui faut un pointeur vers l’instance de cette classe. Ce pointeur lui est passé en paramètre dans un constructeur ajouté à la compilation.</p>
+
+<p>Allons un peu plus loin. Si la classe interne n’est pas différente des autres classes alors que ce passe-t-il quand la classe englobante veut accéder à une méthode <code>private</code> de la classe interne ?</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Inner</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">inner</span><span class="o">.</span><span class="na">hello</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">hello</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello World&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Et le bytecode :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    4: new Outer$Inner
+</span><span class='line'>    7: dup
+</span><span class='line'>    8: aload $0
+</span><span class='line'>    9: invokespecial Outer$Inner.&lt;init> {(Outer) -> void}
+</span><span class='line'>   12: astore $1
+</span><span class='line'>   13: aload $1
+</span><span class='line'>   14: invokestatic Outer$Inner.access$000 {(Outer$Inner) -> void}
+</span><span class='line'>   17: return
+</span><span class='line'>
+</span><span class='line'>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>    5: aload $0
+</span><span class='line'>    6: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    9: return
+</span><span class='line'>
+</span><span class='line'>**** hello () -> void
+</span><span class='line'>    0: getstatic java/lang/System.out {java.io.PrintStream}
+</span><span class='line'>    3: ldc "Hello World"
+</span><span class='line'>    5: invokevirtual java/io/PrintStream.println {(java.lang.String) -> void}
+</span><span class='line'>    8: return
+</span><span class='line'>
+</span><span class='line'>**** access$000 (Outer$Inner) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial Outer$Inner.hello {() -> void}
+</span><span class='line'>    4: return</span></code></pre></td></tr></table></div></figure>
+
+
+<p>La méthode <code>hello</code> est privée et donc Outer ne peut pas l&#8217;appeler directement. Dans ce le compilateur a ajouté une méthode package statique void <code>access$000(Inner)</code> qui sert alors de proxy. Cette méthode se contente alors de rediriger l&#8217;appel vers le méthode <code>hello</code>. Dans le code de l&#8217;appelant l&#8217;appel à la méthode privée est simplement remplacé par un appel à la méthode statique correspondante.</p>
+
+<p>Dans le cas de l&#8217;accès à un champ privé, le résultat est très similaire :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Inner</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">hello</span> <span class="o">=</span> <span class="n">inner</span><span class="o">.</span><span class="na">hello</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="n">String</span> <span class="n">hello</span> <span class="o">=</span> <span class="s">&quot;Hello World&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    4: new Outer$Inner
+</span><span class='line'>    7: dup
+</span><span class='line'>    8: aload $0
+</span><span class='line'>    9: invokespecial Outer$Inner.&lt;init> {(Outer) -> void}
+</span><span class='line'>   12: astore $1
+</span><span class='line'>   13: aload $1
+</span><span class='line'>   14: invokestatic Outer$Inner.access$000 {(Outer$Inner) -> java.lang.String}
+</span><span class='line'>   17: astore $2
+</span><span class='line'>   18: return
+</span><span class='line'>
+</span><span class='line'>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>    5: aload $0
+</span><span class='line'>    6: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    9: aload $0
+</span><span class='line'>   10: ldc "Hello World"
+</span><span class='line'>   12: putfield Outer$Inner.hello {java.lang.String}
+</span><span class='line'>   15: return
+</span><span class='line'>
+</span><span class='line'>**** access$000 (Outer$Inner) -> java.lang.String
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: getfield Outer$Inner.hello {java.lang.String}
+</span><span class='line'>    4: areturn</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Dans ce cas aussi, l&#8217;accès au champ privé <code>hello</code> n&#8217;est pas possible directement. Le compiltateur a donc ajouté une méthode package statique <code>String access$000(Inner)</code> qui lit le champ (opcode <code>getfield</code>) et le renvoie à l&#8217;appelant.</p>
+
+<p>Et dans le cas d&#8217;un constructeur privé ? Vat-t-on se retrouver avec une méthode statique de type <em>factory</em> qui va instancier l&#8217;object qu&#8217;on cherche à construire ? Non, ici le compilateur opte pour une autre stratégie :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Inner</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="nf">Inner</span><span class="o">()</span> <span class="o">{}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    4: new Outer$Inner
+</span><span class='line'>    7: dup
+</span><span class='line'>    8: aload $0
+</span><span class='line'>    9: aconst_null
+</span><span class='line'>   10: invokespecial Outer$Inner.&lt;init> {(Outer, Outer$1) -> void}
+</span><span class='line'>   13: astore $1
+</span><span class='line'>   14: return
+</span><span class='line'>
+</span><span class='line'>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>    5: aload $0
+</span><span class='line'>    6: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    9: return
+</span><span class='line'>
+</span><span class='line'>**** &lt;init> (Outer, Outer$1) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: invokespecial Outer$Inner.&lt;init> {(Outer) -> void}
+</span><span class='line'>    5: return</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le compilateur ajoute un second constructeur qui prend deux paramètres : le pointeur vers l&#8217;instance de la classe englobante et un paramètre de type <code>Outer$1</code>. Quelle est ce type ? Il s&#8217;agit d&#8217;une interface sans méthode créée automatiquement à la compilation. Cette interface sert simplement différencier les deux constructeurs (le second constructeur se contente d&#8217;appeler le premier). Lors de l&#8217;appel de ce constructeur ce second paramètre est mis à null (<code>null</code> est chargé sur la pile par l&#8217;opcode <code>aconst_null</code>).</p>
+
+<p>Le problème principal de ces différentes <em>ruses</em> du compilateur est que cela peut rendre les stacktraces difficilement lisibles si on fait un usage immodéré des classes internes. Il vaut mieux également éviter d&#8217;appeler des méthodes privées depuis la classe englobante. L&#8217;analyseur de code <a href="http://pmd.sourceforge.net/">PMD</a> définit d&#8217;ailleurs une règle <a href="http://pmd.sourceforge.net/rules/design.html">AccessorClassGeneration</a> qui lève une alerte quand un constructeur privé est appelé depuis la classe englobante.</p>
+
+<p>Et que se passe-t-il si on tente d&#8217;accéder à une méthode privée de la classe englobante depuis la classe interne ? Je vous laisse expérimenter :D.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jean-Christophe Sirot</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-26T23:54:00+01:00" pubdate data-updated="true">26 déc 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bytecode/'>bytecode</a>, <a class='category' href='/blog/categories/compiler/'>compiler</a>, <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://coding-stories.github.com/coding-stories/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java/" data-via="jcsirot" data-counturl="http://coding-stories.github.com/coding-stories/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <script type="in/share" data-counter="right" data-showzero="true"></script>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2011/11/26/video-deep-dive-into-android-security/" title="Previous Post: Video : Deep Dive into Android Security">&laquo; Video : Deep Dive into Android Security</a>
+      
+      
+        <a class="basic-alignment right articlenav" href="/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar/" title="Next Post: Couverture des tests d’intégration avec JaCoCo, Maven et Sonar">Couverture des tests d’intégration avec JaCoCo, Maven et Sonar &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/code-story-2013/">Code Story 2013 : la phase de sélection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/">Un mois avec IntelliJ - début de l'expérience</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/">Migration du blog vers Octopress/Github</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/">Mocker un serveur de mail avec Dumbster et JUnit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/">Exclure certaines classes de la couverture des tests unitaires</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("jcsirot", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/jcsirot" class="twitter-follow-button" data-show-count="false">Follow @jcsirot</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/jcsirot?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Category Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 121.81818181818181%'>android</a> <a href='/blog/categories/bytecode' style='font-size: 105.45454545454545%'>bytecode</a> <a href='/blog/categories/chess' style='font-size: 110.9090909090909%'>chess</a> <a href='/blog/categories/cobertura' style='font-size: 110.9090909090909%'>cobertura</a> <a href='/blog/categories/code' style='font-size: 116.36363636363636%'>code</a> <a href='/blog/categories/code-coverage' style='font-size: 105.45454545454545%'>code coverage</a> <a href='/blog/categories/compiler' style='font-size: 105.45454545454545%'>compiler</a> <a href='/blog/categories/conference' style='font-size: 121.81818181818181%'>conference</a> <a href='/blog/categories/confluence' style='font-size: 105.45454545454545%'>confluence</a> <a href='/blog/categories/cryptography' style='font-size: 105.45454545454545%'>cryptography</a> <a href='/blog/categories/dart' style='font-size: 105.45454545454545%'>dart</a> <a href='/blog/categories/devoxx' style='font-size: 110.9090909090909%'>devoxx</a> <a href='/blog/categories/dvcs' style='font-size: 110.9090909090909%'>DVCS</a> <a href='/blog/categories/ecc' style='font-size: 105.45454545454545%'>ECC</a> <a href='/blog/categories/elliptic-curve' style='font-size: 105.45454545454545%'>elliptic curve</a> <a href='/blog/categories/framework' style='font-size: 110.9090909090909%'>framework</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git</a> <a href='/blog/categories/google' style='font-size: 127.27272727272728%'>google</a> <a href='/blog/categories/hero' style='font-size: 105.45454545454545%'>hero</a> <a href='/blog/categories/htc' style='font-size: 105.45454545454545%'>htc</a> <a href='/blog/categories/html5' style='font-size: 105.45454545454545%'>html5</a> <a href='/blog/categories/http' style='font-size: 105.45454545454545%'>HTTP</a> <a href='/blog/categories/https' style='font-size: 110.9090909090909%'>HTTPS</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE</a> <a href='/blog/categories/intellij' style='font-size: 105.45454545454545%'>IntelliJ</a> <a href='/blog/categories/ios' style='font-size: 105.45454545454545%'>iOS</a> <a href='/blog/categories/jacoco' style='font-size: 105.45454545454545%'>JaCoCo</a> <a href='/blog/categories/java' style='font-size: 160.0%'>java</a> <a href='/blog/categories/java7' style='font-size: 105.45454545454545%'>java7</a> <a href='/blog/categories/javascript' style='font-size: 110.9090909090909%'>javascript</a> <a href='/blog/categories/jira' style='font-size: 105.45454545454545%'>jira</a> <a href='/blog/categories/jschessboard' style='font-size: 105.45454545454545%'>jsChessboard</a> <a href='/blog/categories/jug' style='font-size: 110.9090909090909%'>JUG</a> <a href='/blog/categories/junit' style='font-size: 105.45454545454545%'>junit</a> <a href='/blog/categories/keynote' style='font-size: 105.45454545454545%'>keynote</a> <a href='/blog/categories/ldap' style='font-size: 105.45454545454545%'>ldap</a> <a href='/blog/categories/log' style='font-size: 105.45454545454545%'>log</a> <a href='/blog/categories/maven' style='font-size: 116.36363636363636%'>maven</a> <a href='/blog/categories/maven-cobertura-plugin' style='font-size: 105.45454545454545%'>maven-cobertura-plugin</a> <a href='/blog/categories/maven-enforcer-plugin' style='font-size: 105.45454545454545%'>maven-enforcer-plugin</a> <a href='/blog/categories/maven-failsafe-plugin' style='font-size: 105.45454545454545%'>maven-failsafe-plugin</a> <a href='/blog/categories/maven-jacoco-plugin' style='font-size: 105.45454545454545%'>maven-jacoco-plugin</a> <a href='/blog/categories/maven-jarsigner-plugin' style='font-size: 105.45454545454545%'>maven-jarsigner-plugin</a> <a href='/blog/categories/maven-release-plugin' style='font-size: 110.9090909090909%'>maven-release-plugin</a> <a href='/blog/categories/mock' style='font-size: 105.45454545454545%'>mock</a> <a href='/blog/categories/netbeans' style='font-size: 105.45454545454545%'>NetBeans</a> <a href='/blog/categories/objective-c' style='font-size: 105.45454545454545%'>objective-c</a> <a href='/blog/categories/parleys' style='font-size: 116.36363636363636%'>parleys</a> <a href='/blog/categories/pgn' style='font-size: 105.45454545454545%'>PGN</a> <a href='/blog/categories/play' style='font-size: 110.9090909090909%'>play</a> <a href='/blog/categories/proxy' style='font-size: 105.45454545454545%'>proxy</a> <a href='/blog/categories/qualite' style='font-size: 105.45454545454545%'>qualite</a> <a href='/blog/categories/quality' style='font-size: 110.9090909090909%'>quality</a> <a href='/blog/categories/rsa' style='font-size: 105.45454545454545%'>RSA</a> <a href='/blog/categories/scala' style='font-size: 121.81818181818181%'>scala</a> <a href='/blog/categories/security' style='font-size: 127.27272727272728%'>security</a> <a href='/blog/categories/software-craftsmanship' style='font-size: 105.45454545454545%'>software craftsmanship</a> <a href='/blog/categories/sonar' style='font-size: 110.9090909090909%'>sonar</a> <a href='/blog/categories/spring' style='font-size: 105.45454545454545%'>spring</a> <a href='/blog/categories/ssl' style='font-size: 116.36363636363636%'>SSL</a> <a href='/blog/categories/test' style='font-size: 121.81818181818181%'>test</a> <a href='/blog/categories/tls' style='font-size: 116.36363636363636%'>TLS</a> <a href='/blog/categories/uncle-bob' style='font-size: 105.45454545454545%'>Uncle Bob</a> <a href='/blog/categories/video' style='font-size: 105.45454545454545%'>video</a> <a href='/blog/categories/web' style='font-size: 116.36363636363636%'>web</a> <a href='/blog/categories/wiki' style='font-size: 105.45454545454545%'>wiki</a> </span>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Jean-Christophe Sirot -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> -
+  Theme <a href="https://github.com/amelandri/darkstripes">DarkStripes</a> by Alessandro Melandri
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'codingst';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://coding-stories.github.com/coding-stories/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java/';
+        var disqus_url = 'http://coding-stories.github.com/coding-stories/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'http://platform.linkedin.com/in.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

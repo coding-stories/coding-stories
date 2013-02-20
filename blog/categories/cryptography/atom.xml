@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: cryptography | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/cryptography/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[La cryptographie à clé publique par ses inventeurs]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/08/06/la-cryptographie-a-cle-publique-par-ses-inventeurs/"/>
+    <updated>2011-08-06T16:53:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/08/06/la-cryptographie-a-cle-publique-par-ses-inventeurs</id>
+    <content type="html"><![CDATA[<p><a href="http://fr.wikipedia.org/wiki/Ronald_Rivest">Ron Rivest</a>, <a href="http://fr.wikipedia.org/wiki/Adi_Shamir">Adi Shamir</a>, <a href="http://fr.wikipedia.org/wiki/Leonard_Adleman">Leonard Adleman</a>, <a href="http://fr.wikipedia.org/wiki/Whitfield_Diffie">Whitfield Diffie</a>, <a href="http://fr.wikipedia.org/wiki/Martin_Hellman">Martin Hellman</a>, <a href="http://fr.wikipedia.org/wiki/Ralph_Merkle">Ralph Merkle</a>. Dans les années 70 en découvrant la cryptographie à clé publique ils ont révolutionné le monde. Télécommunications, commerce électronique, cartes bancaires, téléphonie mobile, VIGIK®… Nous utilisons tous et tous les jours leurs découvertes, souvent même sans le savoir.</p>
+
+<p>Dans cette courte vidéo diffusée à l’ouverture de la <a href="http://www.rsaconference.com/2011/usa/">conférence RSA 2011</a>, les acteurs de cette révolution en racontent la genèse.</p>
+
+<p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/mvOsb9vNIWM "></iframe></div></p>
+]]></content>
+  </entry>
+  
+</feed>

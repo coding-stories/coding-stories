@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: bytecode | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/bytecode/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Les classes internes ou la tambouille du compilateur Java]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java/"/>
+    <updated>2011-12-26T23:54:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java</id>
+    <content type="html"><![CDATA[<p>Il y a quelques mois Olivier Croisier a publié sur son blog <a href="http://thecodersbreakfast.net/">The Coder’s Breakfast</a> (que tout développeur Java se doit de suivre) un article intitulé <a href="Inner%20classes%20and%20the%20myth%20of%20the%20default%20constructor">Inner classes and the myth of the default constructor</a>. Dans cet article il est question des classes internes et des constructeurs « cachés » ajoutés lors de la phase de compilation.</p>
+
+<!--more-->
+
+
+<p>Prenons ce morceau de code :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="n">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">new</span> <span class="nf">Inner</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Et regardons le bytecode des constructeurs généré par le compilateur :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: invokespecial java/lang/Object.&lt;init&gt; {() -&gt; void}
+</span><span class='line'>4: new Outer$Inner
+</span><span class='line'>7: dup
+</span><span class='line'>8: aload $0
+</span><span class='line'>9: invokespecial Outer$Inner.&lt;init&gt; {(Outer) -&gt; void}
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>   12: pop
+</span><span class='line'>   13: return&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: aload $1
+</span><span class='line'>2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>5: aload $0
+</span><span class='line'>6: invokespecial java/lang/Object.&lt;init&gt; {() -&gt; void}
+</span><span class='line'>9: return
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>La class <code>Inner</code> s’est vue ajouter un constructeur qui prend un paramètre de type <code>Outer</code> et quand <code>Outer</code> appelle ce constructeur il passe this en paramètre (l’instruction <code>aload $0</code> charge <code>this</code> sur la pile juste avant l’appel du constructeur).</p>
+
+<p>En fait la classe interne est vue comme n’importe quelle autre classe. Pour lui permettre d’accès à la classe englobante il lui faut un pointeur vers l’instance de cette classe. Ce pointeur lui est passé en paramètre dans un constructeur ajouté à la compilation.</p>
+
+<p>Allons un peu plus loin. Si la classe interne n’est pas différente des autres classes alors que ce passe-t-il quand la classe englobante veut accéder à une méthode <code>private</code> de la classe interne ?</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="n">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Inner</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">inner</span><span class="o">.</span><span class="na">hello</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">hello</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello World&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Et le bytecode :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: invokespecial java/lang/Object.&lt;init&gt; {() -&gt; void}
+</span><span class='line'>4: new Outer$Inner
+</span><span class='line'>7: dup
+</span><span class='line'>8: aload $0
+</span><span class='line'>9: invokespecial Outer$Inner.&lt;init&gt; {(Outer) -&gt; void}
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>   12: astore $1
+</span><span class='line'>   13: aload $1
+</span><span class='line'>   14: invokestatic Outer$Inner.access$000 {(Outer$Inner) -> void}
+</span><span class='line'>   17: return&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: aload $1
+</span><span class='line'>2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>5: aload $0
+</span><span class='line'>6: invokespecial java/lang/Object.&lt;init&gt; {() -&gt; void}
+</span><span class='line'>9: return
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>**** hello () -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: getstatic java/lang/System.out {java.io.PrintStream}
+</span><span class='line'>3: ldc "Hello World"
+</span><span class='line'>5: invokevirtual java/io/PrintStream.println {(java.lang.String) -&gt; void}
+</span><span class='line'>8: return
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>**** access$000 (Outer$Inner) -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: invokespecial Outer$Inner.hello {() -&gt; void}
+</span><span class='line'>4: return
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>La méthode <code>hello</code> est privée et donc Outer ne peut pas l'appeler directement. Dans ce le compilateur a ajouté une méthode package statique void <code>access$000(Inner)</code> qui sert alors de proxy. Cette méthode se contente alors de rediriger l'appel vers le méthode <code>hello</code>. Dans le code de l'appelant l'appel à la méthode privée est simplement remplacé par un appel à la méthode statique correspondante.</p>
+
+<p>Dans le cas de l'accès à un champ privé, le résultat est très similaire :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="n">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Inner</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">hello</span> <span class="o">=</span> <span class="n">inner</span><span class="o">.</span><span class="na">hello</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">hello</span> <span class="o">=</span> <span class="s">&quot;Hello World&quot;</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: invokespecial java/lang/Object.&lt;init&gt; {() -&gt; void}
+</span><span class='line'>4: new Outer$Inner
+</span><span class='line'>7: dup
+</span><span class='line'>8: aload $0
+</span><span class='line'>9: invokespecial Outer$Inner.&lt;init&gt; {(Outer) -&gt; void}
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>   12: astore $1
+</span><span class='line'>   13: aload $1
+</span><span class='line'>   14: invokestatic Outer$Inner.access$000 {(Outer$Inner) -> java.lang.String}
+</span><span class='line'>   17: astore $2
+</span><span class='line'>   18: return&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: aload $1
+</span><span class='line'>2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>5: aload $0
+</span><span class='line'>6: invokespecial java/lang/Object.&lt;init&gt; {() -&gt; void}
+</span><span class='line'>9: aload $0
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>   10: ldc "Hello World"
+</span><span class='line'>   12: putfield Outer$Inner.hello {java.lang.String}
+</span><span class='line'>   15: return&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>**** access$000 (Outer$Inner) -> java.lang.String&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: getfield Outer$Inner.hello {java.lang.String}
+</span><span class='line'>4: areturn
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Dans ce cas aussi, l'accès au champ privé <code>hello</code> n'est pas possible directement. Le compiltateur a donc ajouté une méthode package statique <code>String access$000(Inner)</code> qui lit le champ (opcode <code>getfield</code>) et le renvoie à l'appelant.</p>
+
+<p>Et dans le cas d'un constructeur privé ? Vat-t-on se retrouver avec une méthode statique de type <em>factory</em> qui va instancier l'object qu'on cherche à construire ? Non, ici le compilateur opte pour une autre stratégie :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="n">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Inner</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="nf">Inner</span><span class="o">()</span> <span class="o">{}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: invokespecial java/lang/Object.&lt;init&gt; {() -&gt; void}
+</span><span class='line'>4: new Outer$Inner
+</span><span class='line'>7: dup
+</span><span class='line'>8: aload $0
+</span><span class='line'>9: aconst_null
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>   10: invokespecial Outer$Inner.&lt;init> {(Outer, Outer$1) -> void}
+</span><span class='line'>   13: astore $1
+</span><span class='line'>   14: return&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: aload $1
+</span><span class='line'>2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>5: aload $0
+</span><span class='line'>6: invokespecial java/lang/Object.&lt;init&gt; {() -&gt; void}
+</span><span class='line'>9: return
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>**** &lt;init> (Outer, Outer$1) -> void&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>0: aload $0
+</span><span class='line'>1: aload $1
+</span><span class='line'>2: invokespecial Outer$Inner.&lt;init&gt; {(Outer) -&gt; void}
+</span><span class='line'>5: return
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Le compilateur ajoute un second constructeur qui prend deux paramètres : le pointeur vers l'instance de la classe englobante et un paramètre de type <code>Outer$1</code>. Quelle est ce type ? Il s'agit d'une interface sans méthode créée automatiquement à la compilation. Cette interface sert simplement différencier les deux constructeurs (le second constructeur se contente d'appeler le premier). Lors de l'appel de ce constructeur ce second paramètre est mis à null (<code>null</code> est chargé sur la pile par l'opcode <code>aconst_null</code>).</p>
+
+<p>Le problème principal de ces différentes <em>ruses</em> du compilateur est que cela peut rendre les stacktraces difficilement lisibles si on fait un usage immodéré des classes internes. Il vaut mieux également éviter d'appeler des méthodes privées depuis la classe englobante. L'analyseur de code <a href="http://pmd.sourceforge.net/">PMD</a> définit d'ailleurs une règle <a href="http://pmd.sourceforge.net/rules/design.html">AccessorClassGeneration</a> qui lève une alerte quand un constructeur privé est appelé depuis la classe englobante.</p>
+
+<p>Et que se passe-t-il si on tente d'accéder à une méthode privée de la classe englobante depuis la classe interne ? Je vous laisse expérimenter :D.</p>
+]]></content>
+  </entry>
+  
+</feed>

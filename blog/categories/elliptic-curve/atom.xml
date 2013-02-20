@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: elliptic curve | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/elliptic-curve/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Java 7 : les nouveautés côté sécurité]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/14/java-7-les-nouveautes-cote-securite/"/>
+    <updated>2011-07-14T17:35:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/14/java-7-les-nouveautes-cote-securite</id>
+    <content type="html"><![CDATA[<p>La sortie de Java 7 est imminente et on a déjà beaucoup parlé des grandes nouveautés de cette version (multi-catch, opérateur diamant, Fork/Join, opcode <em>invokedynamic</em>…). Mais Java 7 arrive également des tas de petites améliorations, nouveautés et corrections de bugs. Voilà donc un petit résumé des principales nouveautés de Java 7, côté sécurité.</p>
+
+<!-- more -->
+
+
+<h1>Cryptographie sur les Courbes Elliptiques</h1>
+
+<p>Java 7 est désormais livré avec le provider <code>SunEC</code> (<code>sun.security.ec.SunEC</code>) dédie à la cryptographie sur courbes elliptiques et fournissant un support natif à travers la bibliothèque <code>sunecc</code>. Jusqu’à présent la cryptographie sur courbes elliptique n’était disponible que par le provider <code>SunPKCS11</code> sous réserve de posséder un dispositif supportant ces algorithmes (carte à puce…) ou en utilisant le provider <a href="http://www.bouncycastle.org/">Bouncy Castle</a>.</p>
+
+<p>Par exemple, obtenir un objet <code>Signature</code> pour l’algorithme ECDSA se fait de la façon suivante :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Signature</span> <span class="n">sg</span> <span class="o">=</span> <span class="n">Signature</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;SHA1withECDSA&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sg</span><span class="o">.</span><span class="na">getProvider</span><span class="o">());</span> <span class="c1">// affiche &quot;SunEC version 1.7&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>SSL/TLS</h1>
+
+<h2>Attaque contre les algorithmes en mode CBC</h2>
+
+<p>L’implémentation TLS 1.1 a été mise à jour pour se protéger contre l’attaque décrite dans ce <a href="http://www.openssl.org/~bodo/tls-cbc.txt">document</a>.</p>
+
+<h2>Contrôle de la session TLS</h2>
+
+<p>De nouvelles classes et méthodes donnent un contrôle plus fin sur la connection TLS :</p>
+
+<ul>
+<li><a href="http://download.java.net/jdk7/docs/api/index.html?javax/net/ssl/X509ExtendedTrustManager.html">X509ExtendedTrustManager</a> (une implémentation de <code>TrsutManager</code>) permet d’accéder aux paramètres de la connection TLS pendant le <em>handshake</em>.</li>
+<li><a href="http://download.java.net/jdk7/docs/api/javax/net/ssl/SSLParameters.html#setEndpointIdentificationAlgorithm(java.lang.String">SSLParameters.setEndpointIdentificationAlgorithm</a>) permet de définir un algorithme de vérification de l’identité du serveur lors du <em>handshake</em>. Dans les versions précédentes, cette vérification ne se faisait que pour le protocole HTTPS et passait par l’interface <code>HostnameVerifier</code>. Désormais on peut l’effectuer au niveau de la couche TLS ; la bibliothèque standard fournit deux algorithmes de vérification : <code>HTTPS</code> et <code>LDAPS</code>. Malheureusement il ne semble pas possible d’ajouter d’autres algorithmes de vérification.</li>
+<li>L’utilisation des algorithmes rendus obsolètes (et déconseillés) dans les <a href="http://www.ietf.org/rfc/rfc4346.txt">RFC 4346</a>, <a href="http://www.ietf.org/rfc/rfc5246.txt">RFC 5246</a> et <a href="http://www.ietf.org/rfc/rfc5469.txt">RFC 5469</a> est désormais désactivée par défaut.</li>
+</ul>
+
+
+<h2>Support de SNI</h2>
+
+<p>SNI (Server Name Indication) est une extension ajoutée au protocole TLS et définie dans la <a href="http://www.ietf.org/rfc/rfc6066.txt">RFC 6066</a>. Cette extension contient le nom du serveur auquel le client veut accéder dans le message <em>ClientHello</em>. De cette façon le serveur sait immédiatement quel nom a été demandé et peut donc choisir quel certificat envoyer au client. Cela permet de configurer des <em>VirtuatHosts</em> en HTTPS comme on le fait en HTTP. Auparavant chaque serveur HTTPS devait posséder sa propre adresse IP.</p>
+
+<p>Il est facile de vérifier si l’extension SNI est supportée en envoyant une requête à l’URL <a href="https://sni.velox.ch">https://sni.velox.ch</a> :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="s">&quot;https://alice.sni.velox.ch&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">HttpsURLConnection</span> <span class="n">con</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpsURLConnection</span><span class="o">)</span><span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
+</span><span class='line'><span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">con</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()));</span>
+</span><span class='line'><span class="n">FileWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWriter</span><span class="o">(</span><span class="s">&quot;index.html&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">line</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">writer</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">line</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="n">writer</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Ouvrez ensuite le fichier <code>index.html</code> dans votre navigateur. On change l’URL de la requête en <code>bob.sni.velox.ch</code> ; avec Java 7 cela fonctionne correctement mais Java 6 lève une exception :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception in thread "main" javax.net.ssl.SSLHandshakeException: java.security.cert.CertificateException: No subject alternative DNS name matching bob.sni.velox.ch found.</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>En effet, <code>bob.sni.velox.ch</code> est un hôte virtuel, si l’extension SNI n’est pas envoyée lors du <em>handshake</em> alors le serveur utilise l’hôte par défaut qui est <code>alice.sni.velox.ch</code> ; avec java 6 le code client échoue car le nom de l'hôte ne correspond pas au nom dans le certificat, ce qui explique l’erreur obtenue.</p>
+
+<p>Des questions, des remarques, des éclaircissements ? N’hésitez pas poster un commentaire.</p>
+]]></content>
+  </entry>
+  
+</feed>

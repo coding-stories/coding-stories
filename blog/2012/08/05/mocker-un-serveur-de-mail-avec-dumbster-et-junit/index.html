@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Mocker un serveur de mail avec Dumbster et JUnit - Coding Stories</title>
+  <meta name="author" content="Jean-Christophe Sirot">
+
+  
+  <meta name="description" content="Récemment, en écrivant des tests d’intégration j’ai rencontré un cas d’utilisation qui arrive fréquemment : un utilisateur s’inscrit à un service Web &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://coding-stories.github.com/coding-stories/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Coding Stories" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">cs</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">Coding Stories</a></h1>
+  
+    <h2>Singe savant en ingénierie logicielle</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:coding-stories.github.com/coding-stories" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/digest-js">digest.js</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/a-propos/">À Propos</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Mocker Un Serveur De Mail Avec Dumbster Et JUnit</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T20:29:00+02:00" pubdate data-updated="true"> 5 aoû 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Récemment, en écrivant des tests d’intégration j’ai rencontré un cas d’utilisation qui arrive fréquemment : un utilisateur s’inscrit à un service Web, un courriel lui est envoyé, il contient une URL permettant de confirmer son inscription. La question est comment tester ça automatiquement, par exemple dans un test <a href="http://seleniumhq.org/">Selenium</a> ?</p>
+
+<!--more-->
+
+
+<h1>La solution technique</h1>
+
+<p>Première idée : créer un compte mail dédié pour ce test qu’on va interroger avec une bibliothèque comme <a href="http://www.oracle.com/technetwork/java/javamail/index.html">javamail</a>. Cette solution présente toutefois quelques problèmes. D’abord il va falloir maintenir cette boîte mail dans le temps. Ensuite si le serveur SMTP ou le serveur POP/IMAP est indisponible le test va échouer. Et que va-t-il se passer si deux tests sont lancés en même temps ? Finalement une solution qui me semble bien fragile.</p>
+
+<p>Seconde idée : <em>mocker</em> un serveur SMTP qu’on ne lance que le temps du test. Après quelques rapides recherches j’ai trouvé <a href="http://quintanasoft.com/dumbster/">Dumbster</a>, un serveur qui répond aux requêtes SMTP mais sans relayer les messages envoyés. Ceux-ci sont stockés et peuvent ensuite être examinés.</p>
+
+<h1>Intégration avec JUnit</h1>
+
+<p>Pour intégrer Dumbster avec JUnit, j’ai écrit une <a href="http://kentbeck.github.com/junit/javadoc/latest/org/junit/rules/TestRule.html"><em>TestRule</em></a>. Les <code>TestRule</code> de JUnit sont des classes qui permettent de modifier la façon dont une méthode de test (ou un ensemble de méthodes) va se comporter en exécutant du code avant ou après le test. C’est un moyen très pratique de factoriser des comportements qu’on est amené à utiliser souvent dans les tests : par exemple <a href="http://kentbeck.github.com/junit/javadoc/latest/org/junit/rules/TemporaryFolder.html"><em>TemporaryFolder</em></a> permet de créer des répertoires et des fichiers temporaire et de les supprimer à la fin du test, <a href="http://kentbeck.github.com/junit/javadoc/latest/org/junit/rules/Timeout.html"><em>Timeout</em></a> s’assure que les tests ne dépasseront une durée maximale donnée…</p>
+
+<p>Pour le mock de serveur, j’ai créé une classe <code>MockSMTPRule</code> qui étend la classe abstraite <a href="http://kentbeck.github.com/junit/javadoc/latest/org/junit/rules/ExternalResource.html"><em>ExternalResource</em></a>. Cette classe fournit deux méthodes <code>before</code> et <code>after</code> qui s’exécutent respectivement avant et après la méthode de test ; parfait donc pour gérer des ressources externe au test.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MockSMTPRule</span> <span class="kd">extends</span> <span class="n">ExternalResource</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>     <span class="kd">public</span> <span class="n">SimpleSmtpServer</span> <span class="n">server</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/** Lance le serveur SMTP sur le port 2525 avant le test */</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">before</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">before</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">server</span> <span class="o">=</span> <span class="n">SimpleSmtpServer</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="mi">2525</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/** Arrête le serveur une fois le test terminé */</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">after</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="n">server</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">after</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Il faudra également configurer l’application web pour utiliser le serveur qui sera lancé sur localhost, port 2525.</p>
+
+<p>Ensuite, utiliser cette <code>TestRule</code> dans un test est extrêmement simple. Il suffit de créer une variable d’instance publique dans la classe de test et de la préfixer avec l’annotation <code>@Rule</code>.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RegistrationTest</span> <span class="kd">extends</span> <span class="n">JUnit4TestBase</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Rule</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">MockSMTPRule</span> <span class="n">smtp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MockSMTPRule</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/** Test the registration */</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_send_confirmation_email</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="cm">/* Ouvrir la page à tester */</span>
+</span><span class='line'>        <span class="n">openPage</span><span class="o">(</span><span class="s">&quot;http://localhost:8080/register/&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="cm">/* Saisir les informations sur le nouvel utilisateur */</span>
+</span><span class='line'>        <span class="cm">/* ... */</span>
+</span><span class='line'>        <span class="cm">/* On teste qu&#39;un mail a été reçu */</span>
+</span><span class='line'>        <span class="n">assertEquals</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">smtp</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">getReceivedEmailSize</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">SmtpMessage</span> <span class="n">msg</span> <span class="o">=</span> <span class="o">(</span><span class="n">SmtpMessage</span><span class="o">)</span> <span class="n">smtp</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">getReceivedEmail</span><span class="o">().</span><span class="na">next</span><span class="o">();</span>
+</span><span class='line'>        <span class="cm">/* On teste les champs To, From et Subject */</span>
+</span><span class='line'>        <span class="n">assertEquals</span><span class="o">(</span><span class="s">&quot;[Service Trop Bien] Confirmation de votre inscription&quot;</span><span class="o">,</span> <span class="n">msg</span><span class="o">.</span><span class="na">getHeaderValue</span><span class="o">(</span><span class="s">&quot;Subject&quot;</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">assertEquals</span><span class="o">(</span><span class="s">&quot;john@example.com&quot;</span><span class="o">,</span> <span class="n">msg</span><span class="o">.</span><span class="na">getHeaderValue</span><span class="o">(</span><span class="s">&quot;To&quot;</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">assertEquals</span><span class="o">(</span><span class="s">&quot;no-reply@servicetropbien.com&quot;</span><span class="o">,</span> <span class="n">msg</span><span class="o">.</span><span class="na">getHeaderValue</span><span class="o">(</span><span class="s">&quot;From&quot;</span><span class="o">));</span>
+</span><span class='line'>        <span class="cm">/* On teste le corps du mail */</span>
+</span><span class='line'>        <span class="n">assertTrue</span><span class="o">(</span><span class="n">msg</span><span class="o">.</span><span class="na">getBody</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="s">&quot;Bienvenue&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le code complet de la classe est ici : <a href="https://gist.github.com/3246719">https://gist.github.com/3246719</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jean-Christophe Sirot</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T20:29:00+02:00" pubdate data-updated="true"> 5 aoû 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>java</a>, <a class='category' href='/blog/categories/junit/'>junit</a>, <a class='category' href='/blog/categories/mock/'>mock</a>, <a class='category' href='/blog/categories/qualite/'>qualite</a>, <a class='category' href='/blog/categories/test/'>test</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://coding-stories.github.com/coding-stories/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/" data-via="jcsirot" data-counturl="http://coding-stories.github.com/coding-stories/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <script type="in/share" data-counter="right" data-showzero="true"></script>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/" title="Previous Post: Exclure certaines classes de la couverture des tests unitaires">&laquo; Exclure certaines classes de la couverture des tests unitaires</a>
+      
+      
+        <a class="basic-alignment right articlenav" href="/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/" title="Next Post: Migration du blog vers Octopress/Github">Migration du blog vers Octopress/Github &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/code-story-2013/">Code Story 2013 : la phase de sélection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/">Un mois avec IntelliJ - début de l'expérience</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/">Migration du blog vers Octopress/Github</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/">Mocker un serveur de mail avec Dumbster et JUnit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/">Exclure certaines classes de la couverture des tests unitaires</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("jcsirot", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/jcsirot" class="twitter-follow-button" data-show-count="false">Follow @jcsirot</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/jcsirot?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Category Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 121.81818181818181%'>android</a> <a href='/blog/categories/bytecode' style='font-size: 105.45454545454545%'>bytecode</a> <a href='/blog/categories/chess' style='font-size: 110.9090909090909%'>chess</a> <a href='/blog/categories/cobertura' style='font-size: 110.9090909090909%'>cobertura</a> <a href='/blog/categories/code' style='font-size: 116.36363636363636%'>code</a> <a href='/blog/categories/code-coverage' style='font-size: 105.45454545454545%'>code coverage</a> <a href='/blog/categories/compiler' style='font-size: 105.45454545454545%'>compiler</a> <a href='/blog/categories/conference' style='font-size: 121.81818181818181%'>conference</a> <a href='/blog/categories/confluence' style='font-size: 105.45454545454545%'>confluence</a> <a href='/blog/categories/cryptography' style='font-size: 105.45454545454545%'>cryptography</a> <a href='/blog/categories/dart' style='font-size: 105.45454545454545%'>dart</a> <a href='/blog/categories/devoxx' style='font-size: 110.9090909090909%'>devoxx</a> <a href='/blog/categories/dvcs' style='font-size: 110.9090909090909%'>DVCS</a> <a href='/blog/categories/ecc' style='font-size: 105.45454545454545%'>ECC</a> <a href='/blog/categories/elliptic-curve' style='font-size: 105.45454545454545%'>elliptic curve</a> <a href='/blog/categories/framework' style='font-size: 110.9090909090909%'>framework</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git</a> <a href='/blog/categories/google' style='font-size: 127.27272727272728%'>google</a> <a href='/blog/categories/hero' style='font-size: 105.45454545454545%'>hero</a> <a href='/blog/categories/htc' style='font-size: 105.45454545454545%'>htc</a> <a href='/blog/categories/html5' style='font-size: 105.45454545454545%'>html5</a> <a href='/blog/categories/http' style='font-size: 105.45454545454545%'>HTTP</a> <a href='/blog/categories/https' style='font-size: 110.9090909090909%'>HTTPS</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE</a> <a href='/blog/categories/intellij' style='font-size: 105.45454545454545%'>IntelliJ</a> <a href='/blog/categories/ios' style='font-size: 105.45454545454545%'>iOS</a> <a href='/blog/categories/jacoco' style='font-size: 105.45454545454545%'>JaCoCo</a> <a href='/blog/categories/java' style='font-size: 160.0%'>java</a> <a href='/blog/categories/java7' style='font-size: 105.45454545454545%'>java7</a> <a href='/blog/categories/javascript' style='font-size: 110.9090909090909%'>javascript</a> <a href='/blog/categories/jira' style='font-size: 105.45454545454545%'>jira</a> <a href='/blog/categories/jschessboard' style='font-size: 105.45454545454545%'>jsChessboard</a> <a href='/blog/categories/jug' style='font-size: 110.9090909090909%'>JUG</a> <a href='/blog/categories/junit' style='font-size: 105.45454545454545%'>junit</a> <a href='/blog/categories/keynote' style='font-size: 105.45454545454545%'>keynote</a> <a href='/blog/categories/ldap' style='font-size: 105.45454545454545%'>ldap</a> <a href='/blog/categories/log' style='font-size: 105.45454545454545%'>log</a> <a href='/blog/categories/maven' style='font-size: 116.36363636363636%'>maven</a> <a href='/blog/categories/maven-cobertura-plugin' style='font-size: 105.45454545454545%'>maven-cobertura-plugin</a> <a href='/blog/categories/maven-enforcer-plugin' style='font-size: 105.45454545454545%'>maven-enforcer-plugin</a> <a href='/blog/categories/maven-failsafe-plugin' style='font-size: 105.45454545454545%'>maven-failsafe-plugin</a> <a href='/blog/categories/maven-jacoco-plugin' style='font-size: 105.45454545454545%'>maven-jacoco-plugin</a> <a href='/blog/categories/maven-jarsigner-plugin' style='font-size: 105.45454545454545%'>maven-jarsigner-plugin</a> <a href='/blog/categories/maven-release-plugin' style='font-size: 110.9090909090909%'>maven-release-plugin</a> <a href='/blog/categories/mock' style='font-size: 105.45454545454545%'>mock</a> <a href='/blog/categories/netbeans' style='font-size: 105.45454545454545%'>NetBeans</a> <a href='/blog/categories/objective-c' style='font-size: 105.45454545454545%'>objective-c</a> <a href='/blog/categories/parleys' style='font-size: 116.36363636363636%'>parleys</a> <a href='/blog/categories/pgn' style='font-size: 105.45454545454545%'>PGN</a> <a href='/blog/categories/play' style='font-size: 110.9090909090909%'>play</a> <a href='/blog/categories/proxy' style='font-size: 105.45454545454545%'>proxy</a> <a href='/blog/categories/qualite' style='font-size: 105.45454545454545%'>qualite</a> <a href='/blog/categories/quality' style='font-size: 110.9090909090909%'>quality</a> <a href='/blog/categories/rsa' style='font-size: 105.45454545454545%'>RSA</a> <a href='/blog/categories/scala' style='font-size: 121.81818181818181%'>scala</a> <a href='/blog/categories/security' style='font-size: 127.27272727272728%'>security</a> <a href='/blog/categories/software-craftsmanship' style='font-size: 105.45454545454545%'>software craftsmanship</a> <a href='/blog/categories/sonar' style='font-size: 110.9090909090909%'>sonar</a> <a href='/blog/categories/spring' style='font-size: 105.45454545454545%'>spring</a> <a href='/blog/categories/ssl' style='font-size: 116.36363636363636%'>SSL</a> <a href='/blog/categories/test' style='font-size: 121.81818181818181%'>test</a> <a href='/blog/categories/tls' style='font-size: 116.36363636363636%'>TLS</a> <a href='/blog/categories/uncle-bob' style='font-size: 105.45454545454545%'>Uncle Bob</a> <a href='/blog/categories/video' style='font-size: 105.45454545454545%'>video</a> <a href='/blog/categories/web' style='font-size: 116.36363636363636%'>web</a> <a href='/blog/categories/wiki' style='font-size: 105.45454545454545%'>wiki</a> </span>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Jean-Christophe Sirot -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> -
+  Theme <a href="https://github.com/amelandri/darkstripes">DarkStripes</a> by Alessandro Melandri
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'codingst';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://coding-stories.github.com/coding-stories/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/';
+        var disqus_url = 'http://coding-stories.github.com/coding-stories/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'http://platform.linkedin.com/in.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

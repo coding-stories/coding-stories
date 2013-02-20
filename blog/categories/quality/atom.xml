@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: quality | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/quality/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[GTAC 2011 : les vidéos sont en ligne]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/24/gtac-2011-les-videos-sont-en-ligne/"/>
+    <updated>2011-11-24T08:54:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/24/gtac-2011-les-videos-sont-en-ligne</id>
+    <content type="html"><![CDATA[<p>Intéressés par la qualité et le test logiciel ? Les vidéos des différentes sessions de la conférence GTAC 2011 sont désormais disponibles sur <a href="http://www.gtac.biz/talks">http://www.gtac.biz/talks</a> ou sur la chaîne Youtube <a href="http://www.youtube.com/user/GoogleTechTalks">Google Tech Talks</a>. Bon visionnage !</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Analyse de la qualité logicielle]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/03/10/analyse-de-la-qualite-logicielle/"/>
+    <updated>2011-03-10T07:46:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/03/10/analyse-de-la-qualite-logicielle</id>
+    <content type="html"><![CDATA[<p>Une sympathique session du Lausanne JUG concernant l’analyse de la qualité des logiciels. Le format de la présentation, en forme de « confrontation » (mais pleine de fair-play) me plait assez : cinq éditeurs de logiciels présentent cinq outils (en fait quatre seulement dans la vidéo, le dernier n’ayant semble-t-il pas souhaité être filmé), chacun faisant en 20 minutes la démonstration de ce qu’il peut/sait faire en analysant le même logiciel. En l’occurrence c’est <a href="http://www.icescrum.org/">IceScrum 2</a> qui a servi d’étalon.</p>
+
+<p>Les outils présentés :</p>
+
+<ul>
+<li><a href="http://www.sonarsource.org/">Sonar</a></li>
+<li><a href="http://www.parasoft.com/jsp/products/jtest.jsp">Parasoft JTest</a></li>
+<li><a href="http://www.xdepend.com/">XDepend</a></li>
+<li><a href="http://www.headwaysoftware.com/">Structure 101 et Restructure 101</a></li>
+<li><a href="http://www.coverity.com/">Coverity Static Analysis et Coverity Dynamic Analysis</a></li>
+</ul>
+
+
+<p>A lire également, sur le blog d’OCTO Technology, les <a href="http://blog.octo.com/retour-jug-lausanne-qualite-code-java/">commentaires et impressions</a> de Cyril Picat qui a organisé l’événement.</p>
+
+<p>Et si jamais quelqu’un du Paris JUG me lit, pourquoi ne pas organiser une session de ce genre ?</p>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=2297"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=2297" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

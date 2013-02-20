@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: cobertura | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/cobertura/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Exclure certaines classes de la couverture des tests unitaires]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/"/>
+    <updated>2012-01-30T21:39:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires</id>
+    <content type="html"><![CDATA[<p>Dans nos projets on rencontre souvent ce cas de figure : certaines portions de code se prêtent mal au test unitaire. Ce sont les interfaces graphiques, le code qui manipule des fichiers, les connexions réseaux… Cela peut poser problème lorsqu’on configure Sonar pour lever des alertes quand la couverture de code est trop faible.</p>
+
+<!--more-->
+
+
+<p>Le problème a déjà été posé car Il y a un ticket dans le JIRA de Sonar (<a href="http://jira.codehaus.org/browse/SONAR-766">SONAR-766</a>). Quand il aura été résolu Sonar devrait permettre de configurer ce qui doit être exclu de l’analyse de couverture des tests.</p>
+
+<p>En attendant comment faire ? En posant la question il y a quelques mois sur Twitter j’avais reçu une réponse de Damien Gouyette :</p>
+
+<p><img class="center" src="/images/posts/sonar-cobertura-tweet-20120130.png"></p>
+
+<p>J’ai fini par trouver le temps de tester et ça fonctionne ! Il est possible de régler ces règles d’exclusion en adaptant par la configuration du plugin cobertura dans le POM de notre projet :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.codehaus.mojo<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>cobertura-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;configuration&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>instrumentation<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>excludes<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>exclude<span class="ni">&amp;gt;</span>com/mycompany/gui/**/*.class<span class="ni">&amp;lt;</span>/exclude<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>exclude<span class="ni">&amp;gt;</span>com/mycompany/nontestable/**/*.class<span class="ni">&amp;lt;</span>/exclude<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/excludes<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/instrumentation<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plugin&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>De cette façon les classes correspondant au <em>pattern</em> indiqué sont exclues de l’analyse par cobertura et ainsi ignorées par Sonar. Le taux de couverture est donc calculé sur le code considéré comme testable. La métrique devient alors beaucoup plus intéressante pour l’évaluation de la qualité globale du projet.</p>
+
+<p><strong>Note</strong> : Attention, je parle bien sûr de test unitaire ; il ne faut pas confondre un code qui ne peut pas être testé unitairement avec un code pour lequel les tests sont possibles mais difficiles à écrire. En outre il est toujours possible de tester autrement, avec des tests d’intégration ou des tests de <em>user experience</em> par exemple.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Couverture des tests d’intégration avec JaCoCo, Maven et Sonar]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar/"/>
+    <updated>2012-01-23T07:16:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar</id>
+    <content type="html"><![CDATA[<p>Sur certains de mes projets maven j’aimerai pouvoir séparer les tests unitaires des tests d’intégration. Les tests d’intégration sont souvent moins stables, pas toujours reproductibles et ils prennent souvent trop de temps pour être exécutés par les développeurs à chaque compilation.</p>
+
+<!-- more -->
+
+
+<h1>Déplacer les tests dans un module dédié</h1>
+
+<p>Première chose à faire, créer un module dédié dans le projet maven pour y mettre uniquement les tests d’intégration. Voilà la structure globale du projet :</p>
+
+<p>Error processing input, expected syntax: {% img [class name(s)] [http[s]:/]/path/to/image [width [height]] [title text | "title text" ["alt text"]] %}</p>
+
+<p>Ensuite pour empêcher que le module <code>libfoo-it</code> ne se lance à chaque compilation on crée un profil maven dédié aux test d’intégration dans le fichier <code>pom.xml</code> principal.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>run-its<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>modules<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>module<span class="ni">&amp;gt;</span>libfoo-it<span class="ni">&amp;lt;</span>/module<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/modules<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>Utiliser maven-failsafe-plugin</h1>
+
+<p>Le <a href="http://maven.apache.org/plugins/maven-failsafe-plugin/">plugin failsafe</a> permet de lancer les test d’intégration lors d’un build maven tout comme le plugin surefire le fait avec les tests unitaires. Le plugin failsafe s’attache aux phases <em>integration-test</em> et <em>verify</em> du <a href="http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">cycle de vie du build</a>.</p>
+
+<p>Comme il n’est pas possible de configurer plusieurs répertoires contenant les tests dans maven, la discrimination entre tests unitaires et d’intégration se fait sur le nom des classes. Il ne faudra donc pas oublier de nommer correctement ses classes de test.</p>
+
+<p>Les <em>templates</em> par défaut sont les suivants :</p>
+
+<ul>
+<li><strong>tests unitaires</strong> : <strong>/*Test.java, </strong>/Test<em>.java, **/</em>TestCase.java</li>
+<li><strong>tests d’intégration</strong> : <strong>/*IT.java, </strong>/IT<em>.java, **/</em>ITCase.java</li>
+</ul>
+
+
+<p>On ajoute ensuite la configuration du plugin failsafe dans notre profil.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>run-its<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>modules<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>module<span class="ni">&amp;gt;</span>libfoo-it<span class="ni">&amp;lt;</span>/module<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/modules<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>build<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>pluginManagement<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>plugins<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>artifactId<span class="ni">&amp;gt;</span>maven-failsafe-plugin<span class="ni">&amp;lt;</span>/artifactId<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>version<span class="ni">&amp;gt;</span>2.11<span class="ni">&amp;lt;</span>/version<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>              <span class="ni">&amp;lt;</span>goal<span class="ni">&amp;gt;</span>integration-test<span class="ni">&amp;lt;</span>/goal<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>/execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>/plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/plugins<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/pluginManagement<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/build<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Le POM du sous-projet libfoo-it est également à mettre à jour. De cette façon, petite optimisation, le plugin failsafe ne sera lancé que dans le module qui contient les tests d’intégration.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[/~]$ mvn -Prun-its clean verify</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>Couverture de code avec JaCoCo</h1>
+
+<p>Avoir des tests c’est bien, calculer la couverture de ces tests c’est mieux. Pour cela nous allons utiliser le moteur de couverture de code <a href="http://www.eclemma.org/jacoco/">JaCoCo</a> (Java Code Coverage), plus adapté aux tests d’intégration que le bien connu Cobertura.</p>
+
+<p>JaCoCo est fournit sous la forme d’un agent à lancer avec la JVM. Heureusement, il existe un plugin maven pour JaCoCo qui va nous aider à l’intégrer dans le build. Le plugin maven JaCoCo dispose d’un goal <em>prepare-agent</em> qui va dans un premier temps télécharger l’agent et dans un second temps créer une variable maven contenant la configuration de l’agent qu’il suffira de passer en paramètre au plugin failsafe.</p>
+
+<p>Voilà ce que donne la configuration du plugin (<strong>Nota</strong>: j’utilise la version 5.3 du plugin JaCoCo car les versions suivantes ne semblent pas fonctionner avec maven 2.2.1) :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>run-its<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>modules<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>module<span class="ni">&amp;gt;</span>libfoo-it<span class="ni">&amp;lt;</span>/module<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/modules<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>build<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>pluginManagement<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>plugins<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>groupId<span class="ni">&amp;gt;</span>org.jacoco<span class="ni">&amp;lt;</span>/groupId<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>artifactId<span class="ni">&amp;gt;</span>maven-jacoco-plugin<span class="ni">&amp;lt;</span>/artifactId<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>version<span class="ni">&amp;gt;</span>0.5.3.201107060350<span class="ni">&amp;lt;</span>/version<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>phase<span class="ni">&amp;gt;</span>pre-integration-test<span class="ni">&amp;lt;</span>/phase<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>              <span class="ni">&amp;lt;</span>goal<span class="ni">&amp;gt;</span>prepare-agent<span class="ni">&amp;lt;</span>/goal<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>/execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>propertyName<span class="ni">&amp;gt;</span>it.failsafe.argLine<span class="ni">&amp;lt;</span>/propertyName<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>destFile<span class="ni">&amp;gt;</span>${it.jacoco.destFile}<span class="ni">&amp;lt;</span>/destFile<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>/plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>artifactId<span class="ni">&amp;gt;</span>maven-failsafe-plugin<span class="ni">&amp;lt;</span>/artifactId<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>version<span class="ni">&amp;gt;</span>2.11<span class="ni">&amp;lt;</span>/version<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>              <span class="ni">&amp;lt;</span>goal<span class="ni">&amp;gt;</span>integration-test<span class="ni">&amp;lt;</span>/goal<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>/execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>argLine<span class="ni">&amp;gt;</span>${it.failsafe.argLine}<span class="ni">&amp;lt;</span>/argLine<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>/plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/plugins<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/pluginManagement<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/build<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>properties<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>it.jacoco.destFile<span class="ni">&amp;gt;</span>${java.io.tmpdir}/jacoco-foo.dump<span class="ni">&amp;lt;</span>/it.jacoco.destFile<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/properties<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Le plugin JaCoCo va générer la configuration de l’agent pour lancer les tests et la placer dans variable <code>it.failsafe.argLine</code>. Ensuite on configure le paramètre <code>argLine du plugin failsafe avec cette variable. On définit également le fichier qui va collecter les données de couverture (avec paramètre</code>destFile).</p>
+
+<p>Il faut également mettre à jour le POM du module contenant les tests :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;build&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;plugins&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>groupId<span class="ni">&amp;gt;</span>org.jacoco<span class="ni">&amp;lt;</span>/groupId<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>artifactId<span class="ni">&amp;gt;</span>maven-jacoco-plugin<span class="ni">&amp;lt;</span>/artifactId<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>artifactId<span class="ni">&amp;gt;</span>maven-failsafe-plugin<span class="ni">&amp;lt;</span>/artifactId<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'><span class="nt">&lt;/build&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>Couverture avec Sonar</h1>
+
+<p>Maintenant que nous avons nos données de couverture dans un fichier, il serait intéressant de les faire digérés à Sonar lors de son analyse. Depuis la version 2.12, <a href="http://www.sonarsource.org/">Sonar</a> est livré avec le plugin JaCoCo ; pour les précédentes il faudra l’installer depuis l’<em>update center</em>.</p>
+
+<p>Le plugin JaCoCo de Sonar attend à trouver le chemin vers le fichier de collecte des données dans la variable `sonar.jacoco.itReportPath. Il est possible de configurer ce chemin dans l’interface web de Sonar (menu <em>settings</em>, catégorie <em>JaCoCo</em>, paramètre <em>File with execution data for integration tests</em>) mais cette variable peut également être configurée dans le POM.</p>
+
+<p>Voilà donc la version définitive du profil :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>run-its<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>modules<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>module<span class="ni">&amp;gt;</span>libfoo-it<span class="ni">&amp;lt;</span>/module<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/modules<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>build<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>pluginManagement<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>plugins<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>groupId<span class="ni">&amp;gt;</span>org.jacoco<span class="ni">&amp;lt;</span>/groupId<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>artifactId<span class="ni">&amp;gt;</span>maven-jacoco-plugin<span class="ni">&amp;lt;</span>/artifactId<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>version<span class="ni">&amp;gt;</span>0.5.3.201107060350<span class="ni">&amp;lt;</span>/version<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>phase<span class="ni">&amp;gt;</span>pre-integration-test<span class="ni">&amp;lt;</span>/phase<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>              <span class="ni">&amp;lt;</span>goal<span class="ni">&amp;gt;</span>prepare-agent<span class="ni">&amp;lt;</span>/goal<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>/execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>propertyName<span class="ni">&amp;gt;</span>it.failsafe.argLine<span class="ni">&amp;lt;</span>/propertyName<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>destFile<span class="ni">&amp;gt;</span>${it.jacoco.destFile}<span class="ni">&amp;lt;</span>/destFile<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>/plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>artifactId<span class="ni">&amp;gt;</span>maven-failsafe-plugin<span class="ni">&amp;lt;</span>/artifactId<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>version<span class="ni">&amp;gt;</span>2.11<span class="ni">&amp;lt;</span>/version<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>              <span class="ni">&amp;lt;</span>goal<span class="ni">&amp;gt;</span>integration-test<span class="ni">&amp;lt;</span>/goal<span class="ni">&amp;gt;</span>
+</span><span class='line'>            <span class="ni">&amp;lt;</span>/goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>/execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>argLine<span class="ni">&amp;gt;</span>${it.failsafe.argLine}<span class="ni">&amp;lt;</span>/argLine<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>/plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/plugins<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/pluginManagement<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/build<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>properties<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>it.jacoco.destFile<span class="ni">&amp;gt;</span>${java.io.tmpdir}/jacoco-foo.dump<span class="ni">&amp;lt;</span>/it.jacoco.destFile<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>sonar.jacoco.itReportPath<span class="ni">&amp;gt;</span>${it.jacoco.destFile}<span class="ni">&amp;lt;</span>/sonar.jacoco.itReportPath<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/properties<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Il ne reste plus qu’à lancer l’analyse avec Sonar :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[/~]$ mvn -Prun-its clean verify sonar:sonar</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Finalement, après avoir ajouté le widget Integration test coverage dans le dashboard, on obtient ce résultat :</p>
+
+<p><img class="center" src="/images/posts/sonar-coverage-it-20120123.png" title="'Code coverage avec Sonar'" ></p>
+
+<h1>Pistes d’améliorations</h1>
+
+<p>Cette solution est un peu brute de décoffrage et pour dire vrai entre le début de l’écriture de ce post et maintenant j’ai eu quelques idées pour l’améliorer :</p>
+
+<ul>
+<li>Passer la configuration du profil dans un super POM dont héritent tous les projets. En effet, mis à part le paramètre `destFile il n’y a rien de spécifique dans cette configuration. On pourrait même imaginer la génération d’un nom de fichier aléatoire à chaque lancement.</li>
+<li>Utiliser plusieurs modules de tests d’intégration. Pour cela il faut mettre le paramètre supplémentaire <code>append</code> à <em>true</em> dans le plugin maven JaCoCo afin que les données d’exécution de tous les modules soient collectées dans le même fichier.</li>
+</ul>
+
+
+<p>Et si vous avez d’autres idées, n’hésitez pas à les poster dans les commentaires.</p>
+]]></content>
+  </entry>
+  
+</feed>

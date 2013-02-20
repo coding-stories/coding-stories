@@ -1,0 +1,1142 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Coding Stories</title>
+  <meta name="author" content="Jean-Christophe Sirot">
+
+  
+  <meta name="description" content="J’ai procédé à la release de la bibliothèque jsChessboard en version 0.2. jsChessboard est une bibliothèque qui permet d’interpréter des parties d’ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://coding-stories.github.com/coding-stories/blog/page/4/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Coding Stories" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">cs</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">Coding Stories</a></h1>
+  
+    <h2>Singe savant en ingénierie logicielle</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:coding-stories.github.com/coding-stories" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/digest-js">digest.js</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/a-propos/">À Propos</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2010/06/09/jschessboard-0-2-est-disponible/">jsChessboard 0.2 Est Disponible</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-09T15:24:00+02:00" pubdate data-updated="true"> 9 jun 2010</time>
+        
+         | <a href="/blog/2010/06/09/jschessboard-0-2-est-disponible/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>J’ai procédé à la release de la bibliothèque jsChessboard en version 0.2. jsChessboard est une bibliothèque qui permet d’interpréter des parties d’échecs et de dessiner des échiquiers, le tout entièrement en javascript en utilisant le tag <code>&lt;canvas&gt;</code>.</p>
+
+<p>Les objectifs fixés pour la version 0.3 :</p>
+
+<ul>
+<li>fournir un plugin jQuery ;</li>
+<li>permettre d’afficher les numéros de rangées/colonnes ;</li>
+<li>permettre la personnalisation des pièces, des couleurs ;</li>
+<li>avoir un <em>vrai viewer</em> <a href="http://fr.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> en HTML5/javascript</li>
+<li><strong>ajouter des tests unitaires !</strong></li>
+</ul>
+
+
+<p>Le site du projet : <a href="http://jschessboard.com">http://jschessboard.com</a></p>
+
+<p>Pour voir la bibliothèque en action, il y quelques démos sur le site du projet <a href="http://jschessboard.com/svn/trunk/examples/operagame.html">ici</a>, <a href="http://jschessboard.com/svn/trunk/examples/checkmate.html">là</a> ou encore <a href="http://jschessboard.com/svn/trunk/examples/fen.html">là</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2010/05/31/verifier-le-jira-avant-de-faire-la-release/">Vérifier Le JIRA Avant De Faire La Release</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-31T15:30:00+02:00" pubdate data-updated="true">31 mai 2010</time>
+        
+         | <a href="/blog/2010/05/31/verifier-le-jira-avant-de-faire-la-release/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Quand je coiffe ma casquette de <em>release manager</em> je dois m’assurer que le logiciel que je prépare à affubler d’un joli numéro de version est prêt. Le code n’est pas tout ; il existe une multitude de petits détails à vérifier pour satisfaire les critères de qualité demandés : les tests (unitaires, d’intégration) passent ils ? Le <em>coding style</em> a-t-il été bien respecté ? Les dépendences sont-elles à jour ? Je me suis donc fait une <em>release checklist</em> qui détaille point par point toutes ces tâches.</p>
+
+<h1>Automatisez !</h1>
+
+<p>En bon informaticien pragmatique je connais le bug de l’interface chaise-clavier : tout ce qui est fait à la main est une intarissable source de problèmes et il m’arrive parfois de faire une bêtise, ce qui a le don de me mettre de fort mauvaise humeur.</p>
+
+<p>Comme je suis -fainéant- consciencieux, je cherche donc à automatiser le maximum de tâches. Dans ma checklist se trouve le point suivant : S’assurer que tous les tickets dans le JIRA sont fermés. Mon objectif : annuler le lancement de la release quand cette condition n’est pas remplie.</p>
+
+<h1>JIRA par RPC</h1>
+
+<p>Dans une premier temps il faut accéder à JIRA pour récupérer la liste des issues qui nous intéressent. Pour cela JIRA met à disposition deux interfaces RPC : XML-RPC et SOAP. On utilisera SOAP, non pas par plaisir car je trouve XML-RPC beaucoup plus simple, mais parce que l’API disponible par XML-RPC est moins riche et surtout ne fournit pas la méthode dont on a besoin.</p>
+
+<p>Le descripteur WSDL est normalement servit par JIRA. En supposant que JIRA est installé à l’URL « `http://jira.chelonix.com/ » alors le WSDL peut être téléchargé à l’URL suivante :</p>
+
+<p><code>http://jira.chelonix.com/rpc/soap/jirasoapservice-v2?wsdl</code></p>
+
+<p>Pour utiliser l’API SOAP de JIRA il va falloir enrichir son pom.xml de quelques dépendances à la bibliothèque <a href="http://ws.apache.org/axis/">Axis</a> de la fondation Apache.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>    <span class="c">&lt;!-- Axis dependencies --&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>axis<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>axis<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>1.3<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>axis<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>axis-jaxrpc<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>1.3<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>axis<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>axis-saaj<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>1.3<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>axis<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>axis-wsdl4j<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>1.5.1<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Toujours dans le <code>pom.xml</code> on ajoute un appel au plugin axistools-maven-plugin. Lors de la phase <em>generate-sources</em>, le fichier WSDL va être utilisé pour auto-générer les classes du client SOAP.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;groupId&gt;</span>org.codehaus.mojo<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;artifactId&gt;</span>axistools-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;version&gt;</span>1.3<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;dependencies&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>axis<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>axis<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>1.3<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/dependencies&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;wsdlFiles&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;wsdlFile&gt;</span>jirasoapservice-v2.wsdl<span class="nt">&lt;/wsdlFile&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/wsdlFiles&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;packageSpace&gt;</span>com.atlassian.jira.rpc.soap.client<span class="nt">&lt;/packageSpace&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;id&gt;</span>wsdl2java-generation<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;phase&gt;</span>generate-sources<span class="nt">&lt;/phase&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;goal&gt;</span>wsdl2java<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/build&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le plugin s’attend à trouver le WSDL dans le répertoire <code>${basedir}/src/main/wsdl</code>. Pense à l’y mettre ou à modifier la propriété <code>sourceDirectory</code> dans la configuration du plugin.
+Une fois que le projet a été configuré, il ne reste plus qu’à coder :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">chelonix</span><span class="o">.</span><span class="na">jira</span><span class="o">.</span><span class="na">rpc</span><span class="o">.</span><span class="na">soap</span><span class="o">.</span><span class="na">client</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.atlassian.jira.rpc.exception.RemoteException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.atlassian.jira.rpc.soap.client.JiraSoapService</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.atlassian.jira.rpc.soap.client.JiraSoapServiceService</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.atlassian.jira.rpc.soap.client.JiraSoapServiceServiceLocator</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.atlassian.jira.rpc.soap.client.RemoteIssue</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * A JIRA SOAP client checking for opened issues for a project/version couple.</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IssueChecker</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">URL</span> <span class="o">=</span> <span class="s">&quot;http://jira.chelonix.com/rpc/soap/jirasoapservice-v2&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">IssueCherker</span> <span class="n">checker</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IssueChecker</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">RemoteIssue</span><span class="o">[]</span> <span class="n">issues</span> <span class="o">=</span> <span class="n">checker</span><span class="o">.</span><span class="na">check</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">],</span> <span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="n">RemoteIssue</span> <span class="nl">issue:</span> <span class="n">issues</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Opened issue: %s&quot;</span><span class="o">,</span> <span class="n">issue</span><span class="o">.</span><span class="na">getKey</span><span class="o">());</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">JiraSoapService</span> <span class="n">jiraSoapService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">IssueChecker</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="n">JiraSoapServiceService</span> <span class="n">jiraSoapServiceLocator</span> <span class="o">=</span>
+</span><span class='line'>            <span class="k">new</span> <span class="nf">JiraSoapServiceServiceLocator</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">jiraSoapService</span> <span class="o">=</span> <span class="n">jiraSoapServiceLocator</span><span class="o">.</span><span class="na">getJirasoapserviceV2</span><span class="o">(</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">URL</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">RemoteIssue</span><span class="o">[]</span> <span class="nf">check</span><span class="o">(</span><span class="n">String</span> <span class="n">projectKey</span><span class="o">,</span> <span class="n">String</span> <span class="n">version</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">RemoteException</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">token</span> <span class="o">=</span> <span class="n">jiraSoapService</span><span class="o">.</span><span class="na">login</span><span class="o">(</span><span class="s">&quot;login&quot;</span><span class="o">,</span> <span class="s">&quot;password&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">query</span> <span class="o">=</span> <span class="n">MessageFormat</span><span class="o">.</span><span class="na">format</span><span class="o">(</span>
+</span><span class='line'>            <span class="s">&quot;project=&#39;&#39;{0}&#39;&#39; AND FixVersion=&#39;&#39;{1}&#39;&#39; AND status!=&#39;&#39;Closed&#39;&#39;&quot;</span><span class="o">,</span>
+</span><span class='line'>            <span class="n">project</span><span class="o">,</span> <span class="n">version</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">jiraSoapService</span><span class="o">.</span><span class="na">getIssuesFromJqlSearch</span><span class="o">(</span><span class="n">token</span><span class="o">,</span> <span class="n">query</span><span class="o">,</span> <span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pour plus de détails, la documentation des services RPC de JIRA est là : <a href="http://confluence.atlassian.com/display/JIRA/JIRA+RPC+Services">http://confluence.atlassian.com/display/JIRA/JIRA+RPC+Services</a></p>
+
+<h1>Créer des règles…</h1>
+
+<p>Maintenant qu’on peut savoir s’il reste des issues ouvertes pour un projet/version donné, il faut faire en sorte que l’appel <code>mvn release:prepare</code> échoue quand c’est le cas. Pour cela on va utiliser le plugin <a href="http://maven.apache.org/plugins/maven-enforcer-plugin/">maven-enforcer-plugin</a>. Ce plugin permet de subordonner la compilation à la vérification d’un certain nombre de contraintes telles que la version de maven, la version du JDK, la présence de certains fichiers, etc.</p>
+
+<p>Le plugin permet également d’ajouter ses propres règles. On peut donc en créer une se basant sur la classe <code>IssueChecker</code>.</p>
+
+<p>D’abord on ajoute quelques dépendances au pom.xml :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;dependencies&gt;</span>
+</span><span class='line'>    <span class="c">&lt;!-- Enforcer dependencies --&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.apache.maven.enforcer<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>enforcer-api<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>${api.version}<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.apache.maven<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>maven-project<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>${maven.version}<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.apache.maven<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>maven-core<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>${maven.version}<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.apache.maven<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>maven-artifact<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>${maven.version}<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.apache.maven<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>maven-plugin-api<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>${maven.version}<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.codehaus.plexus<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>plexus-container-default<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;version&gt;</span>1.0-alpha-9<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/dependencies&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Puis il faut écrire une implémentation de l’interface <a href="http://maven.apache.org/enforcer/enforcer-api/apidocs/index.html">EnforcerRule</a> :</p>
+
+<figure class='code'><figcaption><span>url link-text </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">chelonix</span><span class="o">.</span><span class="na">maven</span><span class="o">.</span><span class="na">enforcer</span><span class="o">.</span><span class="na">rule</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.text.MessageFormat</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.atlassian.jira.rpc.exception.RemoteException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.atlassian.jira.rpc.soap.client.RemoteIssue</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.maven.enforcer.rule.api.EnforcerRule</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.maven.enforcer.rule.api.EnforcerRuleException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.maven.enforcer.rule.api.EnforcerRuleHelper</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * Implementation of the EnforcerRule verifying whether there is any remaining unclosed issues.</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JiraOpenIssuesRule</span> <span class="kd">implements</span> <span class="n">EnforcerRule</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">shouldIfail</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">(</span><span class="n">EnforcerRuleHelper</span> <span class="n">helper</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">EnforcerRuleException</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">MavenProject</span> <span class="n">project</span> <span class="o">=</span> <span class="o">(</span><span class="n">MavenProject</span><span class="o">)</span><span class="n">helper</span><span class="o">.</span><span class="na">evaluate</span><span class="o">(</span><span class="s">&quot;${project}&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">String</span> <span class="n">version</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="na">getVersion</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">String</span> <span class="n">projectKey</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span><span class="n">helper</span><span class="o">.</span><span class="na">evaluate</span><span class="o">(</span><span class="s">&quot;${jira.project.key}&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">IssueChecker</span> <span class="n">checker</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IssueChecker</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">RemoteIssue</span><span class="o">[]</span> <span class="n">issues</span> <span class="o">=</span> <span class="n">checker</span><span class="o">.</span><span class="na">check</span><span class="o">(</span><span class="n">projectKey</span><span class="o">,</span> <span class="n">version</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">shouldIfail</span> <span class="o">=</span> <span class="n">issues</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ExpressionEvaluationException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">EnforcerRuleException</span><span class="o">(</span><span class="s">&quot;Unable to lookup an expression &quot;</span> <span class="o">+</span>
+</span><span class='line'>                <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RemoteException</span> <span class="n">re</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">EnforcerRuleException</span><span class="o">(</span><span class="s">&quot;SOAP Remote exception &quot;</span> <span class="o">+</span>
+</span><span class='line'>                <span class="n">re</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">re</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">shouldIfail</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">EnforcerRuleException</span><span class="o">(</span><span class="s">&quot;Remaining unclosed issues&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isCacheable</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isResultValid</span><span class="o">(</span><span class="n">EnforcerRule</span> <span class="n">er</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCacheId</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pensez à ajouter une propriété <code>jira.project.key</code> indiquant la clé du projet JIRA dans le <code>pom.xml</code> du projet dont on fait la release.</p>
+
+<h1>… Et les faire appliquer</h1>
+
+<p>Finalement il n’y a plus qu’à appeler le plugin Enforcer lors de la release. Dans le <code>pom.xml</code> du projet à releaser on va ajouter le code suivant :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;build&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>    ...
+</span><span class='line'>        <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;artifactId&gt;</span>maven-release-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;version&gt;</span>2.0<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;preparationGoals&gt;</span>clean verify enforcer:enforce<span class="nt">&lt;/preparationGoals&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;arguments&gt;</span>-Prelease<span class="nt">&lt;/arguments&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;goals&gt;</span>deploy<span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;autoVersionSubmodules&gt;</span>true<span class="nt">&lt;/autoVersionSubmodules&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>    ...
+</span><span class='line'>    <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'><span class="nt">&lt;build&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;id&gt;</span>releaseVerify<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;artifactId&gt;</span>maven-enforcer-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;dependencies&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;dependency&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>com.chelonix.maven.enforcer<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>jira-rules<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>${jirarules.version}<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/dependency&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/dependencies&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;rules&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;myCustomRule</span> <span class="na">implementation=</span><span class="s">&quot;com.chelonix.maven.enforcer.rule.JiraOpenIssuesRule&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;shouldIfail&gt;</span>false<span class="nt">&lt;/shouldIfail&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/myCustomRule&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/rules&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/build&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profile&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Quelques remarques : j’ai créé un profil <code>releaseVerify</code> afin de définir des règles utilisées uniquement lors de la release. Ensuite j’ai ajouté l’appel <code>enforcer:enforce</code> au paramètre de configuration <code>preparationGoals. Ce paramètre permet de définir une liste de _goals_ à exécuter lors de</code>release:prepare<code>. Par défaut ce sont les goals</code>clean verify<code>qui sont exécutés. Enfin j’ai ajouté le paramètre arguments avec la valeur</code>-PreleaseVerify` pour forcer l’usage du profil.</p>
+
+<h1>Conclusion</h1>
+
+<p>Désormais toute tentative de release avec des tickets encore ouverts dans le JIRA va échouer. Cela ne me dispense pas de faire la vérification mais me prémunit contre un éventuel oubli. Toutefois le code est encore loin d’être parfait (par exemple il y a un risque de NullPointerException quand <code>jira.project.key</code> n’est pas défini).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2010/05/20/crible-deratosthene-en-scala/">Crible D’Ératosthène en Scala</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-20T15:50:00+02:00" pubdate data-updated="true">20 mai 2010</time>
+        
+         | <a href="/blog/2010/05/20/crible-deratosthene-en-scala/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Le <a href="http://fr.wikipedia.org/wiki/Crible_d">crible d’Ératosthène</a> est un grand classique des langages fonctionnels :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">primes</span> <span class="o">(</span><span class="n">end</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">sieve</span> <span class="o">(</span><span class="n">list</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">list</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="nc">List</span><span class="o">()</span>
+</span><span class='line'>      <span class="k">case</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs</span> <span class="k">=&gt;</span> <span class="nc">List</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="o">++</span> <span class="n">sieve</span><span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span> <span class="o">%</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">))</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  <span class="n">sieve</span><span class="o">(</span><span class="nc">List</span><span class="o">.</span><span class="n">range</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">end</span><span class="o">))</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Faisons un test :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">scala</span><span class="o">&gt;</span> <span class="n">primes</span><span class="o">(</span><span class="mi">100</span><span class="o">)</span>
+</span><span class='line'><span class="n">res0</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">13</span><span class="o">,</span> <span class="mi">17</span><span class="o">,</span> <span class="mi">19</span><span class="o">,</span> <span class="mi">23</span><span class="o">,</span> <span class="mi">29</span><span class="o">,</span> <span class="mi">31</span><span class="o">,</span> <span class="mi">37</span><span class="o">,</span> <span class="mi">41</span><span class="o">,</span> <span class="mi">43</span><span class="o">,</span> <span class="mi">47</span><span class="o">,</span> <span class="mi">53</span><span class="o">,</span> <span class="mi">59</span><span class="o">,</span> <span class="mi">61</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">71</span><span class="o">,</span> <span class="mi">73</span><span class="o">,</span> <span class="mi">79</span><span class="o">,</span> <span class="mi">83</span><span class="o">,</span> <span class="mi">89</span><span class="o">,</span> <span class="mi">97</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2010/05/19/android-2-1-passe-en-tete/">Android 2.1 Passe en Tête</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-19T22:51:00+02:00" pubdate data-updated="true">19 mai 2010</time>
+        
+         | <a href="/blog/2010/05/19/android-2-1-passe-en-tete/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Google vient de <a href="http://developer.android.com/resources/dashboard/platform-versions.html">mettre à jour</a> ses données concernant la répartition des différentes versions d’android :</p>
+
+<p><img class="center" src="/images/posts/android_fragmentation-20100519.png" width="370" title="Répartition des version Android" alt="Répartition des version Android"></p>
+
+<p>Ces chiffres ont été collectés à partir des statistiques de connexion à l’Android Market. Voilà ce que cela donne :</p>
+
+<table>
+    <tr><th>Android Platform</th><th>Percent of Devices</th></tr>
+    <tr><td>Android 1.1</td><td>0.1%</td></tr>
+    <tr><td>Android 1.5</td><td>34.1%</td></tr>
+    <tr><td>Android 1.6</td><td>28.0%</td></tr>
+    <tr><td>Android 2.0</td><td>0.2%</td></tr>
+    <tr><td>Android 2.0.1</td><td>0.4%</td></tr>
+    <tr><td>Android 2.1</td><td>37.2%</td></tr>
+</table>
+
+
+<p>C’est en comparant avec les même données du mois dernier que cela devient intéressant : Android 2.1 passe de 27,3% à 37,2% de part de marché, soit une augmentation de presque 10%. À l’opposé, les versions 1.5 et 1.6 perdent respectivement 3,8% et 3,6%. Cela veut surtout dire que la version 2.1 est désormais la version majoritairement déployée sur l’ensemble des terminaux Android.</p>
+
+<p>En supposant que ces chiffres soit représentatifs du parc (<a href="http://www.sosandroid.fr/andropress/2010/05/18/android-eclair-2-1-devient-la-principale-version-deployee-3821/">et SOS Android a fait quelques comparaisons et semble le croire</a>), on assiste, lentement mais sûrement, à une concentration des versions diffusées. Les améliorations entre 1.x et les 2.x ayant réellement amélioré la qualité de l’OS, cette concentration est plutôt une bonne nouvelle.</p>
+
+<p>À moins que la version 2.2, alias <em>Froyo</em>, ne vienne changer la donne.</p>
+
+<p><strong>Update</strong> Après plusieurs mois de rumeurs HTC vient de publier la première mise à jour officielle du Hero (Uniquement chez Sprint pour le moment).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2010/05/17/quicksort-en-scala/">Quicksort en Scala</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-17T23:21:00+02:00" pubdate data-updated="true">17 mai 2010</time>
+        
+         | <a href="/blog/2010/05/17/quicksort-en-scala/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Retour aux racines du génie logiciel : le tri. Tout développeur doit savoir écrire un tri en moins de 5 minutes.</p>
+
+<p>Comment faire un quicksort en Scala ?</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">sort</span> <span class="o">(</span><span class="n">list</span> <span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span> <span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">list</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">list</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs</span> <span class="k">=&gt;</span> <span class="n">sort</span><span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span> <span class="o">&lt;</span> <span class="n">x</span><span class="o">))</span> <span class="o">++</span> <span class="nc">List</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="o">++</span> <span class="n">sort</span><span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="o">))</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ça marche pour les int. Mais si je veux trier des float, des String, des Scoubidou ? Il faudrait généraliser la fonction. Pour cela il existe le trait `Ordered qui permet de définir une relation d’ordre total sur les éléments.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">sort</span> <span class="o">[</span><span class="kt">A</span> <span class="k">&lt;%</span> <span class="kt">Ordered</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="o">(</span><span class="n">list</span><span class="k">:</span><span class="kt">Seq</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">list</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">list</span>
+</span><span class='line'>    <span class="k">case</span> <span class="n">x</span> <span class="o">::</span> <span class="n">xs</span> <span class="k">=&gt;</span> <span class="n">sort</span><span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span> <span class="o">&lt;</span> <span class="n">x</span><span class="o">))</span> <span class="o">++</span> <span class="nc">List</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="o">++</span> <span class="n">sort</span><span class="o">(</span><span class="n">xs</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="o">))</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>L’expression `[A &lt;% Ordered[A]] est une <em>view bound</em>. Cela permet de définir une fonction polymorphique mais aussi fournit la conversion implicite du type A en Ordered[A]. En fait cette définition :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">sort</span> <span class="o">[</span><span class="kt">A</span> <span class="k">&lt;%</span> <span class="kt">Ordered</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="o">(</span><span class="n">list</span><span class="k">:</span><span class="kt">Seq</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span> <span class="cm">/* ... */</span> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>est équivalente à :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">sort</span> <span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="o">(</span><span class="n">list</span><span class="k">:</span><span class="kt">Seq</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">conv</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Ordered</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span> <span class="cm">/* ... */</span> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Avantage : l’objet <code>scala.Predef</code> qui est tourjours chargé par Scala possède déjà plusieurs fonctions implicites de converstion par exemple <code>Int</code> vers <code>Ordered[Int]</code>.</p>
+
+<p>Et si maintenant nous compararions nos scoubidous ?</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">case</span> <span class="k">class</span> <span class="nc">Scoubidou</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+</span><span class='line'><span class="k">val</span> <span class="n">samy</span> <span class="k">=</span> <span class="nc">Scoubidou</span><span class="o">(</span><span class="s">&quot;Samy&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="k">val</span> <span class="n">daphne</span> <span class="k">=</span> <span class="nc">Scoubidou</span><span class="o">(</span><span class="s">&quot;Daphne&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="n">sort</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="n">samy</span><span class="o">,</span> <span class="n">daphne</span><span class="o">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">error</span><span class="k">:</span> <span class="kt">no</span> <span class="kt">implicit</span> <span class="kt">argument</span> <span class="kt">matching</span> <span class="kt">parameter</span> <span class="k">type</span> <span class="o">(</span><span class="kt">Scoubidou</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">Ordered</span><span class="o">[</span><span class="kt">Scoubidou</span><span class="o">]</span> <span class="n">was</span> <span class="n">found</span><span class="o">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Et oui, sort attend un <code>Ordered</code>. Bien sûr nous pourrions nous arranger pour que Scoubidou étende le trait Ordered mais parfois ce n’est simplement pas possible, par exemple parce que le type est fournit par une bibliothèque sur laquelle on n’a pas la main. Mais il est possible de définir une fonction implicite de conversion qui trie les Scoubidou selon l’ordre lexicographique (en clair on va déléguer l’appel à compare au champ name).</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">implicit</span> <span class="k">def</span> <span class="n">scoubidou2ordered</span> <span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Scoubidou</span><span class="o">)</span><span class="k">:</span> <span class="kt">Ordered</span><span class="o">[</span><span class="kt">Scoubidou</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">new</span> <span class="nc">Ordered</span><span class="o">[</span><span class="kt">Scoubidou</span><span class="o">]</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">def</span> <span class="n">compare</span><span class="o">(</span><span class="n">that</span><span class="k">:</span> <span class="kt">Scoubidou</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">compare</span><span class="o">(</span><span class="n">that</span><span class="o">.</span><span class="n">name</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>et maintenant on peut trier la liste :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">sort</span><span class="o">(</span><span class="nc">List</span><span class="o">(</span><span class="n">samy</span><span class="o">,</span> <span class="n">daphne</span><span class="o">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&gt;</span> <span class="nc">Seq</span><span class="o">[</span><span class="kt">Scoubidou</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Scoubidou</span><span class="o">(</span><span class="nc">Daphne</span><span class="o">),</span> <span class="nc">Scoubidou</span><span class="o">(</span><span class="nc">Samy</span><span class="o">))</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2010/05/16/le-zoo-est-ouvert/">Le Zoo Est Ouvert</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-16T23:28:00+02:00" pubdate data-updated="true">16 mai 2010</time>
+        
+         | <a href="/blog/2010/05/16/le-zoo-est-ouvert/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Le combat fut rude, les erreurs absconses, n’étant pas grand amateur de PHP, mais finalement ce blog est installé. S’il reste encore pas mal de chose à terminer, l’essentiel fonctionne. Reste à avoir des choses à raconter et du temps pour le faire.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/code-story-2013/">Code Story 2013 : la phase de sélection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/">Un mois avec IntelliJ - début de l&#8217;expérience</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/">Migration du blog vers Octopress/Github</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/">Mocker un serveur de mail avec Dumbster et JUnit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/">Exclure certaines classes de la couverture des tests unitaires</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("jcsirot", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/jcsirot" class="twitter-follow-button" data-show-count="false">Follow @jcsirot</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/jcsirot?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Category Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 121.81818181818181%'>android</a> <a href='/blog/categories/bytecode' style='font-size: 105.45454545454545%'>bytecode</a> <a href='/blog/categories/chess' style='font-size: 110.9090909090909%'>chess</a> <a href='/blog/categories/cobertura' style='font-size: 110.9090909090909%'>cobertura</a> <a href='/blog/categories/code' style='font-size: 116.36363636363636%'>code</a> <a href='/blog/categories/code-coverage' style='font-size: 105.45454545454545%'>code coverage</a> <a href='/blog/categories/compiler' style='font-size: 105.45454545454545%'>compiler</a> <a href='/blog/categories/conference' style='font-size: 121.81818181818181%'>conference</a> <a href='/blog/categories/confluence' style='font-size: 105.45454545454545%'>confluence</a> <a href='/blog/categories/cryptography' style='font-size: 105.45454545454545%'>cryptography</a> <a href='/blog/categories/dart' style='font-size: 105.45454545454545%'>dart</a> <a href='/blog/categories/devoxx' style='font-size: 110.9090909090909%'>devoxx</a> <a href='/blog/categories/dvcs' style='font-size: 110.9090909090909%'>DVCS</a> <a href='/blog/categories/ecc' style='font-size: 105.45454545454545%'>ECC</a> <a href='/blog/categories/elliptic-curve' style='font-size: 105.45454545454545%'>elliptic curve</a> <a href='/blog/categories/framework' style='font-size: 110.9090909090909%'>framework</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git</a> <a href='/blog/categories/google' style='font-size: 127.27272727272728%'>google</a> <a href='/blog/categories/hero' style='font-size: 105.45454545454545%'>hero</a> <a href='/blog/categories/htc' style='font-size: 105.45454545454545%'>htc</a> <a href='/blog/categories/html5' style='font-size: 105.45454545454545%'>html5</a> <a href='/blog/categories/http' style='font-size: 105.45454545454545%'>HTTP</a> <a href='/blog/categories/https' style='font-size: 110.9090909090909%'>HTTPS</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE</a> <a href='/blog/categories/intellij' style='font-size: 105.45454545454545%'>IntelliJ</a> <a href='/blog/categories/ios' style='font-size: 105.45454545454545%'>iOS</a> <a href='/blog/categories/jacoco' style='font-size: 105.45454545454545%'>JaCoCo</a> <a href='/blog/categories/java' style='font-size: 160.0%'>java</a> <a href='/blog/categories/java7' style='font-size: 105.45454545454545%'>java7</a> <a href='/blog/categories/javascript' style='font-size: 110.9090909090909%'>javascript</a> <a href='/blog/categories/jira' style='font-size: 105.45454545454545%'>jira</a> <a href='/blog/categories/jschessboard' style='font-size: 105.45454545454545%'>jsChessboard</a> <a href='/blog/categories/jug' style='font-size: 110.9090909090909%'>JUG</a> <a href='/blog/categories/junit' style='font-size: 105.45454545454545%'>junit</a> <a href='/blog/categories/keynote' style='font-size: 105.45454545454545%'>keynote</a> <a href='/blog/categories/ldap' style='font-size: 105.45454545454545%'>ldap</a> <a href='/blog/categories/log' style='font-size: 105.45454545454545%'>log</a> <a href='/blog/categories/maven' style='font-size: 116.36363636363636%'>maven</a> <a href='/blog/categories/maven-cobertura-plugin' style='font-size: 105.45454545454545%'>maven-cobertura-plugin</a> <a href='/blog/categories/maven-enforcer-plugin' style='font-size: 105.45454545454545%'>maven-enforcer-plugin</a> <a href='/blog/categories/maven-failsafe-plugin' style='font-size: 105.45454545454545%'>maven-failsafe-plugin</a> <a href='/blog/categories/maven-jacoco-plugin' style='font-size: 105.45454545454545%'>maven-jacoco-plugin</a> <a href='/blog/categories/maven-jarsigner-plugin' style='font-size: 105.45454545454545%'>maven-jarsigner-plugin</a> <a href='/blog/categories/maven-release-plugin' style='font-size: 110.9090909090909%'>maven-release-plugin</a> <a href='/blog/categories/mock' style='font-size: 105.45454545454545%'>mock</a> <a href='/blog/categories/netbeans' style='font-size: 105.45454545454545%'>NetBeans</a> <a href='/blog/categories/objective-c' style='font-size: 105.45454545454545%'>objective-c</a> <a href='/blog/categories/parleys' style='font-size: 116.36363636363636%'>parleys</a> <a href='/blog/categories/pgn' style='font-size: 105.45454545454545%'>PGN</a> <a href='/blog/categories/play' style='font-size: 110.9090909090909%'>play</a> <a href='/blog/categories/proxy' style='font-size: 105.45454545454545%'>proxy</a> <a href='/blog/categories/qualite' style='font-size: 105.45454545454545%'>qualite</a> <a href='/blog/categories/quality' style='font-size: 110.9090909090909%'>quality</a> <a href='/blog/categories/rsa' style='font-size: 105.45454545454545%'>RSA</a> <a href='/blog/categories/scala' style='font-size: 121.81818181818181%'>scala</a> <a href='/blog/categories/security' style='font-size: 127.27272727272728%'>security</a> <a href='/blog/categories/software-craftsmanship' style='font-size: 105.45454545454545%'>software craftsmanship</a> <a href='/blog/categories/sonar' style='font-size: 110.9090909090909%'>sonar</a> <a href='/blog/categories/spring' style='font-size: 105.45454545454545%'>spring</a> <a href='/blog/categories/ssl' style='font-size: 116.36363636363636%'>SSL</a> <a href='/blog/categories/test' style='font-size: 121.81818181818181%'>test</a> <a href='/blog/categories/tls' style='font-size: 116.36363636363636%'>TLS</a> <a href='/blog/categories/uncle-bob' style='font-size: 105.45454545454545%'>Uncle Bob</a> <a href='/blog/categories/video' style='font-size: 105.45454545454545%'>video</a> <a href='/blog/categories/web' style='font-size: 116.36363636363636%'>web</a> <a href='/blog/categories/wiki' style='font-size: 105.45454545454545%'>wiki</a> </span>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Jean-Christophe Sirot -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> -
+  Theme <a href="https://github.com/amelandri/darkstripes">DarkStripes</a> by Alessandro Melandri
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'codingst';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'http://platform.linkedin.com/in.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

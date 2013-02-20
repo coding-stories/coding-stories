@@ -1,0 +1,506 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>SSL/TLS en Java – Partie 1 - Coding Stories</title>
+  <meta name="author" content="Jean-Christophe Sirot">
+
+  
+  <meta name="description" content="J’ai pensé appeler cet article «Pourquoi SSL ne marche pas ?». En effet j’ai lu beaucoup de questions sur des forums posées par des développeurs qui &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://coding-stories.github.com/coding-stories/blog/2011/07/02/ssltls-en-java-partie-1/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Coding Stories" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">cs</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">Coding Stories</a></h1>
+  
+    <h2>Singe savant en ingénierie logicielle</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:coding-stories.github.com/coding-stories" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/digest-js">digest.js</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/a-propos/">À Propos</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">SSL/TLS en Java – Partie 1</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-02T21:45:00+02:00" pubdate data-updated="true"> 2 jui 2011</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>J’ai pensé appeler cet article «<em>Pourquoi SSL ne marche pas ?</em>». En effet j’ai lu beaucoup de questions sur des forums posées par des développeurs qui n’arrivaient pas à faire fonctionner SSL entre le serveur et les clients ; le plus souvent le développeur ne sait pas très bien comment fonctionne le protocole et il n’arrive pas à diagnostiquer les problèmes ; j’espère que cette série article aidera ceux qui se battent encore avec les erreurs du type <code>alert=42</code> (si si, je vous assure que c’est une vraie erreur :)).</p>
+
+<!-- more -->
+
+
+<h1>SSL en quelques mot</h1>
+
+<p>D’abord un peu de vocabulaire, on lis souvent SSL, TLS ou encore SSL/TLS. Pour faire court, tout ça c’est la même chose. Pour entrer un peu dans les détails, SSL a été inventé par Netscape qui publia SSL 2.0 en 1995 puis SSL 3.0 en 1996. Puis ce fut le <a href="http://datatracker.ietf.org/wg/tls/">TLS Working Group</a> membre de l’IETF qui repris le standard en publiant TLS 1.0 (aussi appelé SSL 3.1) en 1999, TLS 1.1 en 2006 et TLS 1.2 en 2008. Pour la petite histoire, SSL apparait toujours dans TLS car la structure de données contenant le numéro de version du protocole vaut 3.1 pour TLS 1.0, 3.2 pour TLS 1.1 et 3.3 pour TLS 1.2.</p>
+
+<p>Mais finalement à quoi ça sert exactement ? SSL fournit un canal sécurisé entre un client et un serveur en fournissant les services suivants :</p>
+
+<ul>
+<li>chiffrement des messages</li>
+<li>intégrité des message (utilisation d’un <a href="http://fr.wikipedia.org/wiki/Code_d%27authentification_de_message"><em>Message Authentication Code</em></a>)</li>
+<li>authentification du serveur (basée sur des certificats X.509)</li>
+<li>authentification du client (optionnelle)</li>
+</ul>
+
+
+<p>À noter que, <em>stricto sensu</em>, le serveur n’est pas obligé de s’authentifier auprès du client et que l’usage de certificats X.509 n’est pas obligatoire. Cependant il s’agit de cas d’utilisation marginaux.</p>
+
+<h1>Un peu de Java</h1>
+
+<p>Le support de SSL en Java a d’abord été fournit sous forme d’une extension la <em>Java Secure Socket Extension</em> ou JSSE ; à partir de Java 1.4, la JSSE a été incluse dans la bibliothèque standard. L’API de la JSSE est couverte par les packages java suivants : javax.net, javax.net.ssl et javax.security.cert.</p>
+
+<p>Alors, comment s’en sert on ? L’API JSSE a introduit la classe javax.net.ssl.SSLSocket, une sous-classe de java.net.Socket qui encapsule toute la complexité du protocole SSL. On ne peut pas instancier directement de <code>SSLSocket</code> car son constructeur est <em>protected</em>, il faut aller passer par une autre class de la JSSE <code>javax.net.ssl.SSLSocketFactory</code>.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">SocketFactory</span> <span class="n">sf</span> <span class="o">=</span> <span class="n">SSLContext</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">getSocketFactory</span><span class="o">();</span>
+</span><span class='line'><span class="n">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="na">createSocket</span><span class="o">(</span><span class="s">&quot;www.example.com&quot;</span><span class="o">,</span> <span class="mi">443</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sur le web on va plutôt utiliser le <a href="http://fr.wikipedia.org/wiki/Https#HTTPS">protocole HTTP/S</a> ; la JSSE fournit le handler <code>javax.net.ssl.HttpsURLConnection</code> qui permet de gérer ces URL en <code>https://</code>. L’utilisation devient alors complètement transparente :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="s">&quot;https://www.example.com&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">URLConnection</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">conn</span> <span class="k">instanceof</span> <span class="n">HttpsURLConnection</span><span class="o">);</span> <span class="c1">// affiche &quot;true&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Voilà un schéma tiré de la documentation officielle d’Oracle qui montre les relations entre les classes de la JSSE.</p>
+
+<p><img class="center" src="/images/posts/jsseclasses-20110702.jpg"></p>
+
+<p>La classe centrale est <a href="http://download.oracle.com/javase/6/docs/api/javax/net/ssl/SSLContext.html">SSLContext</a> et c’est par cette classe que passe la configuration de SSL. Le code va alors ressembler à ça :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">SSLContext</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">SSLContext</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;TLS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* ici on configure le contexte SSL */</span>
+</span><span class='line'><span class="c1">// ctx.init(... parameters ...);</span>
+</span><span class='line'><span class="n">SSLSocketFactory</span> <span class="n">sf</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">getSSLSocketFactory</span><span class="o">();</span>
+</span><span class='line'><span class="cm">/* on configure la socket factory utilisée pour les connexions aux URLs en https:// */</span>
+</span><span class='line'><span class="n">HttpsURLConnection</span><span class="o">.</span><span class="na">setDefaultSSLSocketFactory</span><span class="o">(</span><span class="n">sf</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Question de confiance</h1>
+
+<p>Avec SSL tout est une question de confiance. Lors du <em>handshake</em> le serveur envoie son certificat (pour être plus précis, une chaîne de certificat qui contient également toutes les autorités de certification intermédiaires) au client qui doit le valider. La validation de ce certificat implique de relier la chaîne de certificats du serveur à une racine de confiance (ou <em>trust anchor</em>).</p>
+
+<p>La bibliothèque standard Java est livrée avec une liste de d’autorités racines qui se trouve un fichier de type <code>KeyStore</code>. Sur ma machine (un Mac) le fichier se trouve là :
+<code>/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/security/cacerts</code></p>
+
+<p>On peut obtenir la liste de ces autorités avec l’outil <code>keytool</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>keytool -list -keystore cacerts</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ici le mot de passe demandé ne sert qu’à vérifier l’intégrité du fichier, il n’y a pas de clés dont il faut protéger la confidentialité ; et par défaut le mot de passe est changeit.</p>
+
+<p>Cependant il peut arriver que le serveur contacté n’ait pas de certificat signé par une autorité reconnue (test, application sur un intranet, pas d’argent pour s’acheter un certificat…). Arrive alors inéluctablement cette erreur :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception in thread "main" javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Que s’est il passé ? Le message de l’erreur nous indique qu’il a été impossible de trouver un chemin de certificats valide pour le certificat du serveur.</p>
+
+<p>Le mécanisme de validation d’une chaîne de certificat est accessible via un <code>TrustManager</code>, et la classe <code>TrustManagerFactory</code> permet d’en créer une instance. Pour régler notre problème il faut donc un <code>TrustManager</code> qui prenne en compte notre nouvelle autorité racine.</p>
+
+<p>Première solution, ajouter l’autorité au fichier <code>cacerts</code>. Dans ce cas l’autorité racine pourra être utilisée par le <code>TrustManager</code> par défaut. Pas terrible pour faire des tests mais c’est une solution envisageable quand on a une PKI interne.</p>
+
+<p>Seconde solution : utiliser un <code>TrustManager</code> dédié qui fait confiance à notre nouvelle autorité. D’abord il faut créer un <code>KeyStore</code> contenant notre racine. Cela se fait simplement avec <code>keytool</code> :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>keytool -importcert -trustcacerts -noprompt -alias myTrustAnchor -file /path/to/my/root.crt -keystore /path/to/my/keystore</span></code></pre></td></tr></table></div></figure>
+
+
+<p>L’option <code>-trustcacerts</code> permet de créer une entrée de type <code>TrustedCertificateEntry</code> dans le <em>key store</em>.</p>
+
+<p>Ensuite, il existe deux options. Soit on demande au <code>TrustManager</code> par défaut d’utiliser notre <em>key store</em> ; dans ce cas on le déclare en passant une variable d’environnement à la JVM :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>java -Djavax.net.ssl.trustStore=/path/to/my/keystore -jar ...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Seconde solution, on instancie un TrustManager configuré avec notre key store de façon programmatique :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/* instancier le KeyStore */</span>
+</span><span class='line'><span class="n">KeyStore</span> <span class="n">ks</span> <span class="o">=</span> <span class="n">KeyStore</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;JKS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">ks</span><span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">&quot;/path/to/my/keystore&quot;</span><span class="o">),</span> <span class="kc">null</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* initialiser une TrustManagerFactory avec ce KeyStore */</span>
+</span><span class='line'><span class="n">TrustManagerFactory</span> <span class="n">tmf</span> <span class="o">=</span> <span class="n">TrustManagerFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;PKIX&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">tmf</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="n">ks</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* créer un SSLContext utilisant cette TrustManagerFactory */</span>
+</span><span class='line'><span class="n">SSLContext</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">SSLContext</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;TLS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">ctx</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">tmf</span><span class="o">.</span><span class="na">getTrustManagers</span><span class="o">(),</span> <span class="kc">null</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Prenez le contrôle</h1>
+
+<p>Jusqu’à présent on a pu configurer la source des racines de confiance ; on peut donc utiliser des certificats émis par n’importe qui. Mais alors que vous venez de finir cette configuration voilà une nouvelle erreur :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception in thread "main" javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path validation failed: java.security.cert.CertPathValidatorException: revocation statut check failed: no CRL found</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Et oui, le certificat auto-signé que vous aviez bricolé sur le coin d’une console ne contient pas les informations permettant de le valider ; en l&#8217;occurence impossible ici de déterminer si ce certificat a été révoqué ou non. Le problème est que le comportement par défaut du <code>TrustManager</code> et de rejeter tout certificat dont le statut de révocation n’a pu être établi.</p>
+
+<p>Pour passer outre ce comportement et pouvoir utiliser notre certificat de test il faudrait pouvoir désactiver cette vérification du statut de révocation du certificat dans le <code>TrustManager</code>. L’API permet une configuration plus fine des paramètres de validation, cela passe par la classe <a href="http://download.oracle.com/javase/6/docs/api/java/security/cert/PKIXBuilderParameters.html">PKIXBuilderParameters</a>.</p>
+
+<p><code>PKIXBuilderParameters</code> permet de configurer le comportement de la validation de chaînes de certificats en lui passant un certain nombre de paramètres parmi lesquels :</p>
+
+<ul>
+<li>la liste des racines de confiance (sous forme d’un <code>KeyStore</code> ou d’un <code>Set</code> de <code>`TrustAnchor</code>)</li>
+<li>la date à laquelle on fait la validation (par défaut, la validation est faite à la date courante)</li>
+<li>si on doit vérifier le statut de révocation des certificats</li>
+<li>des magasins de certificats et de listes de révocation supplémentaires au cas où (par exemple un serveur LDAP ou seraient publiées des listes de révocation)</li>
+<li>et d’autres…</li>
+</ul>
+
+
+<p>Comment régler notre problème de vérification du statut de révocation ? En construisant un <code>PKIXBuilderParameters</code> qui ne fait pas cette validation :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">KeyStore</span> <span class="n">st</span> <span class="o">=</span> <span class="n">KeyStore</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;JKS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* ... */</span>
+</span><span class='line'><span class="n">PKIXBuilderParameters</span> <span class="n">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PKIXBuilderParameters</span><span class="o">(</span><span class="n">ks</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* désactivation la révocation */</span>
+</span><span class='line'><span class="n">params</span><span class="o">.</span><span class="na">setRevocationEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+</span><span class='line'><span class="n">TrustManagerFactory</span> <span class="n">tmf</span> <span class="o">=</span> <span class="n">TrustManagerFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;PKIX&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">tmf</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="k">new</span> <span class="n">CertPathTrustManagerParameters</span><span class="o">(</span><span class="n">params</span><span class="o">));</span>
+</span><span class='line'><span class="n">SSLContext</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">SSLContext</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;TLS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">ctx</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">tmf</span><span class="o">.</span><span class="na">getTrustManagers</span><span class="o">(),</span> <span class="kc">null</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Dans cet exemple la vérification du statut de révocation a été désactivée ; c’est acceptable dans le cas d’un test mais fortement déconseillé dans un contexte de production. Dans le cas courant l’algorithme de validation va chercher dans le certificat l’URL où il peut télécharger la liste de révocation de l’autorité qui a émis ce certificat. La liste de révocation (CRL pour <em>Certificate Revocation List</em> en anglais) contient, pour simplifier, la liste des numéros de série des certificats qui n’ont pas encore expirés mais qui ont été révoqués par leur porteur. Pour certaines autorités émettant beaucoup de certificats ces CRL peuvent atteindre plusieurs Mo, voire plusieurs dizaines de Mo.</p>
+
+<p>Pour réduire la consommation de bande passante, le standard OCSP (<em>Online Certificate Status Protocol</em>, spécifié dans la <a href="http://tools.ietf.org/html/rfc2560">RFC 2560</a>) a été inventé. Il s’agit d’un protocole qui permet de demander à une serveur (habituellement appelé <em>répondeur OCSP</em>) de façon interactive le statut de révocation d’un unique certificat. La réponse peut être « valide », « invalide » ou « inconnu » (comprendre que le serveur n’a pas l’information pour répondre).</p>
+
+<p>Par défaut OCSP n’est pas utilisé pour la validation. Pour l’activer il faut soit modifier le fichier <code>java.security</code>, soit l’activer de façon programmatique dans le code :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Security</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&quot;ocsp.enabled&quot;</span><span class="o">,</span> <span class="s">&quot;true&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Si OCSP est activé alors l’algorithme de validation essaie d’abord de l’utiliser et repasse sur les CRL en cas d’échec, par exemple si le certificat n’indique pas de répondeur OCSP à contacter. Il est également possible de préciser l’une URL d’un répondeur OCSP à toujours contacter ; cela peut être utile dans le cas d’un répondeur OCSP installé en proxy dans une entreprise.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Security</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&quot;ocsp.responderURL&quot;</span><span class="o">,</span> <span class="s">&quot;http://ocsp.example.net&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Conclusion temporaire</h1>
+
+<p>J’ai fait le tour, un peu succinctement j’avoue, sur la validation du certificat du serveur. Mais il reste beaucoup à dire sur SSL : authentification du client, les <em>ciphers suites</em>, d’autres APIs… Ce sera l’objet d&#8217;une seconde partie.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jean-Christophe Sirot</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-02T21:45:00+02:00" pubdate data-updated="true"> 2 jui 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/http/'>HTTP</a>, <a class='category' href='/blog/categories/https/'>HTTPS</a>, <a class='category' href='/blog/categories/ssl/'>SSL</a>, <a class='category' href='/blog/categories/tls/'>TLS</a>, <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://coding-stories.github.com/coding-stories/blog/2011/07/02/ssltls-en-java-partie-1/" data-via="jcsirot" data-counturl="http://coding-stories.github.com/coding-stories/blog/2011/07/02/ssltls-en-java-partie-1/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <script type="in/share" data-counter="right" data-showzero="true"></script>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2011/05/05/audit-automatique-avec-play-framework/" title="Previous Post: Audit automatique avec Play Framework">&laquo; Audit automatique avec Play Framework</a>
+      
+      
+        <a class="basic-alignment right articlenav" href="/blog/2011/07/07/code-compare-sha-1-sur-android-ios/" title="Next Post: Code comparé : SHA-1 sur Android &amp; iOS">Code comparé : SHA-1 sur Android &amp; iOS &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/code-story-2013/">Code Story 2013 : la phase de sélection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/">Un mois avec IntelliJ - début de l'expérience</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/">Migration du blog vers Octopress/Github</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/">Mocker un serveur de mail avec Dumbster et JUnit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/">Exclure certaines classes de la couverture des tests unitaires</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("jcsirot", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/jcsirot" class="twitter-follow-button" data-show-count="false">Follow @jcsirot</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/jcsirot?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Category Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 121.81818181818181%'>android</a> <a href='/blog/categories/bytecode' style='font-size: 105.45454545454545%'>bytecode</a> <a href='/blog/categories/chess' style='font-size: 110.9090909090909%'>chess</a> <a href='/blog/categories/cobertura' style='font-size: 110.9090909090909%'>cobertura</a> <a href='/blog/categories/code' style='font-size: 116.36363636363636%'>code</a> <a href='/blog/categories/code-coverage' style='font-size: 105.45454545454545%'>code coverage</a> <a href='/blog/categories/compiler' style='font-size: 105.45454545454545%'>compiler</a> <a href='/blog/categories/conference' style='font-size: 121.81818181818181%'>conference</a> <a href='/blog/categories/confluence' style='font-size: 105.45454545454545%'>confluence</a> <a href='/blog/categories/cryptography' style='font-size: 105.45454545454545%'>cryptography</a> <a href='/blog/categories/dart' style='font-size: 105.45454545454545%'>dart</a> <a href='/blog/categories/devoxx' style='font-size: 110.9090909090909%'>devoxx</a> <a href='/blog/categories/dvcs' style='font-size: 110.9090909090909%'>DVCS</a> <a href='/blog/categories/ecc' style='font-size: 105.45454545454545%'>ECC</a> <a href='/blog/categories/elliptic-curve' style='font-size: 105.45454545454545%'>elliptic curve</a> <a href='/blog/categories/framework' style='font-size: 110.9090909090909%'>framework</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git</a> <a href='/blog/categories/google' style='font-size: 127.27272727272728%'>google</a> <a href='/blog/categories/hero' style='font-size: 105.45454545454545%'>hero</a> <a href='/blog/categories/htc' style='font-size: 105.45454545454545%'>htc</a> <a href='/blog/categories/html5' style='font-size: 105.45454545454545%'>html5</a> <a href='/blog/categories/http' style='font-size: 105.45454545454545%'>HTTP</a> <a href='/blog/categories/https' style='font-size: 110.9090909090909%'>HTTPS</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE</a> <a href='/blog/categories/intellij' style='font-size: 105.45454545454545%'>IntelliJ</a> <a href='/blog/categories/ios' style='font-size: 105.45454545454545%'>iOS</a> <a href='/blog/categories/jacoco' style='font-size: 105.45454545454545%'>JaCoCo</a> <a href='/blog/categories/java' style='font-size: 160.0%'>java</a> <a href='/blog/categories/java7' style='font-size: 105.45454545454545%'>java7</a> <a href='/blog/categories/javascript' style='font-size: 110.9090909090909%'>javascript</a> <a href='/blog/categories/jira' style='font-size: 105.45454545454545%'>jira</a> <a href='/blog/categories/jschessboard' style='font-size: 105.45454545454545%'>jsChessboard</a> <a href='/blog/categories/jug' style='font-size: 110.9090909090909%'>JUG</a> <a href='/blog/categories/junit' style='font-size: 105.45454545454545%'>junit</a> <a href='/blog/categories/keynote' style='font-size: 105.45454545454545%'>keynote</a> <a href='/blog/categories/ldap' style='font-size: 105.45454545454545%'>ldap</a> <a href='/blog/categories/log' style='font-size: 105.45454545454545%'>log</a> <a href='/blog/categories/maven' style='font-size: 116.36363636363636%'>maven</a> <a href='/blog/categories/maven-cobertura-plugin' style='font-size: 105.45454545454545%'>maven-cobertura-plugin</a> <a href='/blog/categories/maven-enforcer-plugin' style='font-size: 105.45454545454545%'>maven-enforcer-plugin</a> <a href='/blog/categories/maven-failsafe-plugin' style='font-size: 105.45454545454545%'>maven-failsafe-plugin</a> <a href='/blog/categories/maven-jacoco-plugin' style='font-size: 105.45454545454545%'>maven-jacoco-plugin</a> <a href='/blog/categories/maven-jarsigner-plugin' style='font-size: 105.45454545454545%'>maven-jarsigner-plugin</a> <a href='/blog/categories/maven-release-plugin' style='font-size: 110.9090909090909%'>maven-release-plugin</a> <a href='/blog/categories/mock' style='font-size: 105.45454545454545%'>mock</a> <a href='/blog/categories/netbeans' style='font-size: 105.45454545454545%'>NetBeans</a> <a href='/blog/categories/objective-c' style='font-size: 105.45454545454545%'>objective-c</a> <a href='/blog/categories/parleys' style='font-size: 116.36363636363636%'>parleys</a> <a href='/blog/categories/pgn' style='font-size: 105.45454545454545%'>PGN</a> <a href='/blog/categories/play' style='font-size: 110.9090909090909%'>play</a> <a href='/blog/categories/proxy' style='font-size: 105.45454545454545%'>proxy</a> <a href='/blog/categories/qualite' style='font-size: 105.45454545454545%'>qualite</a> <a href='/blog/categories/quality' style='font-size: 110.9090909090909%'>quality</a> <a href='/blog/categories/rsa' style='font-size: 105.45454545454545%'>RSA</a> <a href='/blog/categories/scala' style='font-size: 121.81818181818181%'>scala</a> <a href='/blog/categories/security' style='font-size: 127.27272727272728%'>security</a> <a href='/blog/categories/software-craftsmanship' style='font-size: 105.45454545454545%'>software craftsmanship</a> <a href='/blog/categories/sonar' style='font-size: 110.9090909090909%'>sonar</a> <a href='/blog/categories/spring' style='font-size: 105.45454545454545%'>spring</a> <a href='/blog/categories/ssl' style='font-size: 116.36363636363636%'>SSL</a> <a href='/blog/categories/test' style='font-size: 121.81818181818181%'>test</a> <a href='/blog/categories/tls' style='font-size: 116.36363636363636%'>TLS</a> <a href='/blog/categories/uncle-bob' style='font-size: 105.45454545454545%'>Uncle Bob</a> <a href='/blog/categories/video' style='font-size: 105.45454545454545%'>video</a> <a href='/blog/categories/web' style='font-size: 116.36363636363636%'>web</a> <a href='/blog/categories/wiki' style='font-size: 105.45454545454545%'>wiki</a> </span>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Jean-Christophe Sirot -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> -
+  Theme <a href="https://github.com/amelandri/darkstripes">DarkStripes</a> by Alessandro Melandri
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'codingst';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://coding-stories.github.com/coding-stories/blog/2011/07/02/ssltls-en-java-partie-1/';
+        var disqus_url = 'http://coding-stories.github.com/coding-stories/blog/2011/07/02/ssltls-en-java-partie-1/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'http://platform.linkedin.com/in.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

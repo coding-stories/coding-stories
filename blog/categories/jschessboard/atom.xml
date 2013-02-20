@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: jsChessboard | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/jschessboard/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[jsChessboard 0.2 est disponible]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/06/09/jschessboard-0-2-est-disponible/"/>
+    <updated>2010-06-09T15:24:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/06/09/jschessboard-0-2-est-disponible</id>
+    <content type="html"><![CDATA[<p>J’ai procédé à la release de la bibliothèque jsChessboard en version 0.2. jsChessboard est une bibliothèque qui permet d’interpréter des parties d’échecs et de dessiner des échiquiers, le tout entièrement en javascript en utilisant le tag <code>&lt;canvas&gt;</code>.</p>
+
+<p>Les objectifs fixés pour la version 0.3 :</p>
+
+<ul>
+<li>fournir un plugin jQuery ;</li>
+<li>permettre d’afficher les numéros de rangées/colonnes ;</li>
+<li>permettre la personnalisation des pièces, des couleurs ;</li>
+<li>avoir un <em>vrai viewer</em> <a href="http://fr.wikipedia.org/wiki/Portable_Game_Notation">PGN</a> en HTML5/javascript</li>
+<li><strong>ajouter des tests unitaires !</strong></li>
+</ul>
+
+
+<p>Le site du projet : <a href="http://jschessboard.com">http://jschessboard.com</a></p>
+
+<p>Pour voir la bibliothèque en action, il y quelques démos sur le site du projet <a href="http://jschessboard.com/svn/trunk/examples/operagame.html">ici</a>, <a href="http://jschessboard.com/svn/trunk/examples/checkmate.html">là</a> ou encore <a href="http://jschessboard.com/svn/trunk/examples/fen.html">là</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

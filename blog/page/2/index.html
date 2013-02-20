@@ -1,0 +1,728 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Coding Stories</title>
+  <meta name="author" content="Jean-Christophe Sirot">
+
+  
+  <meta name="description" content="Quand on développe un produit de sécurité (firewall, VPN, application de chiffrement…) on cherche a donner confiance dans son produit et on est bien &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://coding-stories.github.com/coding-stories/blog/page/2/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Coding Stories" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">cs</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">Coding Stories</a></h1>
+  
+    <h2>Singe savant en ingénierie logicielle</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:coding-stories.github.com/coding-stories" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/digest-js">digest.js</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/a-propos/">À Propos</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/11/21/ameliorer-la-securite-du-developpement-avec-git/">Améliorer La Sécurité Du Développement Avec Git</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-21T09:01:00+01:00" pubdate data-updated="true">21 nov 2011</time>
+        
+         | <a href="/blog/2011/11/21/ameliorer-la-securite-du-developpement-avec-git/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Quand on développe un produit de sécurité (firewall, VPN, application de chiffrement…) on cherche a donner confiance dans son produit et on est bien souvent amené pour cela à passer des certifications (<a href="http://www.ssi.gouv.fr/fr/certification-qualification/cspn/">CSPN</a>, <a href="http://www.commoncriteriaportal.org/">Critères Communs</a>, etc) et à ainsi prouver qu’on applique de «bonnes pratiques» de matière développement : gestion des bugs, tests, utilisation d’un SCM. Un point important est de montrer que le code source du produit est maîtrisé, c’est à dire qu’aucune modification, intentionnelle ou non, ne peut être intégrée au produit sans avoir été validé. Et pour cela <a href="http://git-scm.com/">Git</a> est un outil qui peut réellement aider.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011/11/21/ameliorer-la-securite-du-developpement-avec-git/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/09/26/changement-du-theme/">Changement Du Thème</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-26T16:51:00+02:00" pubdate data-updated="true">26 sep 2011</time>
+        
+         | <a href="/blog/2011/09/26/changement-du-theme/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ne soyez pas étonnés si le site à changé de tête ; suite à une mise à jour hasardeuse (faire une mise à jour sans réfléchir est presque aussi stupide que que ne pas la faire) le thème que j’utilisais n’est plus compatible avec la version actuelle.</p>
+
+<p>Bref, plutôt que garder un thème dégradé j’ai préféré basculer sur le thème par défaut de WordPress… Le temps de régler le problème. Mais finalement, ce thème, je l’aime bien ; il est sobre et lisible même s’il lui manque toutefois quelques fonctionnalités que je trouvais bien pratique comme l’ouverture des images dans un popup javascript.</p>
+
+<p>Finalement, garder le thème actuel, remettre l’ancien, régler les problèmes de la mise à jour ou installer une tout nouveau thème ? La décision n’est pas encore prise, je verrai à l’usage.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/08/06/la-cryptographie-a-cle-publique-par-ses-inventeurs/">La Cryptographie à Clé Publique Par Ses Inventeurs</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-06T16:53:00+02:00" pubdate data-updated="true"> 6 aoû 2011</time>
+        
+         | <a href="/blog/2011/08/06/la-cryptographie-a-cle-publique-par-ses-inventeurs/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://fr.wikipedia.org/wiki/Ronald_Rivest">Ron Rivest</a>, <a href="http://fr.wikipedia.org/wiki/Adi_Shamir">Adi Shamir</a>, <a href="http://fr.wikipedia.org/wiki/Leonard_Adleman">Leonard Adleman</a>, <a href="http://fr.wikipedia.org/wiki/Whitfield_Diffie">Whitfield Diffie</a>, <a href="http://fr.wikipedia.org/wiki/Martin_Hellman">Martin Hellman</a>, <a href="http://fr.wikipedia.org/wiki/Ralph_Merkle">Ralph Merkle</a>. Dans les années 70 en découvrant la cryptographie à clé publique ils ont révolutionné le monde. Télécommunications, commerce électronique, cartes bancaires, téléphonie mobile, VIGIK®… Nous utilisons tous et tous les jours leurs découvertes, souvent même sans le savoir.</p>
+
+<p>Dans cette courte vidéo diffusée à l’ouverture de la <a href="http://www.rsaconference.com/2011/usa/">conférence RSA 2011</a>, les acteurs de cette révolution en racontent la genèse.</p>
+
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/mvOsb9vNIWM "></iframe></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/07/23/ssltls-un-probleme-frequent/">SSL/TLS : Un Problème Fréquent</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-23T16:59:00+02:00" pubdate data-updated="true">23 jui 2011</time>
+        
+         | <a href="/blog/2011/07/23/ssltls-un-probleme-frequent/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Je viens de lire un post très intéressant sur le blog de <a href="http://www.ippon.fr/">Ippon Technologies</a> qui met en lumière l’importance de la notion de chaîne de certificats.</p>
+
+<p>Le <a href="http://fr.wikipedia.org/wiki/X.509">standard X.509</a> est basé sur un modèle de confiance pyramidal :</p>
+
+<p><img class="center" src="/images/posts/X509TrustModel-20110723.png"></p>
+
+<p>En haut ce sont les racines de confiance (<em>trust anchors</em>), en bas les certificats des utilisateurs finaux (<em>end entity</em>) et au milieu on trouve les certificats des autorités de certification intermédiaires. Il faut garder à l’esprit que celui qui valide un certificat ne possède en général que la racine de confiance ; mais pour effectuer la validation il faut disposer de la chaîne de certificats au complet, c’est à dire le certificat final avec l’ensemble des certificats des autorités intermédiaires. Moralité : un certificat seul ne sert à rien, il faut toujours considérer la chaîne dans son ensemble.</p>
+
+<p>L’article sur le blog de Ippon : <a href="http://blog.ippon.fr/2011/07/23/pourquoi-firefox-ou-java-ne-reconnaissent-pas-ce-certificat-ssl-si-cherement-payee/">http://blog.ippon.fr/2011/07/23/pourquoi-firefox-ou-java-ne-reconnaissent-pas-ce-certificat-ssl-si-cherement-payee/</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/07/17/git-pour-les-imbeciles-comme-moi/">Git Pour Les Imbéciles Comme Moi</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-17T17:26:00+02:00" pubdate data-updated="true">17 jui 2011</time>
+        
+         | <a href="/blog/2011/07/17/git-pour-les-imbeciles-comme-moi/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Git, je n’y comprenais rien. Et puis j’ai vu la présentation de Sébastien Douche (<a href="http://twitter.com/sdouche">twitter</a>, <a href="http://douche.name/blog/">blog</a>) au Paris JUG et les choses alors sont devenues beaucoup plus claires. Cette présentation doit absolument être vue par tous les développeurs qui utilisent un logiciel de gestion de source (donc <strong>tous</strong> les développeurs). Ce qui me désole le plus c’est qu’avant j’étais heureux dans l’ignorance ; désormais je souffre quand je dois utiliser subversion…</p>
+
+<h1>Les concepts</h1>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=2366"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=2366" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+
+<h1>La pratique</h1>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=2368"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=2368" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/07/14/java-7-les-nouveautes-cote-securite/">Java 7 : Les Nouveautés Côté Sécurité</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-14T17:35:00+02:00" pubdate data-updated="true">14 jui 2011</time>
+        
+         | <a href="/blog/2011/07/14/java-7-les-nouveautes-cote-securite/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>La sortie de Java 7 est imminente et on a déjà beaucoup parlé des grandes nouveautés de cette version (multi-catch, opérateur diamant, Fork/Join, opcode <em>invokedynamic</em>…). Mais Java 7 arrive également des tas de petites améliorations, nouveautés et corrections de bugs. Voilà donc un petit résumé des principales nouveautés de Java 7, côté sécurité.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011/07/14/java-7-les-nouveautes-cote-securite/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/07/12/security-stack-exchange/">Security Stack Exchange</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-12T17:52:00+02:00" pubdate data-updated="true">12 jui 2011</time>
+        
+         | <a href="/blog/2011/07/12/security-stack-exchange/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="left" src="/images/posts/ITSecurity-e1310503676421-300x135-20110712.png"></p>
+
+<p>Le site de questions/réponses <a href="http://security.stackexchange.com/">Security Stack Exchange</a> vient de sortir de sa phase de béta test et devient donc officiellement le 28e site du réseau <a href="http://stackexchange.com/sites">Stack Exchange</a> (dont la tête de pont est le célèbre <a href="http://stackoverflow.com/">Stack Overflow</a>, le site de questions/réponses dédié aux programmeurs de tout poil).</p>
+
+<p>Nouveau design donc pour le site qui abandonne les couleurs de la béta, mais également ouverture d’un <a href="http://security.blogoverflow.com/">blog</a> et d’un <a href="https://twitter.com/StackSecurity">compte twitter</a>. Si vous avez des questions sur la sécurité des applications web, sur la certification des PKI, sur les cartes à puce, sur les standards cryptographiques… vous êtes au bon endroit.</p>
+
+<p>À noter également l’ouverture (mais pour le moment en béta privée) d’un autre site dédié spécifiquement aux questions touchant la cryptographie.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/07/07/code-compare-sha-1-sur-android-ios/">Code Comparé : SHA-1 Sur Android &amp; iOS</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-07T17:57:00+02:00" pubdate data-updated="true"> 7 jui 2011</time>
+        
+         | <a href="/blog/2011/07/07/code-compare-sha-1-sur-android-ios/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Problème : on dispose d’un bloc de données dont on désire calculer l’empreinte SHA-1. Deux solutions, sur Android et iOS.</p>
+
+<h1>Android</h1>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.security.MessageDigest</span><span class="o">;</span>
+</span><span class='line'><span class="cm">/* ... */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">computeSHA1</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">input</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">MessageDigest</span> <span class="n">dg</span> <span class="o">=</span> <span class="n">MessageDigest</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;SHA-1&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">dg</span><span class="o">.</span><span class="na">digest</span><span class="o">(</span><span class="n">input</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>iOS</h1>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;CommonCrypto/CommonDigest.h&gt;</span>
+</span><span class='line'><span class="cm">/* ... */</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">NSData</span><span class="o">*</span><span class="p">)</span> <span class="nf">computeSHA1:</span><span class="p">(</span><span class="n">NSData</span><span class="o">*</span><span class="p">)</span><span class="nv">input</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">output</span><span class="p">[</span><span class="n">CC_SHA1_DIGEST_LENGTH</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">CC_SHA1</span><span class="p">([</span><span class="n">input</span> <span class="n">bytes</span><span class="p">],</span> <span class="p">(</span><span class="n">CC_LONG</span><span class="p">)[</span><span class="n">input</span> <span class="n">length</span><span class="p">],</span> <span class="n">output</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="n">NSData</span> <span class="nl">dataWithBytes:</span><span class="n">output</span> <span class="nl">length:</span><span class="n">CC_SHA1_DIGEST_LENGTH</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/07/02/ssltls-en-java-partie-1/">SSL/TLS en Java – Partie 1</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-02T21:45:00+02:00" pubdate data-updated="true"> 2 jui 2011</time>
+        
+         | <a href="/blog/2011/07/02/ssltls-en-java-partie-1/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>J’ai pensé appeler cet article «<em>Pourquoi SSL ne marche pas ?</em>». En effet j’ai lu beaucoup de questions sur des forums posées par des développeurs qui n’arrivaient pas à faire fonctionner SSL entre le serveur et les clients ; le plus souvent le développeur ne sait pas très bien comment fonctionne le protocole et il n’arrive pas à diagnostiquer les problèmes ; j’espère que cette série article aidera ceux qui se battent encore avec les erreurs du type <code>alert=42</code> (si si, je vous assure que c’est une vraie erreur :)).</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011/07/02/ssltls-en-java-partie-1/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2011/05/05/audit-automatique-avec-play-framework/">Audit Automatique Avec Play Framework</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-05T07:40:00+02:00" pubdate data-updated="true"> 5 mai 2011</time>
+        
+         | <a href="/blog/2011/05/05/audit-automatique-avec-play-framework/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>J’aime beaucoup l’annotation @With de Play framework, elle permet d’étendre le comportement d’un <em>Controller</em> en y ajoutant simplement des intercepteurs. Par exemple il est possible d’écrire un <em>Controller</em> générique dont le travail est de logguer des appels et d’ajouter ce comportement sur d’autre <em>Controller</em> avec une simple annotation.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011/05/05/audit-automatique-avec-play-framework/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/code-story-2013/">Code Story 2013 : la phase de sélection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/">Un mois avec IntelliJ - début de l&#8217;expérience</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/">Migration du blog vers Octopress/Github</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/">Mocker un serveur de mail avec Dumbster et JUnit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/">Exclure certaines classes de la couverture des tests unitaires</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("jcsirot", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/jcsirot" class="twitter-follow-button" data-show-count="false">Follow @jcsirot</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/jcsirot?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Category Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 121.81818181818181%'>android</a> <a href='/blog/categories/bytecode' style='font-size: 105.45454545454545%'>bytecode</a> <a href='/blog/categories/chess' style='font-size: 110.9090909090909%'>chess</a> <a href='/blog/categories/cobertura' style='font-size: 110.9090909090909%'>cobertura</a> <a href='/blog/categories/code' style='font-size: 116.36363636363636%'>code</a> <a href='/blog/categories/code-coverage' style='font-size: 105.45454545454545%'>code coverage</a> <a href='/blog/categories/compiler' style='font-size: 105.45454545454545%'>compiler</a> <a href='/blog/categories/conference' style='font-size: 121.81818181818181%'>conference</a> <a href='/blog/categories/confluence' style='font-size: 105.45454545454545%'>confluence</a> <a href='/blog/categories/cryptography' style='font-size: 105.45454545454545%'>cryptography</a> <a href='/blog/categories/dart' style='font-size: 105.45454545454545%'>dart</a> <a href='/blog/categories/devoxx' style='font-size: 110.9090909090909%'>devoxx</a> <a href='/blog/categories/dvcs' style='font-size: 110.9090909090909%'>DVCS</a> <a href='/blog/categories/ecc' style='font-size: 105.45454545454545%'>ECC</a> <a href='/blog/categories/elliptic-curve' style='font-size: 105.45454545454545%'>elliptic curve</a> <a href='/blog/categories/framework' style='font-size: 110.9090909090909%'>framework</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git</a> <a href='/blog/categories/google' style='font-size: 127.27272727272728%'>google</a> <a href='/blog/categories/hero' style='font-size: 105.45454545454545%'>hero</a> <a href='/blog/categories/htc' style='font-size: 105.45454545454545%'>htc</a> <a href='/blog/categories/html5' style='font-size: 105.45454545454545%'>html5</a> <a href='/blog/categories/http' style='font-size: 105.45454545454545%'>HTTP</a> <a href='/blog/categories/https' style='font-size: 110.9090909090909%'>HTTPS</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE</a> <a href='/blog/categories/intellij' style='font-size: 105.45454545454545%'>IntelliJ</a> <a href='/blog/categories/ios' style='font-size: 105.45454545454545%'>iOS</a> <a href='/blog/categories/jacoco' style='font-size: 105.45454545454545%'>JaCoCo</a> <a href='/blog/categories/java' style='font-size: 160.0%'>java</a> <a href='/blog/categories/java7' style='font-size: 105.45454545454545%'>java7</a> <a href='/blog/categories/javascript' style='font-size: 110.9090909090909%'>javascript</a> <a href='/blog/categories/jira' style='font-size: 105.45454545454545%'>jira</a> <a href='/blog/categories/jschessboard' style='font-size: 105.45454545454545%'>jsChessboard</a> <a href='/blog/categories/jug' style='font-size: 110.9090909090909%'>JUG</a> <a href='/blog/categories/junit' style='font-size: 105.45454545454545%'>junit</a> <a href='/blog/categories/keynote' style='font-size: 105.45454545454545%'>keynote</a> <a href='/blog/categories/ldap' style='font-size: 105.45454545454545%'>ldap</a> <a href='/blog/categories/log' style='font-size: 105.45454545454545%'>log</a> <a href='/blog/categories/maven' style='font-size: 116.36363636363636%'>maven</a> <a href='/blog/categories/maven-cobertura-plugin' style='font-size: 105.45454545454545%'>maven-cobertura-plugin</a> <a href='/blog/categories/maven-enforcer-plugin' style='font-size: 105.45454545454545%'>maven-enforcer-plugin</a> <a href='/blog/categories/maven-failsafe-plugin' style='font-size: 105.45454545454545%'>maven-failsafe-plugin</a> <a href='/blog/categories/maven-jacoco-plugin' style='font-size: 105.45454545454545%'>maven-jacoco-plugin</a> <a href='/blog/categories/maven-jarsigner-plugin' style='font-size: 105.45454545454545%'>maven-jarsigner-plugin</a> <a href='/blog/categories/maven-release-plugin' style='font-size: 110.9090909090909%'>maven-release-plugin</a> <a href='/blog/categories/mock' style='font-size: 105.45454545454545%'>mock</a> <a href='/blog/categories/netbeans' style='font-size: 105.45454545454545%'>NetBeans</a> <a href='/blog/categories/objective-c' style='font-size: 105.45454545454545%'>objective-c</a> <a href='/blog/categories/parleys' style='font-size: 116.36363636363636%'>parleys</a> <a href='/blog/categories/pgn' style='font-size: 105.45454545454545%'>PGN</a> <a href='/blog/categories/play' style='font-size: 110.9090909090909%'>play</a> <a href='/blog/categories/proxy' style='font-size: 105.45454545454545%'>proxy</a> <a href='/blog/categories/qualite' style='font-size: 105.45454545454545%'>qualite</a> <a href='/blog/categories/quality' style='font-size: 110.9090909090909%'>quality</a> <a href='/blog/categories/rsa' style='font-size: 105.45454545454545%'>RSA</a> <a href='/blog/categories/scala' style='font-size: 121.81818181818181%'>scala</a> <a href='/blog/categories/security' style='font-size: 127.27272727272728%'>security</a> <a href='/blog/categories/software-craftsmanship' style='font-size: 105.45454545454545%'>software craftsmanship</a> <a href='/blog/categories/sonar' style='font-size: 110.9090909090909%'>sonar</a> <a href='/blog/categories/spring' style='font-size: 105.45454545454545%'>spring</a> <a href='/blog/categories/ssl' style='font-size: 116.36363636363636%'>SSL</a> <a href='/blog/categories/test' style='font-size: 121.81818181818181%'>test</a> <a href='/blog/categories/tls' style='font-size: 116.36363636363636%'>TLS</a> <a href='/blog/categories/uncle-bob' style='font-size: 105.45454545454545%'>Uncle Bob</a> <a href='/blog/categories/video' style='font-size: 105.45454545454545%'>video</a> <a href='/blog/categories/web' style='font-size: 116.36363636363636%'>web</a> <a href='/blog/categories/wiki' style='font-size: 105.45454545454545%'>wiki</a> </span>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Jean-Christophe Sirot -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> -
+  Theme <a href="https://github.com/amelandri/darkstripes">DarkStripes</a> by Alessandro Melandri
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'codingst';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'http://platform.linkedin.com/in.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

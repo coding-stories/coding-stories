@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Code Story 2013 : la phase de sélection - Coding Stories</title>
+  <meta name="author" content="Jean-Christophe Sirot">
+
+  
+  <meta name="description" content="Quand j&#8217;ai lu début janvier l&#8217;annonce du lancement de la saison 2013 de Code Story j&#8217;ai trouvé le principe de sélection amusant. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://coding-stories.github.com/coding-stories/blog/2013/02/20/code-story-2013/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Coding Stories" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">cs</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">Coding Stories</a></h1>
+  
+    <h2>Singe savant en ingénierie logicielle</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:coding-stories.github.com/coding-stories" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/digest-js">digest.js</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/a-propos/">À Propos</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Code Story 2013 : La Phase De Sélection</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-20T08:02:00+01:00" pubdate data-updated="true">20 fév 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Quand j&#8217;ai lu début janvier l&#8217;annonce du lancement de la saison 2013 de Code Story j&#8217;ai trouvé le principe de sélection amusant. Cette année, c&#8217;est décidé je participe à Code Story. Code Story 2013 me voilà&#8230;</p>
+
+<!-- more -->
+
+
+<h1>Choix des technologies</h1>
+
+<p>Cette année la sélection consistait à mettre en place un serveur web répondant aux questions du bot de Code Story. Quand la réponse envoyée est fausse, le bot continue à poser la question régulièrement jusqu&#8217;à obtenir une réponse correcte. De temps un temps un petit reboot du bot lui fait poser une nouvelle fois toutes les questions depuis le début. Gare alors aux régressions&#8230;</p>
+
+<p>Pour le choix du langage, après avoir hésité à choisir un langage &#8220;alternatif&#8221; (Dart ? Ceylon ?), j&#8217;ai préféré partir sur une valeur sûre et maitrisée : Java.</p>
+
+<p>Côté serveur web, il y a pléthore de choix : du <a href="https://github.com/jnizet/CodeStory2013">serveur HTTP réécrit from scratch</a> à partir de `java.net.ServerSocket au full-fledge framework comme Play 2 en passant par Jetty et Tomcat. J&#8217;ai choisi la voie moyenne en utilisant le <a href="http://docs.oracle.com/javase/6/docs/jre/api/net/httpserver/spec/index.html?com/sun/net/httpserver/package-summary.html">serveur HTTP livré avec le JRE</a> depuis Java 6.</p>
+
+<p>Restait l&#8217;hébergement du serveur. Pour ma première incursion dans le Cloud je me suis souvenu de la présentation <a href="http://blog-rd.ideotechnologies.com/?p=2943">Du legacy au cloud</a> donnée par David Gageot lors du dernier JUG Summer Camp. Il utilisait <a href="http://www.heroku.com/">Heroku</a> pour déployer son application car il est possible de lancer n&#8217;importe quel programme Java disposant d&#8217;un simple <code>main</code>. Le port du serveur est simplment fourni dans une variable d&#8217;environnement. La création d&#8217;une application dans Heroku se fait en moins de 5 minutes et un &#8220;git push master heroku&#8221; suffit pour recompiler et redéployer automatiquement l&#8217;application. Cerise sur la gâteau, il existe des dizaines de modules complémentaires pour le stockage des données, le logging, etc qu&#8217;il est possible d&#8217;ajouter à son application d&#8217;un simple click.</p>
+
+<h1>Premières questions</h1>
+
+<p>Les premières questions sont simples &#8220;Quelle est ton adresse email&#8221;, &#8220;Es tu content de participer à Code Story(OUI/NON)&#8221;&#8230; Elles permettent au bot Code Story de vérifier que le serveur est bien présent et lit et répond correctement aux requêtes.</p>
+
+<p>Les choses sérieuses commence avec l&#8217;arrivée d&#8217;une requête <code>POST</code> contenant l&#8217;énonce du premier exercice. J&#8217;interface alors le serveur avec Amazon S3 (merci à Amazon pour sa <a href="http://aws.amazon.com/fr/sdkforjava/">bibliothèque d&#8217;intégration</a>) pour stocker le contenu des requêtes POST qui arrivent, histoire de ne pas perdre l&#8217;énoncé.</p>
+
+<h1>L&#8217;échoppe de monade sur Scalaskel</h1>
+
+<p>Le premier énoncé s&#8217;appelle <em><a href="http://code-story.net/2013/01/22/scalaskel.html">L&#8217;échoppe de monade sur Scalaskel</a></em>. C&#8217;est un problème de rendu de monnaie : dénombrer toutes les façons possibles de partager une somme <code>S</code> avec des pièces de valeur <code>P1</code>, <code>P2</code>, <code>P3</code>, &#8230; <code>Pn</code>.</p>
+
+<p>Je commence classiquement en TDD par écrire des tests pour les premières valeurs : 1, rouge-vert-refactoring, 2, rouge-vert-refactoring&#8230; À partir de 8 les choses se compliquent un peu, il y a faut retourner deux solutions. Petit à petit je commence à voir l&#8217;algorithme se dessiner. Les nouveaux tests sont assez simples à trouver et les phases de refactoring ne posent pas non plus trop de problèmes.</p>
+
+<p>Finalement j&#8217;arrive à un algorithme contenant deux récursion : une première sur la valeur des pièces (on réduit le nombre de pièces différentes à chaque itération) et une seconde sur la somme à partionner.</p>
+
+<p>Je redéploie le serveur et je vois dans les logs les appels du bots pour les valeurs successives de 1 à 100 comme indiqué dans l&#8217;énoncé. Tous les tests passent. Joie :p</p>
+
+<p>Mon code : <a href="https://gist.github.com/jcsirot/4677917">https://gist.github.com/jcsirot/4677917</a></p>
+
+<h1>La calculatrice</h1>
+
+<p>Pas d&#8217;énoncé pour l&#8217;exercice suivant, les questions se suffisent à elles-même. D&#8217;abord ce sont de simples expressions <code>1+1</code>, <code>2+2</code>, etc ; progressivement elles deviennent plus compliquées : <code>(1+2)/2</code>. Bref, il va falloir écrire un solveur d&#8217;expressions arithmétques.</p>
+
+<p>Certains auront l&#8217;idée d&#8217;évaluer l&#8217;expression en emabarquant Groovy, une idée très maligne. Mais moi je suis ici en terrain connu. Ce problème, je le fais coder aux ingénieurs que je vois en entretien d&#8217;embauche alors je sais comment faire : <a href="http://en.wikipedia.org/wiki/Shunting-yard_algorithm">l&#8217;algorithme Shunting-yard</a> inventé par Dijkstra permet de transformer une expression en notation infixée en notation post-fixée (la notation polonaise inversée bien connu des possesseurs de HP48) ou en AST.</p>
+
+<p>Pour aller plus vite, pas (trop) de TDD. J&#8217;écris une liste de tests puis je code l&#8217;algorithme d&#8217;une traite. Comme on ne cherche à supporter que les quatres opérations et les parenthèses l&#8217;implémenter est assez courte. L&#8217;algorithme fonctionne (presque&#8230;) du premier coup.</p>
+
+<p>De nouvelles questions arrivant du bot demandent de supporter les nombres négatifs. J&#8217;ajoute un lexer pour découper l&#8217;expression en tokens car un simple StringTokenizer ne suffit plus.</p>
+
+<p>Finalement, sécurisé par l&#8217;ensemble des tests unitaires, je me lance dans un important refactoring pour utiliser un pattern visitor et rendre le code un peu plus objet, la contrepartie étant un nombre de classes plus important.</p>
+
+<p>Mon code : <a href="https://gist.github.com/jcsirot/4990325">https://gist.github.com/jcsirot/4990325</a></p>
+
+<h1>Location d’astronef sur Jajascript</h1>
+
+<p>Le troisième exercice est <em><a href="http://code-story.net/2013/02/02/jajascript.html">Location d’astronef sur Jajascript</a></em> et c&#8217;est sans doute celui qui m&#8217;a demandé le plus de travail.</p>
+
+<p>Tout commençait bien car j&#8217;avais déjà vu ce kata au Paris Scala User Group. J&#8217;ai donc rapidement produit une première version fonctionnelle. L&#8217;algorithme consite à parcourir de façon récursive l&#8217;arbre de toutes les combinaisons de locations possibles (c&#8217;est à dire en ne prenant que des vols qui ne chevauchent pas) et à garder la plus rentable.</p>
+
+<p>Assez rapidement je trouve une optimisation. L&#8217;algorithme passe en effet beaucoup de temps à recalculer le chemin optimal pour une liste commençant par un vol donné. On peut donc créer un cache qui associe un vol avec le chemin optimal à utiliser.</p>
+
+<p>Le premier déploiement (en fait le second, car j&#8217;avais oublié de trier les vols la première fois) fonctionne et va jusqu&#8217;à 1500 vols. Sauf que ma JVM comment à se sentir un peu à l&#8217;étroit dans les 512Mo de RAM accordés par Heroku et le processus commence à swapper. Impossible de répondre dans les 30 secondes impartis. Je pense que j&#8217;aurais pu améliorer les strucutures de données pour prendre moins de RAM mais je choisis une autre option.</p>
+
+<p>À la lecture des tweets qui s&#8217;échangeaient sur ce problème je décide de chercher un algorithme non récursif. Ça sera comme bien souvent en discutant du problème avec un collègue que je trouverai la solution. Le cache calculé dans l&#8217;agorithme récursif peut être généré de façon itérative en commançant par la fin de la liste et en remontant vers les premiers vols tout en utilisant les valeurs stockées dans le cache pour calculer à chaque fois le résultat optimal.</p>
+
+<p>Désormais mon algorithme passe la barre des 50000 vols (3,7 Mo de JSON tout de même) mais peine à le faire sous la barre des 30 secondes. Ma dernière idée me viendra un matin sous la douche :-) L&#8217;algorithme passe beaucoup de temps, en construisant les valeurs du cache, à copier des listes de chaînes de caractères. C&#8217;est en remplaçant ces copies par une simple implémentation de liste chaînée que j&#8217;obtiendrai la plus impressionnante amélioration de performance : le traitement d&#8217;une liste de 50000 vols passant de 17s à 20ms (oui, presque 1000 fois plus rapide).</p>
+
+<p>Mon code : <a href="https://gist.github.com/jcsirot/4990366">https://gist.github.com/jcsirot/4990366</a></p>
+
+<h1>Conclusion</h1>
+
+<p>Code Story, c&#8217;est fun. J&#8217;aurais certainement passé plus de temps que prévu mais toujours en y prennant beaucoup de plaisir. Et cela permet de jouer avec des petits problèmes d&#8217;algorithmiques qu&#8217;on ne voit pas forcément tous les jours. Finalement j&#8217;ai été sélectionné pour la phase finale qui aura lieu chez Google jeudi 21 février. Cela fera l&#8217;objet d&#8217;un second post.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jean-Christophe Sirot</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-20T08:02:00+01:00" pubdate data-updated="true">20 fév 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://coding-stories.github.com/coding-stories/blog/2013/02/20/code-story-2013/" data-via="jcsirot" data-counturl="http://coding-stories.github.com/coding-stories/blog/2013/02/20/code-story-2013/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <script type="in/share" data-counter="right" data-showzero="true"></script>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/" title="Previous Post: Un mois avec IntelliJ - début de l'expérience">&laquo; Un mois avec IntelliJ - début de l'expérience</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/code-story-2013/">Code Story 2013 : la phase de sélection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/">Un mois avec IntelliJ - début de l'expérience</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/">Migration du blog vers Octopress/Github</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/">Mocker un serveur de mail avec Dumbster et JUnit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/">Exclure certaines classes de la couverture des tests unitaires</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("jcsirot", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/jcsirot" class="twitter-follow-button" data-show-count="false">Follow @jcsirot</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/jcsirot?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Category Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 121.81818181818181%'>android</a> <a href='/blog/categories/bytecode' style='font-size: 105.45454545454545%'>bytecode</a> <a href='/blog/categories/chess' style='font-size: 110.9090909090909%'>chess</a> <a href='/blog/categories/cobertura' style='font-size: 110.9090909090909%'>cobertura</a> <a href='/blog/categories/code' style='font-size: 116.36363636363636%'>code</a> <a href='/blog/categories/code-coverage' style='font-size: 105.45454545454545%'>code coverage</a> <a href='/blog/categories/compiler' style='font-size: 105.45454545454545%'>compiler</a> <a href='/blog/categories/conference' style='font-size: 121.81818181818181%'>conference</a> <a href='/blog/categories/confluence' style='font-size: 105.45454545454545%'>confluence</a> <a href='/blog/categories/cryptography' style='font-size: 105.45454545454545%'>cryptography</a> <a href='/blog/categories/dart' style='font-size: 105.45454545454545%'>dart</a> <a href='/blog/categories/devoxx' style='font-size: 110.9090909090909%'>devoxx</a> <a href='/blog/categories/dvcs' style='font-size: 110.9090909090909%'>DVCS</a> <a href='/blog/categories/ecc' style='font-size: 105.45454545454545%'>ECC</a> <a href='/blog/categories/elliptic-curve' style='font-size: 105.45454545454545%'>elliptic curve</a> <a href='/blog/categories/framework' style='font-size: 110.9090909090909%'>framework</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git</a> <a href='/blog/categories/google' style='font-size: 127.27272727272728%'>google</a> <a href='/blog/categories/hero' style='font-size: 105.45454545454545%'>hero</a> <a href='/blog/categories/htc' style='font-size: 105.45454545454545%'>htc</a> <a href='/blog/categories/html5' style='font-size: 105.45454545454545%'>html5</a> <a href='/blog/categories/http' style='font-size: 105.45454545454545%'>HTTP</a> <a href='/blog/categories/https' style='font-size: 110.9090909090909%'>HTTPS</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE</a> <a href='/blog/categories/intellij' style='font-size: 105.45454545454545%'>IntelliJ</a> <a href='/blog/categories/ios' style='font-size: 105.45454545454545%'>iOS</a> <a href='/blog/categories/jacoco' style='font-size: 105.45454545454545%'>JaCoCo</a> <a href='/blog/categories/java' style='font-size: 160.0%'>java</a> <a href='/blog/categories/java7' style='font-size: 105.45454545454545%'>java7</a> <a href='/blog/categories/javascript' style='font-size: 110.9090909090909%'>javascript</a> <a href='/blog/categories/jira' style='font-size: 105.45454545454545%'>jira</a> <a href='/blog/categories/jschessboard' style='font-size: 105.45454545454545%'>jsChessboard</a> <a href='/blog/categories/jug' style='font-size: 110.9090909090909%'>JUG</a> <a href='/blog/categories/junit' style='font-size: 105.45454545454545%'>junit</a> <a href='/blog/categories/keynote' style='font-size: 105.45454545454545%'>keynote</a> <a href='/blog/categories/ldap' style='font-size: 105.45454545454545%'>ldap</a> <a href='/blog/categories/log' style='font-size: 105.45454545454545%'>log</a> <a href='/blog/categories/maven' style='font-size: 116.36363636363636%'>maven</a> <a href='/blog/categories/maven-cobertura-plugin' style='font-size: 105.45454545454545%'>maven-cobertura-plugin</a> <a href='/blog/categories/maven-enforcer-plugin' style='font-size: 105.45454545454545%'>maven-enforcer-plugin</a> <a href='/blog/categories/maven-failsafe-plugin' style='font-size: 105.45454545454545%'>maven-failsafe-plugin</a> <a href='/blog/categories/maven-jacoco-plugin' style='font-size: 105.45454545454545%'>maven-jacoco-plugin</a> <a href='/blog/categories/maven-jarsigner-plugin' style='font-size: 105.45454545454545%'>maven-jarsigner-plugin</a> <a href='/blog/categories/maven-release-plugin' style='font-size: 110.9090909090909%'>maven-release-plugin</a> <a href='/blog/categories/mock' style='font-size: 105.45454545454545%'>mock</a> <a href='/blog/categories/netbeans' style='font-size: 105.45454545454545%'>NetBeans</a> <a href='/blog/categories/objective-c' style='font-size: 105.45454545454545%'>objective-c</a> <a href='/blog/categories/parleys' style='font-size: 116.36363636363636%'>parleys</a> <a href='/blog/categories/pgn' style='font-size: 105.45454545454545%'>PGN</a> <a href='/blog/categories/play' style='font-size: 110.9090909090909%'>play</a> <a href='/blog/categories/proxy' style='font-size: 105.45454545454545%'>proxy</a> <a href='/blog/categories/qualite' style='font-size: 105.45454545454545%'>qualite</a> <a href='/blog/categories/quality' style='font-size: 110.9090909090909%'>quality</a> <a href='/blog/categories/rsa' style='font-size: 105.45454545454545%'>RSA</a> <a href='/blog/categories/scala' style='font-size: 121.81818181818181%'>scala</a> <a href='/blog/categories/security' style='font-size: 127.27272727272728%'>security</a> <a href='/blog/categories/software-craftsmanship' style='font-size: 105.45454545454545%'>software craftsmanship</a> <a href='/blog/categories/sonar' style='font-size: 110.9090909090909%'>sonar</a> <a href='/blog/categories/spring' style='font-size: 105.45454545454545%'>spring</a> <a href='/blog/categories/ssl' style='font-size: 116.36363636363636%'>SSL</a> <a href='/blog/categories/test' style='font-size: 121.81818181818181%'>test</a> <a href='/blog/categories/tls' style='font-size: 116.36363636363636%'>TLS</a> <a href='/blog/categories/uncle-bob' style='font-size: 105.45454545454545%'>Uncle Bob</a> <a href='/blog/categories/video' style='font-size: 105.45454545454545%'>video</a> <a href='/blog/categories/web' style='font-size: 116.36363636363636%'>web</a> <a href='/blog/categories/wiki' style='font-size: 105.45454545454545%'>wiki</a> </span>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Jean-Christophe Sirot -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> -
+  Theme <a href="https://github.com/amelandri/darkstripes">DarkStripes</a> by Alessandro Melandri
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'codingst';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://coding-stories.github.com/coding-stories/blog/2013/02/20/code-story-2013/';
+        var disqus_url = 'http://coding-stories.github.com/coding-stories/blog/2013/02/20/code-story-2013/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'http://platform.linkedin.com/in.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

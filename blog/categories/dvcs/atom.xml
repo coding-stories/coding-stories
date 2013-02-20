@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: DVCS | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/dvcs/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Améliorer la sécurité du développement avec Git]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/21/ameliorer-la-securite-du-developpement-avec-git/"/>
+    <updated>2011-11-21T09:01:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/21/ameliorer-la-securite-du-developpement-avec-git</id>
+    <content type="html"><![CDATA[<p>Quand on développe un produit de sécurité (firewall, VPN, application de chiffrement…) on cherche a donner confiance dans son produit et on est bien souvent amené pour cela à passer des certifications (<a href="http://www.ssi.gouv.fr/fr/certification-qualification/cspn/">CSPN</a>, <a href="http://www.commoncriteriaportal.org/">Critères Communs</a>, etc) et à ainsi prouver qu’on applique de «bonnes pratiques» de matière développement : gestion des bugs, tests, utilisation d’un SCM. Un point important est de montrer que le code source du produit est maîtrisé, c’est à dire qu’aucune modification, intentionnelle ou non, ne peut être intégrée au produit sans avoir été validé. Et pour cela <a href="http://git-scm.com/">Git</a> est un outil qui peut réellement aider.</p>
+
+<!-- more -->
+
+
+<p>Subversion, probablement le SCM le plus utilisé aujourd’hui, impose un modèle de développement centralisé. Tous les développeurs poussent leurs modifications vers un unique dépôt central partagé. Ce modèle a plusieurs inconvénients quand on désire tracer les modifications dans la base de code.</p>
+
+<p>D’abord il faut donner aux développeurs des droits d’accès suffisamment fins pour qu’ils puissent <em>commiter</em> dans le dépôt, sans pour autant les autoriser à avoir accès à toute la base de code, tant en écriture qu’en lecture. Ensuite il faut suivre les modifications apportées au code par les équipes de développement. Il est possible de développer les nouvelles fonctionnalités ou corriger les bugs dans des branches, avec tous les problèmes de <em>merge</em> qui peuvent survenir. On peut également forcer l’utilisation du numéros de référence d’un ticket du <em>bugtracker</em> dans les messages de commits. Dans ce cas il faudra bien sûr compter avec les erreurs sur le numéro du ticket ou les oublis mais également avec la relecture de complexes et multiples <em>diff</em>… Et je ne parle pas de l’historique du dépôt qui devient simplement illisible.</p>
+
+<p>Avec Git, le problème du workflow disparaît car vous pouvez l’adapter à votre façon de développer. On peut illustrer ça avec l’exemple du <a href="http://fr.wikipedia.org/wiki/Processus_de_d%C3%A9veloppement_de_Linux">modèle de développement du noyau Linux</a> (schéma ci-dessous) : un développeur privilégié (le dictateur) est autorisé à écrire dans le dépôt de référence (<em>blessed repository</em>). Les développeurs clonent ce dépôt, et poussent leurs patchs vers des «développeurs de confiance» (les lieutenants). Les lieutenants valident ces modifications, le dictateur peut alors venir les chercher auprès des lieutenants. Le dictateur décide alors d’intégrer ou non ces modifications dans le dépôt de référence.</p>
+
+<p><img class="center" src="/images/posts/workflow-git-20111121.png"></p>
+
+<p>En outre, avec Git finis les multiples <em>commits</em> pour implémenter une fonctionnalité : grâce au merge de branches et au rebase, le développeur est en mesure de ne livrer qu’un unique <em>commit</em>. De cette façon l’historique du dépôt est clair et propre mais surtout cela simplifie énormément la revue de code.</p>
+
+<p>Pour finir j’ajoute également que Git permet de signer les <em>tags</em> permettant ainsi de garantir l’origine de toutes les modifications du code importées dans le dépôt de référence.</p>
+
+<p>En conclusion je terminerai sur le fait que ce que je raconte ici sur Git est également vrai pour d’autres DVCS tels que <a href="http://mercurial.selenic.com/">Mercurial</a> ou <a href="http://bazaar.canonical.com/">Bazaar</a> (à vérifier tout de même pour la signature des tags).</p>
+
+<p>Quelques références :</p>
+
+<ul>
+<li><a href="http://nvie.com/posts/a-successful-git-branching-model/">A successful Git branching model</a></li>
+<li><a href="http://fr.whygitisbetterthanx.com/">Pourquoi Git est Meilleur Que X</a> (d’où est issu le schéma d’exemple de workflow)</li>
+<li><a href="http://fr.wikipedia.org/wiki/Processus_de_d%C3%A9veloppement_de_Linux">Processus de développement de Linux</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git pour les imbéciles comme moi]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/17/git-pour-les-imbeciles-comme-moi/"/>
+    <updated>2011-07-17T17:26:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/17/git-pour-les-imbeciles-comme-moi</id>
+    <content type="html"><![CDATA[<p>Git, je n’y comprenais rien. Et puis j’ai vu la présentation de Sébastien Douche (<a href="http://twitter.com/sdouche">twitter</a>, <a href="http://douche.name/blog/">blog</a>) au Paris JUG et les choses alors sont devenues beaucoup plus claires. Cette présentation doit absolument être vue par tous les développeurs qui utilisent un logiciel de gestion de source (donc <strong>tous</strong> les développeurs). Ce qui me désole le plus c’est qu’avant j’étais heureux dans l’ignorance ; désormais je souffre quand je dois utiliser subversion…</p>
+
+<h1>Les concepts</h1>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=2366"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=2366" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+
+<h1>La pratique</h1>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=2368"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=2368" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+]]></content>
+  </entry>
+  
+</feed>

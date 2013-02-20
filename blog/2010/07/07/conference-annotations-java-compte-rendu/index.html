@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Conférence annotations java – compte rendu - Coding Stories</title>
+  <meta name="author" content="Jean-Christophe Sirot">
+
+  
+  <meta name="description" content="La conférence Annotations Java animée par Olivier Croisier, expert java et auteur du blog The Coders Breakfast, s’est tenue le 29 juin dernier a eu &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://coding-stories.github.com/coding-stories/blog/2010/07/07/conference-annotations-java-compte-rendu/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Coding Stories" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">cs</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">Coding Stories</a></h1>
+  
+    <h2>Singe savant en ingénierie logicielle</h2>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:coding-stories.github.com/coding-stories" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/digest-js">digest.js</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/a-propos/">À Propos</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Conférence Annotations Java – Compte Rendu</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-07T07:39:00+02:00" pubdate data-updated="true"> 7 jui 2010</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>La conférence <em>Annotations Java</em> animée par Olivier Croisier, expert java et auteur du blog <a href="http://thecodersbreakfast.net/">The Coders Breakfast</a>, s’est tenue le 29 juin dernier a eu lieu la dans les locaux de <a href="http://www.zenika.com/">Zénika</a>.</p>
+
+<p>Les annotations, je pensais bien connaitre… J’avais tort.</p>
+
+<p>Après s’être présenté et avoir présenté Zénika, Olivier commence par un rappel historique : en matière de méta-programmation, il existait déjà l’API <a href="http://java.sun.com/j2se/1.5.0/docs/guide/javadoc/">Doclets</a> qui permet d’ajouter ses propres tags dans les commentaires du code. Les développeurs ont vite détourné cette fonctionnalité, souvent pour permettre la génération automatique de code. A partir de Java 5 sont apparues les annotations.</p>
+
+<p>Dans la bibliothèque Java standard on trouve finalement assez peu d’annotations : <code>@Override</code>, <code>@SuppressWarnings</code> et <code>@Deprecated</code> ainsi que quelques unes dans le package <code>java.lang.annotation</code> (des <em>meta-annotations</em>, c’est à dire des annotations que l’on place sur d’autres annotations comme <code>Target</code> ou <code>Retention). Avec Java 6, on en voit arriver d’autres dans les packages</code>javax.annotation<code>ou</code>javax.xml.bind.annotation`. Mais ce sont surtout les frameworks et autres standards qui font la part belle aux annotations : Hibernate, JPA, JDO, Spring, Guice, J2EE6&#8230; Le plus souvent il s&#8217;agit de remplacer de longs fichiers de description en XML.</p>
+
+<p>Ensuite Olivier nous a présenté la syntaxe et les règles d&#8217;usage des annotations : elles peuvent se placer partout et si on les voit souvent sur des classes, des interfaces ou des méthodes, il est aussi possible d&#8217;annoter les packages en utilisant un fichier <a href="http://java.sun.com/docs/books/jls/third_edition/html/packages.html">package-info.java</a>, les constructeurs, les champs et également les paramètres de méthodes. Les annotations peuvent être paramétrées et ces paramètres peuvent avoir des valeurs par défaut. Valeurs par défaut qui peuvent même être des expressions si tant est que cette expression est résolue à la compilation. Toutefois il existe deux limites : les paramètres des annotations ne peuvent être null (pourquoi ? Personne ne semble vraiment savoir) et on ne peut annoter un élément qu&#8217;avec une seule annotation d&#8217;un même type. Mais il exste une astuce pour contourner le problème : écrire des annotations qui prennent un tableau d&#8217;annotations en paramètre.</p>
+
+<p>Puis on passe au développement d&#8217;annotations personnalisées.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="nd">@interface</span> <span class="n">MyAnnotation</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="nf">aString</span><span class="o">()</span> <span class="k">default</span> <span class="s">&quot;FooBar&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="nf">aInteger</span><span class="o">()</span> <span class="k">default</span> <span class="mi">21</span> <span class="o">+</span> <span class="mi">21</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@MyAnnotation</span><span class="o">(</span><span class="n">aString</span><span class="o">=</span><span class="s">&quot;An arbitrary String&quot;</span><span class="o">,</span> <span class="n">aInteger</span><span class="o">=</span><span class="mi">27</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyAnnotedClass</span> <span class="o">{</span>
+</span><span class='line'>    <span class="cm">/* .... */</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Quand on a un unique paramètre dans l&#8217;annotation on peut simplifier un peu la syntaxe en nommant ce paramètre <code>value</code> :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="nd">@interface</span> <span class="n">MyAnnotation</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="nf">value</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@MyAnnotation</span><span class="o">(</span><span class="s">&quot;Hello world&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyAnnotedClass</span> <span class="o">{</span>
+</span><span class='line'>    <span class="cm">/* .... */</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On peut également annoter nos propres annotations avec les meta-annotations définies dans la bibliothèque standard :</p>
+
+<ul>
+<li><code>Target</code> indique sur quels éléments on peut placer l&#8217;annotation (classes, méthodes&#8230;). Par défaut on peut mettre une annotation partout.</li>
+<li><code>Retention</code> indique la durée de vie de l&#8217;annotation : présence uniquement dans le code source, dans le bytecode de la classe ou également au runtime.</li>
+<li><code>Documented</code> indique si l&#8217;annotation apparaitra dans la javadoc.</li>
+<li>`Inherited indique si l&#8217;annotation est héritée par les sous-classes des classes ou elle est définie. Limitation : on ne peut pas hériter d&#8217;une annotation placée sur un interface en implémentant cette interface.</li>
+</ul>
+
+
+<p>Finalement Olivier est passé à des exemples concrets d&#8217;utilisation des annotations.</p>
+
+<p>D&#8217;abord à la compilation, les annotations permettent d&#8217;étendre les fonctionnalités du compilateur Java. Java 6 propose un mécanisme appelé <em>Pluggable Annotation Processing</em> qui permet de brancher ses propres modules dans le compilateur. Cela se passe dans les packages <code>javax.annotation</code> et <code>javax.annotation.processing</code>. Il suffit d&#8217;écire une implémentation de la classe <code>javax.annotation.processing.Processor</code> (ou étendre <code>AbstractProcessor</code>) et de la mettre dans le classpath du compilateur (les implementations de <code>Processor</code> sont découvertes par le compilateur en utilisant le <a href="http://www/docs/java/docs-1.6.0/api/index.html?java/util/ServiceLoader.html">mécanisme de chargement de service</a>). L&#8217;interface <code>Processor</code> permet d&#8217;accéder à l&#8217;<a href="http://fr.wikipedia.org/wiki/Abstract_syntax_tree">AST</a> du code en cours de compilation. Une utilisation possible est la vérification programmatique de règles de design : s&#8217;assurer par exemple que toutes les classes d&#8217;un package annoté implémentent <code>Serializable</code> ou encore que toutes les classes annotées par un <code>@Loadable</code> possède bien une méthode `load avec les bons paramètres.</p>
+
+<p>Toutefois cette approche d&#8217;extension du compilateur a ses limites : il n&#8217;est pas possible de modifier le code existant (on ne peut qu&#8217;en générer) et certains bugs pouvant être bloquant trainent depuis longtemps (cela semble corrigé dans Java 7).</p>
+
+<p>Second exemple, en runtime cette fois, la recherche d&#8217;annotations par introspection. Pour cela il ne faut pas oublier d&#8217;ajouter la méta-annotation <code>@Rentention(RententionPolicy.RUNTIME)</code> pour que celle-ci survive à l&#8217;exécution dans la JVM. Les cas d&#8217;utilisation tournent cette fois plus vers la programmation orientée <em>POJO</em> (plus besoin d&#8217;implémenter telle interface, on appelle les méthodes par introspection en recherchant celles qui sont annotées), le mapping d&#8217;objets java vers autre chose (par exemple java vers base de données avec JPA ou JDO) ou encore la configuration des frameworks (`@Inject dans Guice par exemple).</p>
+
+<p>En guise de dessert, Olivier nous a proposé une jolie demo d&#8217;injection d&#8217;annotation en runtime dans une classe. Il s&#8217;agit surtout d&#8217;une <em>proof of concept</em> et, de son propre aveux, il n&#8217;a pas trouvé de vrai use case à cela.</p>
+
+<p>Les slides de la présentation et les exemples de code sont disponibles sur le <a href="http://blog.zenika.com/index.php?post/2010/07/05/Conf%C3%A9rence:-Les-annotations-enfin-expliqu%C3%A9es-simplement">blog de Zenika</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jean-Christophe Sirot</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-07T07:39:00+02:00" pubdate data-updated="true"> 7 jui 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/conference/'>conference</a>, <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://coding-stories.github.com/coding-stories/blog/2010/07/07/conference-annotations-java-compte-rendu/" data-via="jcsirot" data-counturl="http://coding-stories.github.com/coding-stories/blog/2010/07/07/conference-annotations-java-compte-rendu/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <script type="in/share" data-counter="right" data-showzero="true"></script>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2010/06/26/android-2-1-tient-la-moitie-du-parc/" title="Previous Post: Android 2.1 tient la moitié du parc">&laquo; Android 2.1 tient la moitié du parc</a>
+      
+      
+        <a class="basic-alignment right articlenav" href="/blog/2010/07/14/scala-2-8-0/" title="Next Post: Scala 2.8.0">Scala 2.8.0 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/20/code-story-2013/">Code Story 2013 : la phase de sélection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/">Un mois avec IntelliJ - début de l'expérience</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/">Migration du blog vers Octopress/Github</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/">Mocker un serveur de mail avec Dumbster et JUnit</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/">Exclure certaines classes de la couverture des tests unitaires</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("jcsirot", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/jcsirot" class="twitter-follow-button" data-show-count="false">Follow @jcsirot</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/jcsirot?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1>Category Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 121.81818181818181%'>android</a> <a href='/blog/categories/bytecode' style='font-size: 105.45454545454545%'>bytecode</a> <a href='/blog/categories/chess' style='font-size: 110.9090909090909%'>chess</a> <a href='/blog/categories/cobertura' style='font-size: 110.9090909090909%'>cobertura</a> <a href='/blog/categories/code' style='font-size: 116.36363636363636%'>code</a> <a href='/blog/categories/code-coverage' style='font-size: 105.45454545454545%'>code coverage</a> <a href='/blog/categories/compiler' style='font-size: 105.45454545454545%'>compiler</a> <a href='/blog/categories/conference' style='font-size: 121.81818181818181%'>conference</a> <a href='/blog/categories/confluence' style='font-size: 105.45454545454545%'>confluence</a> <a href='/blog/categories/cryptography' style='font-size: 105.45454545454545%'>cryptography</a> <a href='/blog/categories/dart' style='font-size: 105.45454545454545%'>dart</a> <a href='/blog/categories/devoxx' style='font-size: 110.9090909090909%'>devoxx</a> <a href='/blog/categories/dvcs' style='font-size: 110.9090909090909%'>DVCS</a> <a href='/blog/categories/ecc' style='font-size: 105.45454545454545%'>ECC</a> <a href='/blog/categories/elliptic-curve' style='font-size: 105.45454545454545%'>elliptic curve</a> <a href='/blog/categories/framework' style='font-size: 110.9090909090909%'>framework</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git</a> <a href='/blog/categories/google' style='font-size: 127.27272727272728%'>google</a> <a href='/blog/categories/hero' style='font-size: 105.45454545454545%'>hero</a> <a href='/blog/categories/htc' style='font-size: 105.45454545454545%'>htc</a> <a href='/blog/categories/html5' style='font-size: 105.45454545454545%'>html5</a> <a href='/blog/categories/http' style='font-size: 105.45454545454545%'>HTTP</a> <a href='/blog/categories/https' style='font-size: 110.9090909090909%'>HTTPS</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE</a> <a href='/blog/categories/intellij' style='font-size: 105.45454545454545%'>IntelliJ</a> <a href='/blog/categories/ios' style='font-size: 105.45454545454545%'>iOS</a> <a href='/blog/categories/jacoco' style='font-size: 105.45454545454545%'>JaCoCo</a> <a href='/blog/categories/java' style='font-size: 160.0%'>java</a> <a href='/blog/categories/java7' style='font-size: 105.45454545454545%'>java7</a> <a href='/blog/categories/javascript' style='font-size: 110.9090909090909%'>javascript</a> <a href='/blog/categories/jira' style='font-size: 105.45454545454545%'>jira</a> <a href='/blog/categories/jschessboard' style='font-size: 105.45454545454545%'>jsChessboard</a> <a href='/blog/categories/jug' style='font-size: 110.9090909090909%'>JUG</a> <a href='/blog/categories/junit' style='font-size: 105.45454545454545%'>junit</a> <a href='/blog/categories/keynote' style='font-size: 105.45454545454545%'>keynote</a> <a href='/blog/categories/ldap' style='font-size: 105.45454545454545%'>ldap</a> <a href='/blog/categories/log' style='font-size: 105.45454545454545%'>log</a> <a href='/blog/categories/maven' style='font-size: 116.36363636363636%'>maven</a> <a href='/blog/categories/maven-cobertura-plugin' style='font-size: 105.45454545454545%'>maven-cobertura-plugin</a> <a href='/blog/categories/maven-enforcer-plugin' style='font-size: 105.45454545454545%'>maven-enforcer-plugin</a> <a href='/blog/categories/maven-failsafe-plugin' style='font-size: 105.45454545454545%'>maven-failsafe-plugin</a> <a href='/blog/categories/maven-jacoco-plugin' style='font-size: 105.45454545454545%'>maven-jacoco-plugin</a> <a href='/blog/categories/maven-jarsigner-plugin' style='font-size: 105.45454545454545%'>maven-jarsigner-plugin</a> <a href='/blog/categories/maven-release-plugin' style='font-size: 110.9090909090909%'>maven-release-plugin</a> <a href='/blog/categories/mock' style='font-size: 105.45454545454545%'>mock</a> <a href='/blog/categories/netbeans' style='font-size: 105.45454545454545%'>NetBeans</a> <a href='/blog/categories/objective-c' style='font-size: 105.45454545454545%'>objective-c</a> <a href='/blog/categories/parleys' style='font-size: 116.36363636363636%'>parleys</a> <a href='/blog/categories/pgn' style='font-size: 105.45454545454545%'>PGN</a> <a href='/blog/categories/play' style='font-size: 110.9090909090909%'>play</a> <a href='/blog/categories/proxy' style='font-size: 105.45454545454545%'>proxy</a> <a href='/blog/categories/qualite' style='font-size: 105.45454545454545%'>qualite</a> <a href='/blog/categories/quality' style='font-size: 110.9090909090909%'>quality</a> <a href='/blog/categories/rsa' style='font-size: 105.45454545454545%'>RSA</a> <a href='/blog/categories/scala' style='font-size: 121.81818181818181%'>scala</a> <a href='/blog/categories/security' style='font-size: 127.27272727272728%'>security</a> <a href='/blog/categories/software-craftsmanship' style='font-size: 105.45454545454545%'>software craftsmanship</a> <a href='/blog/categories/sonar' style='font-size: 110.9090909090909%'>sonar</a> <a href='/blog/categories/spring' style='font-size: 105.45454545454545%'>spring</a> <a href='/blog/categories/ssl' style='font-size: 116.36363636363636%'>SSL</a> <a href='/blog/categories/test' style='font-size: 121.81818181818181%'>test</a> <a href='/blog/categories/tls' style='font-size: 116.36363636363636%'>TLS</a> <a href='/blog/categories/uncle-bob' style='font-size: 105.45454545454545%'>Uncle Bob</a> <a href='/blog/categories/video' style='font-size: 105.45454545454545%'>video</a> <a href='/blog/categories/web' style='font-size: 116.36363636363636%'>web</a> <a href='/blog/categories/wiki' style='font-size: 105.45454545454545%'>wiki</a> </span>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Jean-Christophe Sirot -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> -
+  Theme <a href="https://github.com/amelandri/darkstripes">DarkStripes</a> by Alessandro Melandri
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'codingst';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://coding-stories.github.com/coding-stories/blog/2010/07/07/conference-annotations-java-compte-rendu/';
+        var disqus_url = 'http://coding-stories.github.com/coding-stories/blog/2010/07/07/conference-annotations-java-compte-rendu/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'http://platform.linkedin.com/in.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

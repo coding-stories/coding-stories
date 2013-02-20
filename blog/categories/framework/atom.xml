@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: framework | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/framework/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Audit automatique avec Play Framework]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/05/05/audit-automatique-avec-play-framework/"/>
+    <updated>2011-05-05T07:40:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/05/05/audit-automatique-avec-play-framework</id>
+    <content type="html"><![CDATA[<p>J’aime beaucoup l’annotation @With de Play framework, elle permet d’étendre le comportement d’un <em>Controller</em> en y ajoutant simplement des intercepteurs. Par exemple il est possible d’écrire un <em>Controller</em> générique dont le travail est de logguer des appels et d’ajouter ce comportement sur d’autre <em>Controller</em> avec une simple annotation.</p>
+
+<!-- more -->
+
+
+<p>On commence par définir une annotation qui servira à taguer les méthodes dont les appels seront loggués:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">controllers</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.lang.annotation.ElementType</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Retention</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.RetentionPolicy</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Target</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">METHOD</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="nd">@interface</span> <span class="n">Audit</span> <span class="o">{</span> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Ensuite on va rechercher toutes les méthodes taguées avec cette annotation et on ajoute une ligne de log contenant des informations pertinentes.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">controllers</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">java.lang.reflect.Method</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.Logger</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.mvc.ActionInvoker</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.mvc.Finally</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.mvc.Controller</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.mvc.Http</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.utils.Java</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AuditTrail</span> <span class="kd">extends</span> <span class="n">Controller</span>
+</span><span class='line'><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Finally</span>
+</span><span class='line'><span class="kd">static</span> <span class="kt">void</span> <span class="nf">log</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">getActionAnnotation</span><span class="o">(</span><span class="n">Audit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">audit</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">audit</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+</span><span class='line'>    <span class="cm">/* Get the method name */</span>
+</span><span class='line'>    <span class="n">Object</span><span class="o">[]</span> <span class="n">action</span> <span class="o">=</span> <span class="n">ActionInvoker</span><span class="o">.</span><span class="na">getActionMethod</span><span class="o">(</span><span class="n">Http</span><span class="o">.</span><span class="na">Request</span><span class="o">.</span><span class="na">current</span><span class="o">().</span><span class="na">action</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">Class</span> <span class="n">c</span> <span class="o">=</span> <span class="o">(</span><span class="n">Class</span><span class="o">)</span><span class="n">action</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+</span><span class='line'>    <span class="n">Method</span> <span class="n">m</span> <span class="o">=</span> <span class="o">(</span><span class="n">Method</span><span class="o">)</span><span class="n">action</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+</span><span class='line'>    <span class="cm">/* Get the method parameters name... */</span>
+</span><span class='line'>    <span class="n">String</span><span class="o">[]</span> <span class="n">names</span> <span class="o">=</span> <span class="n">Java</span><span class="o">.</span><span class="na">parameterNames</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+</span><span class='line'>    <span class="cm">/* ... and the values */</span>
+</span><span class='line'>    <span class="n">Object</span><span class="o">[]</span> <span class="n">args</span> <span class="o">=</span> <span class="n">ActionInvoker</span><span class="o">.</span><span class="na">getActionMethodArgs</span><span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">List</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span> <span class="n">names</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">params</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">names</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="s">&quot;=&quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="cm">/* Get the username if Secure module is used */</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">username</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;username&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">username</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">username</span> <span class="o">=</span> <span class="s">&quot;Anonymous User&quot;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="cm">/* Log the action */</span>
+</span><span class='line'>    <span class="n">Logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;&amp;lt;%s&amp;gt; called contoller action &amp;lt;%s.%s&amp;gt; with parameters &amp;lt;%s&amp;gt; at &amp;lt;%s&amp;gt;&quot;</span><span class="o">,</span>
+</span><span class='line'>        <span class="n">username</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">(),</span> <span class="n">m</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="n">params</span><span class="o">,</span> <span class="k">new</span> <span class="n">Date</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Enfin, pour utiliser notre <em>Audit Trail</em>, rien de plus simple, il suffit d’ajouter un <code>@With(AuditTrail.class)</code> sur un <em>Controller</em> et d’annoter avec `@Audit les méthodes à auditer.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@With</span><span class="o">({</span><span class="n">Secure</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">AuditTrail</span><span class="o">.</span><span class="na">class</span><span class="o">})</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Issues</span> <span class="kd">extends</span> <span class="n">Controller</span>
+</span><span class='line'><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Audit</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">showTicket</span><span class="o">(</span><span class="kt">long</span> <span class="n">ticketId</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="cm">/* Do some stuff */</span>
+</span><span class='line'>    <span class="n">render</span><span class="o">(...);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Et dans les logs on pourra alors trouver une ligne qui ressemble à ça :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>17:45:53,867 INFO  ~ &lt;johndoe> called contoller action &lt;Issues.showTicket> with parameters &lt;[ticketId: 11484]> at &lt;Mon May 02 17:45:53 CEST 2011></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Beaucoup d’améliorations sont possibles comme par exemple indiquer le Logger à utiliser comme paramètre de l’annotation `@Audit ou encore mettre les logs dans la base de donnée pour faire des recherches.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Authentification LDAP avec Play! framework]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/11/03/authentification-ldap-avec-play-framework/"/>
+    <updated>2010-11-03T22:42:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/11/03/authentification-ldap-avec-play-framework</id>
+    <content type="html"><![CDATA[<p>Il y a quelques semaines j’ai profité de l’écriture d’une petite application web, un outil interne dans ma boîte, pour essayer <a href="http://www.playframework.org/">Play! framework</a>. Chez nous l’authentification passant par un serveur LDAP centralisé, j’ai cherché à interfacer ce type d’authentification avec Play!</p>
+
+<!-- more -->
+
+
+<h1>Le module Secure</h1>
+
+<p>C’est un module <em>built-in</em> de Play! qui fournit un cadre pour l’authentification. Toutes les informations sont sur la <a href="http://www.playframework.org/documentation/1.1/secure">page de documentation du module</a>.</p>
+
+<p>Il faut d’abord importer le module dans le fichier <code>application.conf</code>.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>The secure module&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>module.secure=${play.path}/modules/secure</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Puis il faut importer les routes définies par le module Secure dans le fichier conf/routes</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>Import Secure routes&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;ul>
+</span><span class='line'>&lt;li>   /                module:secure</span></code></pre></td></tr></table></div></figure></notextile></div></li>
+</ul>
+
+
+<p>Cette ligne permet d’associer les routes <code>/login</code> et `/logout sur le contrôleur Secure.</p>
+
+<p>On va ensuite sécuriser le contrôleur de l’application :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">controllers</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">models.</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.mvc.</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@With</span><span class="o">(</span><span class="n">Secure</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">/&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">L</span><span class="err">&#39;</span><span class="n">acc</span><span class="err">è</span><span class="n">s</span> <span class="err">à</span> <span class="n">ce</span> <span class="n">contr</span><span class="err">ô</span><span class="n">ler</span> <span class="n">n</span><span class="err">é</span><span class="n">cessite</span> <span class="n">une</span> <span class="n">authentification</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Application</span> <span class="kd">extends</span> <span class="n">Controller</span>
+</span><span class='line'><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="n">index</span><span class="o">()</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="cm">/* Render page */</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>Accéder à l’annuaire LDAP avec Spring LDAP</h1>
+
+<p>Pour accéder à un LDAP en java il existe l’API JNDI mais je lui préfère <a href="http://www.springsource.org/ldap">Spring LDAP</a>. Pour ce que je veux faire cette API est plus simple à utiliser.</p>
+
+<p>Pour utiliser Spring LDAP on va d’abord installer le module Spring pour Play!</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[jcs:~]$ play install spring
+</span><span class='line'>~        _            _
+</span><span class='line'>~  _ &lt;strong> | | &lt;/strong> _ _  &lt;em>| |
+</span><span class='line'>~ | '&lt;/em> \| |/ &lt;em>' | || |&lt;/em>|
+</span><span class='line'>~ |  &lt;strong>/|&lt;em>|_&lt;/em>&lt;/strong>|_&lt;em> (&lt;/em>)
+</span><span class='line'>~ |_|            |__/
+</span><span class='line'>~
+</span><span class='line'>~ play! 1.1RC3, http://www.playframework.org
+</span><span class='line'>~
+</span><span class='line'>~ Will install spring-head
+</span><span class='line'>~ This module is compatible with: 1.0.1
+</span><span class='line'>~ Do you want to install this version (y/n)? y
+</span><span class='line'>~ Installing module spring-head...
+</span><span class='line'>~
+</span><span class='line'>~ Fetching http://www.playframework.org/modules/spring-head.zip
+</span><span class='line'>~ [--------------------------100%-------------------------] 625.0 KiB/s
+</span><span class='line'>~ Unzipping...
+</span><span class='line'>~
+</span><span class='line'>~ Module spring-head is installed!
+</span><span class='line'>~ You can now use it by add adding this line to application.conf file:
+</span><span class='line'>~
+</span><span class='line'>~ module.spring=${play.path}/modules/spring-head
+</span><span class='line'>~</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Après avoir importé le module Spring dans le fichier <code>application.conf, il faut ajouter dans le répertoire</code>/lib` les dépendances pour accéder à Spring LDAP. Je les ai téléchargées depuis le <em>repostiory</em> maven central.</p>
+
+<ul>
+<li><a href="http://repo2.maven.org/maven2/org/springframework/ldap/spring-ldap/1.3.0.RELEASE/spring-ldap-1.3.0.RELEASE-all.jar">spring-ldap-1.3.0.RELEASE-all.jar</a></li>
+<li><a href="http://repo2.maven.org/maven2/org/springframework/spring-dao/2.0.8/spring-dao-2.0.8.jar">spring-dao-2.0.8.jar</a></li>
+</ul>
+
+
+<p>Ensuite on va écrire un fichier <code>application-context.xml (à placer dans le répertoire</code>conf/) afin de créer, à la sauce Spring, les objets dont on aura besoin.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="ni">&amp;lt;</span>?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+</span><span class='line'><span class="ni">&amp;lt;</span>!DOCTYPE beans PUBLIC &quot;-//SPRING//DTD BEAN//EN&quot; &quot;http://www.springsource.org/dtd/spring-beans-2.0.dtd&quot;&gt;
+</span><span class='line'><span class="nt">&lt;beans&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;contextSource&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.ldap.core.support.LdapContextSource&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>property name=&quot;url&quot; value=&quot;ldap://ldap.example.com&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>property name=&quot;base&quot; value=&quot;dc=example,dc=com&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">&quot;ldapTemplate&quot;</span> <span class="na">class=</span><span class="s">&quot;org.springframework.ldap.core.LdapTemplate&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>constructor-arg ref=&quot;contextSource&quot; /<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/bean&gt;</span>
+</span><span class='line'><span class="nt">&lt;/beans&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Ce fichier permet d’initialiser un contexte Spring et de créer deux objets :</p>
+
+<ul>
+<li>un `LdapContextSource où j’ai défini 2 paramètres : l’URL et la base (le Dinstinguished Name de la racine de l’arbre du LDAP). Le paramètre base est optionnel et dépend évidemment de la structure du LDAP contacté.</li>
+<li>un <code>LdapTemplate</code> : c’est l’objet qui va être injecté dans notre contrôleur Play!. Il prend le <code>LdapContextSource</code> en paramètre dans son constructeur (le tag <code>constructor-arg</code> est à mon avis plutôt explicite).</li>
+</ul>
+
+
+<h1>Personnaliser le mécanisme d’authentification</h1>
+
+<p>Par défaut, le module Secure accepte n’importe quel couple login/mot de passe. En suivant la documentation, on écrit un nouveau contrôleur afin de personnaliser le mécanisme d’authentification.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">controllers</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Security</span> <span class="kd">extends</span> <span class="n">Secure</span><span class="o">.</span><span class="na">Security</span>
+</span><span class='line'><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">static</span> <span class="kt">boolean</span> <span class="n">authenticate</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">)</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Certes pour le moment ce n’est pas mieux, l’authentification laisse encore passer tout le monde ; mais on va rapidement arranger ça.</p>
+
+<p>Tout d’abord on ajoute une variable de type <code>LdapTemplate</code> qui sera injectée par le framework Spring en utilisant l’annotation `@Inject. Ensuite il n’y a plus qu’à faire un appel à <a href="http://static.springsource.org/spring-ldap/docs/1.3.0.RELEASE/apidocs/org/springframework/ldap/core/LdapTemplate.html#authenticate(javax.naming.Name,%20java.lang.String,%20java.lang.String">LdapTemplate.authenticate(...)</a>) pour effectuer l’authentification.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">controllers</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kn">import</span> <span class="nn">javax.inject.Inject</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.ldap.core.DistinguishedName</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.ldap.core.LdapTemplate</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.ldap.filter.EqualsFilter</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Security</span> <span class="kd">extends</span> <span class="n">Secure</span><span class="o">.</span><span class="na">Security</span>
+</span><span class='line'><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Inject</span> <span class="kd">private</span> <span class="kd">static</span> <span class="n">LdapTemplate</span> <span class="n">ldap</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">authenticate</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">)</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="n">EqualsFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EqualsFilter</span><span class="o">(</span><span class="s">&quot;uid&quot;</span><span class="o">,</span> <span class="n">username</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">ldap</span><span class="o">.</span><span class="na">authenticate</span><span class="o">(</span><span class="n">DistinguishedName</span><span class="o">.</span><span class="na">EMPTY_PATH</span><span class="o">,</span> <span class="n">filter</span><span class="o">.</span><span class="na">encode</span><span class="o">(),</span> <span class="n">password</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Les paramètres passés à <code>authenticate</code> sont à adapter selon les besoins :</p>
+
+<ul>
+<li>Le premier paramètre est la base de recherche des utilisateurs. Ici je fais une recherche globale sur le LDAP voilà pourquoi je passe un nom vide.</li>
+<li>Le deuxième paramètre est le filtre de recherche des utilisateurs. Dans mon LDAP, ce filtre est le traditionnel <code>uid=user_name</code>. Là aussi à adapter selon les cas ; je conseille la lecture de la javadoc de <a href="http://static.springsource.org/spring-ldap/docs/1.3.0.RELEASE/apidocs/index.html?org/springframework/ldap/filter/Filter.html">org.springframework.ldap.filter.Filter</a> et ses sous-classes.</li>
+</ul>
+
+
+<h1>Et ensuite ?</h1>
+
+<p>Voilà c’est terminé, et j’avoue avoir été surpris par le peu de code nécessaire pour avoir quelque chose qui fonctionne. Il reste toutefois des choses à faire : utiliser les protocoles <code>https</code> et <code>ldaps</code> pour authentifier les serveur et éviter que les mots de passe se baladent en clair sur le réseau, ou encore lier des rôles des utilisateurs (avec l’annotation <code>@Check</code> décrite dans la documentation du module Secure) à des attributs de l’utilisateur récupérés dans le LDAP…</p>
+
+<p>Si vous avez d’autres idées ou des remarques, n’hésitez pas à laisser un commentaire.</p>
+]]></content>
+  </entry>
+  
+</feed>

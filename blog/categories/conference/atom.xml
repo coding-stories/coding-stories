@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: conference | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/conference/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Video : Deep Dive into Android Security]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/26/video-deep-dive-into-android-security/"/>
+    <updated>2011-11-26T09:24:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/26/video-deep-dive-into-android-security</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/posts/android-security-20111126.jpg"></p>
+
+<p>Si vous chercher à mieux comprendre le fonctionnement du modèle de sécurité Android je vous conseille fortement de regarder cette vidéo. Dans cette excellente session de la conférence <a href="http://www.andevcon.com/">AndDevCon II</a> <a href="http://marakana.com/expert/aleksandar_gargenta,1.html">Aleksandar Gargenta</a> présente différents aspects liés à la sécurité sur Android (le <em>sandboxing</em> des applications, le fonctionnement du système de permissions, le chiffrement et la protection des données, etc) mais il parle également des limites du modèle et des contre-mesures contre les menaces (signature des applications, <em>rooting</em> &amp; <em>rootkits</em>, SE-Linux, etc).</p>
+
+<p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/tKJiSjVk8NA "></iframe></div></p>
+
+<p><iframe src="http://fr.slideshare.net/slideshow/embed_code/10123665 " width="599" height="487" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[GTAC 2011 : les vidéos sont en ligne]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/24/gtac-2011-les-videos-sont-en-ligne/"/>
+    <updated>2011-11-24T08:54:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/24/gtac-2011-les-videos-sont-en-ligne</id>
+    <content type="html"><![CDATA[<p>Intéressés par la qualité et le test logiciel ? Les vidéos des différentes sessions de la conférence GTAC 2011 sont désormais disponibles sur <a href="http://www.gtac.biz/talks">http://www.gtac.biz/talks</a> ou sur la chaîne Youtube <a href="http://www.youtube.com/user/GoogleTechTalks">Google Tech Talks</a>. Bon visionnage !</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sommes-nous des professionnels ?]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/11/22/sommes-nous-des-professionnels/"/>
+    <updated>2010-11-22T08:11:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/11/22/sommes-nous-des-professionnels</id>
+    <content type="html"><![CDATA[<p>Les vidéos de la conférence Devoxx 2009 sont désormais toutes <a href="http://parleys.com/#id=74957&amp;st=4">librement accessibles</a> ; j’en profite donc pour inciter toute personne travaillant dans le développement logiciel à regarder la <em>keynote</em> de <a href="http://en.wikipedia.org/wiki/Robert_Cecil_Martin">Robert Martin</a> (alias oncle Bob) sur ce que devrait être, et devrait faire, un professionnel du développement logiciel. À Lire également, l’article de wikipedia <a href="http://en.wikipedia.org/wiki/Software_craftsmanship">Software craftsmanship</a>.</p>
+
+<p>Alors certes, rien de bien nouveau dans le discours ; mais il est toujours bon de rappeler les évidences, ne serait-ce que pour nous montrer qu’il nous reste une marge de progression…</p>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=1491"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=1491" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Conférence annotations java – compte rendu]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/07/07/conference-annotations-java-compte-rendu/"/>
+    <updated>2010-07-07T07:39:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/07/07/conference-annotations-java-compte-rendu</id>
+    <content type="html"><![CDATA[<p>La conférence <em>Annotations Java</em> animée par Olivier Croisier, expert java et auteur du blog <a href="http://thecodersbreakfast.net/">The Coders Breakfast</a>, s’est tenue le 29 juin dernier a eu lieu la dans les locaux de <a href="http://www.zenika.com/">Zénika</a>.</p>
+
+<p>Les annotations, je pensais bien connaitre… J’avais tort.</p>
+
+<p>Après s’être présenté et avoir présenté Zénika, Olivier commence par un rappel historique : en matière de méta-programmation, il existait déjà l’API <a href="http://java.sun.com/j2se/1.5.0/docs/guide/javadoc/">Doclets</a> qui permet d’ajouter ses propres tags dans les commentaires du code. Les développeurs ont vite détourné cette fonctionnalité, souvent pour permettre la génération automatique de code. A partir de Java 5 sont apparues les annotations.</p>
+
+<p>Dans la bibliothèque Java standard on trouve finalement assez peu d’annotations : <code>@Override</code>, <code>@SuppressWarnings</code> et <code>@Deprecated</code> ainsi que quelques unes dans le package <code>java.lang.annotation</code> (des <em>meta-annotations</em>, c’est à dire des annotations que l’on place sur d’autres annotations comme <code>Target</code> ou <code>Retention). Avec Java 6, on en voit arriver d’autres dans les packages</code>javax.annotation<code>ou</code>javax.xml.bind.annotation`. Mais ce sont surtout les frameworks et autres standards qui font la part belle aux annotations : Hibernate, JPA, JDO, Spring, Guice, J2EE6... Le plus souvent il s'agit de remplacer de longs fichiers de description en XML.</p>
+
+<p>Ensuite Olivier nous a présenté la syntaxe et les règles d'usage des annotations : elles peuvent se placer partout et si on les voit souvent sur des classes, des interfaces ou des méthodes, il est aussi possible d'annoter les packages en utilisant un fichier <a href="http://java.sun.com/docs/books/jls/third_edition/html/packages.html">package-info.java</a>, les constructeurs, les champs et également les paramètres de méthodes. Les annotations peuvent être paramétrées et ces paramètres peuvent avoir des valeurs par défaut. Valeurs par défaut qui peuvent même être des expressions si tant est que cette expression est résolue à la compilation. Toutefois il existe deux limites : les paramètres des annotations ne peuvent être null (pourquoi ? Personne ne semble vraiment savoir) et on ne peut annoter un élément qu'avec une seule annotation d'un même type. Mais il exste une astuce pour contourner le problème : écrire des annotations qui prennent un tableau d'annotations en paramètre.</p>
+
+<p>Puis on passe au développement d'annotations personnalisées.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="nd">@interface</span> <span class="n">MyAnnotation</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">String</span> <span class="n">aString</span><span class="o">()</span> <span class="k">default</span> <span class="s">&quot;FooBar&quot;</span><span class="o">;</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">aInteger</span><span class="o">()</span> <span class="k">default</span> <span class="mi">21</span> <span class="o">+</span> <span class="mi">21</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@MyAnnotation</span><span class="o">(</span><span class="n">aString</span><span class="o">=</span><span class="s">&quot;An arbitrary String&quot;</span><span class="o">,</span> <span class="n">aInteger</span><span class="o">=</span><span class="mi">27</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyAnnotedClass</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="cm">/* .... */</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Quand on a un unique paramètre dans l'annotation on peut simplifier un peu la syntaxe en nommant ce paramètre <code>value</code> :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="nd">@interface</span> <span class="n">MyAnnotation</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">String</span> <span class="n">value</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@MyAnnotation</span><span class="o">(</span><span class="s">&quot;Hello world&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyAnnotedClass</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="cm">/* .... */</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>On peut également annoter nos propres annotations avec les meta-annotations définies dans la bibliothèque standard :</p>
+
+<ul>
+<li><code>Target</code> indique sur quels éléments on peut placer l'annotation (classes, méthodes...). Par défaut on peut mettre une annotation partout.</li>
+<li><code>Retention</code> indique la durée de vie de l'annotation : présence uniquement dans le code source, dans le bytecode de la classe ou également au runtime.</li>
+<li><code>Documented</code> indique si l'annotation apparaitra dans la javadoc.</li>
+<li>`Inherited indique si l'annotation est héritée par les sous-classes des classes ou elle est définie. Limitation : on ne peut pas hériter d'une annotation placée sur un interface en implémentant cette interface.</li>
+</ul>
+
+
+<p>Finalement Olivier est passé à des exemples concrets d'utilisation des annotations.</p>
+
+<p>D'abord à la compilation, les annotations permettent d'étendre les fonctionnalités du compilateur Java. Java 6 propose un mécanisme appelé <em>Pluggable Annotation Processing</em> qui permet de brancher ses propres modules dans le compilateur. Cela se passe dans les packages <code>javax.annotation</code> et <code>javax.annotation.processing</code>. Il suffit d'écire une implémentation de la classe <code>javax.annotation.processing.Processor</code> (ou étendre <code>AbstractProcessor</code>) et de la mettre dans le classpath du compilateur (les implementations de <code>Processor</code> sont découvertes par le compilateur en utilisant le <a href="http://www/docs/java/docs-1.6.0/api/index.html?java/util/ServiceLoader.html">mécanisme de chargement de service</a>). L'interface <code>Processor</code> permet d'accéder à l'<a href="http://fr.wikipedia.org/wiki/Abstract_syntax_tree">AST</a> du code en cours de compilation. Une utilisation possible est la vérification programmatique de règles de design : s'assurer par exemple que toutes les classes d'un package annoté implémentent <code>Serializable</code> ou encore que toutes les classes annotées par un <code>@Loadable</code> possède bien une méthode `load avec les bons paramètres.</p>
+
+<p>Toutefois cette approche d'extension du compilateur a ses limites : il n'est pas possible de modifier le code existant (on ne peut qu'en générer) et certains bugs pouvant être bloquant trainent depuis longtemps (cela semble corrigé dans Java 7).</p>
+
+<p>Second exemple, en runtime cette fois, la recherche d'annotations par introspection. Pour cela il ne faut pas oublier d'ajouter la méta-annotation <code>@Rentention(RententionPolicy.RUNTIME)</code> pour que celle-ci survive à l'exécution dans la JVM. Les cas d'utilisation tournent cette fois plus vers la programmation orientée <em>POJO</em> (plus besoin d'implémenter telle interface, on appelle les méthodes par introspection en recherchant celles qui sont annotées), le mapping d'objets java vers autre chose (par exemple java vers base de données avec JPA ou JDO) ou encore la configuration des frameworks (`@Inject dans Guice par exemple).</p>
+
+<p>En guise de dessert, Olivier nous a proposé une jolie demo d'injection d'annotation en runtime dans une classe. Il s'agit surtout d'une <em>proof of concept</em> et, de son propre aveux, il n'a pas trouvé de vrai use case à cela.</p>
+
+<p>Les slides de la présentation et les exemples de code sont disponibles sur le <a href="http://blog.zenika.com/index.php?post/2010/07/05/Conf%C3%A9rence:-Les-annotations-enfin-expliqu%C3%A9es-simplement">blog de Zenika</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

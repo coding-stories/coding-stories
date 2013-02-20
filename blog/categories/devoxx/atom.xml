@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: devoxx | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/devoxx/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Afficher les vidéos de Parleys dans Confluence]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/11/29/afficher-les-videos-de-parleys-dans-confluence/"/>
+    <updated>2010-11-29T07:55:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/11/29/afficher-les-videos-de-parleys-dans-confluence</id>
+    <content type="html"><![CDATA[<p>Comment faire quand on désire afficher du contenu multimedia (une vidéo par exemple) dans une page <a href="http://www.atlassian.com/software/confluence/">Confluence</a> ?
+Confluence fournit une la <a href="http://confluence.atlassian.com/display/DOC/Embedding+Multimedia+Content">balise wiki</a> dédiée si la ressource à afficher est stockée localement (un attachement dans le wiki par exemple). Une autre solution c’est le plugin widget connector qui est compatible avec des services tels que youtube, vimeo, slideshare… Malheureusement aucune de ces solutions ne permet d’inclure une vidéo issue de <a href="http://www.parleys.com/">Parleys</a>.</p>
+
+<!-- more -->
+
+
+<h1>Une macro utilisateur</h1>
+
+<p>Confluence permet des définir ses propres macros pour afficher du code HTML arbitraire dans une page du wiki. Cela permet par exemple de formater automatiquement des données ou, dans notre cas, d’insérer du contenu externe. Pour insérer la vidéo je vais écrire une <strong>macro utilisateur</strong> ; ce type a de macro a l’avantage de pouvoir être saisie directement dans l’interface d’administration de Confluence.</p>
+
+<p>Pour créer une nouvelle macro, dans le menu de gauche cliquez sur ‘<strong>User Macros</strong>‘ puis sur ‘<strong>Create a User Macro</strong>‘ au-dessus de la liste des macro existantes. Puis on configure la nouvelle macro :</p>
+
+<ul>
+<li><strong>Name</strong> : Parleys</li>
+<li><strong>Visibility</strong> : visible par tous</li>
+<li><strong>Title</strong> : parleys</li>
+<li><strong>Description</strong> : Embeds Parleys video</li>
+<li><strong>Categories</strong> : Contenu Externe</li>
+<li><strong>Macro Body Processing</strong> : No macro body (toutes les informations seront contenues dans les paramètres de la macro)</li>
+<li><strong>Output format</strong> : HTML</li>
+</ul>
+
+
+<h1>Le gabarit</h1>
+
+<p>Dans la zone <strong>template</strong> on commence par définir les paramètres de la macro. Ils sont au nombre de quatre : <code>id</code> (l’identifiant de la video), <code>width</code>, <code>height</code> et `allowFullScreen (si on active la fonction de passage en plein écran). Définir ces paramètres permet d’accéder à la macro depuis le navigateur de macros dans l’éditeur de page.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h2>@param id:title=id|desc=The video identifier|required=true|multiple=false&lt;/h2>
+</span><span class='line'>
+</span><span class='line'>&lt;h2>@param width:title=width|type=int|desc=The video width|required=false|multiple=false|default=474&lt;/h2>
+</span><span class='line'>
+</span><span class='line'>&lt;h2>@param height:title=height|type=int|desc=The video height|required=false|multiple=false|default=443&lt;/h2>
+</span><span class='line'>
+</span><span class='line'>&lt;h2>@param allowFullScreen:title=Allow full screen|type=boolean|desc=Allow full screen|required=false|multiple=false|default=true&lt;/h2>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Ensuite on va définir des valeurs par défaut pour nos différents paramètres. Pour accéder au paramètre dont le nom est foo, on utilise la variable $paramfoo.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>set($id= $paramid)&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>set($width= $paramwidth)&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>set($height= $paramheight)&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>set($allowFullScreen= $paramallowFullScreen)&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>if (!$width)&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  #set ($width=474)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>end&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>if (!$height)&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  #set ($height=443)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>end&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>if (!$allowFullScreen)&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  #set ($allowFullScreen="true")&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h1>end&lt;/h1>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Et enfin il n’y a plus qu’à importer le code HTML fournit par Parleys en remplaçant les variables.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;div&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;object</span> <span class="na">width=</span><span class="s">&quot;$width&quot;</span> <span class="na">height=</span><span class="s">&quot;$height&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;movie&quot;</span> <span class="na">value=</span><span class="s">&quot;http://www.parleys.com/share/parleysshare2.swf?pageId=$id&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;allowFullScreen&quot;</span> <span class="na">value=</span><span class="s">&quot;$allowFullScreen&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;param</span> <span class="na">name=</span><span class="s">&quot;pageId&quot;</span> <span class="na">value=</span><span class="s">&quot;$id&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;embed</span> <span class="na">src=</span><span class="s">&quot;http://www.parleys.com/share/parleysshare2.swf?pageId=$paramid&quot;</span>
+</span><span class='line'>          <span class="na">type=</span><span class="s">&quot;application/x-shockwave-flash&quot;</span>
+</span><span class='line'>          <span class="na">allowfullscreen=</span><span class="s">&quot;$allowFullScreen&quot;</span>
+</span><span class='line'>          <span class="na">width=</span><span class="s">&quot;$width&quot;</span> <span class="na">height=</span><span class="s">&quot;$height&quot;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/object&gt;</span>
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Utiliser la macro</p>
+
+<p>Pour utiliser la macro, il suffit de l’appeler dans une page avec l’identifiant (obligatoire) de la vidéo.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{parleys:id=1234}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>On peut aussi passer les paramètres supplémentaires en les séparant par des pipe</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{parleys:id=1234|width=237|height=221}</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>À partir de Confluence 3.3.4, grâce à la définition des paramètres au début du template, il est possible d’accèder directement à la macro depuis le navigateur de macro et l’auto-complétion fonctionne dans le mode d’édition <em>Rich Text</em>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sommes-nous des professionnels ?]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/11/22/sommes-nous-des-professionnels/"/>
+    <updated>2010-11-22T08:11:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/11/22/sommes-nous-des-professionnels</id>
+    <content type="html"><![CDATA[<p>Les vidéos de la conférence Devoxx 2009 sont désormais toutes <a href="http://parleys.com/#id=74957&amp;st=4">librement accessibles</a> ; j’en profite donc pour inciter toute personne travaillant dans le développement logiciel à regarder la <em>keynote</em> de <a href="http://en.wikipedia.org/wiki/Robert_Cecil_Martin">Robert Martin</a> (alias oncle Bob) sur ce que devrait être, et devrait faire, un professionnel du développement logiciel. À Lire également, l’article de wikipedia <a href="http://en.wikipedia.org/wiki/Software_craftsmanship">Software craftsmanship</a>.</p>
+
+<p>Alors certes, rien de bien nouveau dans le discours ; mais il est toujours bon de rappeler les évidences, ne serait-ce que pour nous montrer qu’il nous reste une marge de progression…</p>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=1491"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=1491" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

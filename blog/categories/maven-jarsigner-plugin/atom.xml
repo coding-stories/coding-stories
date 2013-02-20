@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: maven-jarsigner-plugin | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/maven-jarsigner-plugin/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Signer les JARs avec maven]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/09/02/signer-les-jars-avec-maven/"/>
+    <updated>2010-09-02T23:09:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/09/02/signer-les-jars-avec-maven</id>
+    <content type="html"><![CDATA[<p>Après avoir vu cette <a href="http://stackoverflow.com/questions/3598424/jar-signing-strategy-in-maven-projects">question</a> sur stackoverflow j’ai pensé que présenter la façon dont je gère la signature de code avec maven pouvait en intéresser certains.</p>
+
+<!-- more -->
+
+
+<h1>Utiliser deux <em>keystores</em></h1>
+
+<p>Tout d’abord il s’agit de produire un keystore pour le développement ; soit un certificat auto-signée, soit un certificat émis par une PKI interne à votre organisation si d’aventure vous en disposez une. Appelons le `dev.keystore. Ce keystore va être enregistré dans le SCM et de cette façon le serveur d’intégration continue pourra signer les builds de développement.</p>
+
+<p>Le deuxième keystore contiendra la clé de production, c’est-à-dire un certificat signé par une autorité de certification délivrant des certificats de signature de code. Comptez entre 100 et 300€/an. Appelons le `prod.keystore. Idéalement ce keystore sera conservé en sécurité et protégé par un mot de passe sûr, connu uniquement des personnes autorisées (par exemple le responsable des releases).</p>
+
+<p>Pour les détails de la génération de la clé et l’obtention d’un certificat je vous laisse regarder la <a href="http://download.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html">documentation de keytool</a>.</p>
+
+<h1>Configurer maven</h1>
+
+<p>Le plugin maven-jarsigner-plugin comme son nom l’indique permet de signer des jar. Comme il est lié par défaut à la phase <em>package</em> de maven il sera appelé automatiquement une fois le jar généré. Configurons-le.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>  <span class="nt">&lt;build&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>plugins<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>artifactId<span class="ni">&amp;gt;</span>maven-jarsigner-plugin<span class="ni">&amp;lt;</span>/artifactId<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>version<span class="ni">&amp;gt;</span>1.2<span class="ni">&amp;lt;</span>/version<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>          <span class="ni">&amp;lt;</span>goal<span class="ni">&amp;gt;</span>sign<span class="ni">&amp;lt;</span>/goal<span class="ni">&amp;gt;</span>
+</span><span class='line'>        <span class="ni">&amp;lt;</span>/goals<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>/execution<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/executions<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>keystore<span class="ni">&amp;gt;</span>${keystore.path}<span class="ni">&amp;lt;</span>/keystore<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>storetype<span class="ni">&amp;gt;</span>${keystore.type}<span class="ni">&amp;lt;</span>/storetype<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>alias<span class="ni">&amp;gt;</span>${keystore.alias}<span class="ni">&amp;lt;</span>/alias<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>storepass<span class="ni">&amp;gt;</span>${keystore.store.password}<span class="ni">&amp;lt;</span>/storepass<span class="ni">&amp;gt;</span>
+</span><span class='line'>      <span class="ni">&amp;lt;</span>keypass<span class="ni">&amp;gt;</span>${keystore.key.password}<span class="ni">&amp;lt;</span>/keypass<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>/configuration<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/plugin<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>plugins<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>  ...
+</span><span class='line'>  <span class="nt">&lt;properties&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>keystore.path<span class="ni">&amp;gt;</span>dev.keystore<span class="ni">&amp;lt;</span>/keystore.path<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>keystore.type<span class="ni">&amp;gt;</span>JKS<span class="ni">&amp;lt;</span>/keystore.type<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>keystore.alias<span class="ni">&amp;gt;</span>signingKey<span class="ni">&amp;lt;</span>/keystore.alias<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>keystore.password<span class="ni">&amp;gt;</span>changeit<span class="ni">&amp;lt;</span>/keystore.password<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>keystore.store.password<span class="ni">&amp;gt;</span>${keystore.password}<span class="ni">&amp;lt;</span>/keystore.store.password<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>keystore.key.password<span class="ni">&amp;gt;</span>${keystore.password}<span class="ni">&amp;lt;</span>/keystore.key.password<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/properties&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Ensuite dans le fichier <code>${HOME}/.m2/settings.xml</code> on définit un profil codesigning :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;settings&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profiles&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>profile<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>id<span class="ni">&amp;gt;</span>codesigning<span class="ni">&amp;lt;</span>/id<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>properties<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>keystore.path<span class="ni">&amp;gt;</span>~/private/prod.keystore<span class="ni">&amp;lt;</span>/keystore.path<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>keystore.alias<span class="ni">&amp;gt;</span>codesigning<span class="ni">&amp;lt;</span>/keystore.alias<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>keystore.type<span class="ni">&amp;gt;</span>JKS<span class="ni">&amp;lt;</span>/keystore.type<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>keystore.store.password<span class="ni">&amp;gt;</span>${keystore.password}<span class="ni">&amp;lt;</span>/keystore.store.password<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>keystore.key.password<span class="ni">&amp;gt;</span>${keystore.password}<span class="ni">&amp;lt;</span>/keystore.key.password<span class="ni">&amp;gt;</span>
+</span><span class='line'>    <span class="ni">&amp;lt;</span>keystore.password<span class="ni">&amp;gt;</span>aVeryStringPassword<span class="ni">&amp;lt;</span>/keystore.password<span class="ni">&amp;gt;</span>
+</span><span class='line'>  <span class="ni">&amp;lt;</span>/properties<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>/profile<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/profiles&gt;</span>
+</span><span class='line'><span class="nt">&lt;/settings&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Désormais pour signer avec la clé de production il suffit de lancer maven avec le bon profil.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mvn clean install -Pcodesigning</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Si vous être parano, il est possible de ne pas mettre le mot de passe dans le fichier <code>settings.xml</code>. Dans ce cas on le passe à maven en paramètre.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mvn clean install -Pcodesigning -Dkeystore.password=aVeryStringPassword</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>Faire une release</h1>
+
+<p>La version stable du produit se doit d’être signée par la clé de production. Pour cela on passe le profil au plugin release :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mvn release:perform -Darguments="-Pcodesigning -Dkeystore.password=aVeryStringPassword"</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Et comme je trouve cette syntaxe peu agréable à utiliser, j’ai configuré le plugin dans le <code>pom.xml</code>.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>maven-release-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;version&gt;</span>2.0<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;configuration&gt;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;pre&gt;&lt;code&gt;</span><span class="ni">&amp;lt;</span>arguments<span class="ni">&amp;gt;</span>-Pcodesigning -Dkeystore.password=${keystore.password}<span class="ni">&amp;lt;</span>/arguments<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>goals<span class="ni">&amp;gt;</span>deploy<span class="ni">&amp;lt;</span>/goals<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="ni">&amp;lt;</span>useReleaseProfile<span class="ni">&amp;gt;</span>false<span class="ni">&amp;lt;</span>/useReleaseProfile<span class="ni">&amp;gt;</span>
+</span><span class='line'><span class="nt">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;p&gt;</span>  <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plugin&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>de cette façon on peut se contenter d’appeler cette commande :</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mvn release:perform -Dkeystore.password=aVeryStringPassword</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+]]></content>
+  </entry>
+  
+</feed>

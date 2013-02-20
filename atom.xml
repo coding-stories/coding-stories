@@ -1,0 +1,1699 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Code Story 2013 : la phase de sélection]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2013/02/20/code-story-2013/"/>
+    <updated>2013-02-20T08:02:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2013/02/20/code-story-2013</id>
+    <content type="html"><![CDATA[<p>Quand j&#8217;ai lu début janvier l&#8217;annonce du lancement de la saison 2013 de Code Story j&#8217;ai trouvé le principe de sélection amusant. Cette année, c&#8217;est décidé je participe à Code Story. Code Story 2013 me voilà&#8230;</p>
+
+<!-- more -->
+
+
+<h1>Choix des technologies</h1>
+
+<p>Cette année la sélection consistait à mettre en place un serveur web répondant aux questions du bot de Code Story. Quand la réponse envoyée est fausse, le bot continue à poser la question régulièrement jusqu&#8217;à obtenir une réponse correcte. De temps un temps un petit reboot du bot lui fait poser une nouvelle fois toutes les questions depuis le début. Gare alors aux régressions&#8230;</p>
+
+<p>Pour le choix du langage, après avoir hésité à choisir un langage &#8220;alternatif&#8221; (Dart ? Ceylon ?), j&#8217;ai préféré partir sur une valeur sûre et maitrisée : Java.</p>
+
+<p>Côté serveur web, il y a pléthore de choix : du <a href="https://github.com/jnizet/CodeStory2013">serveur HTTP réécrit from scratch</a> à partir de `java.net.ServerSocket au full-fledge framework comme Play 2 en passant par Jetty et Tomcat. J&#8217;ai choisi la voie moyenne en utilisant le <a href="http://docs.oracle.com/javase/6/docs/jre/api/net/httpserver/spec/index.html?com/sun/net/httpserver/package-summary.html">serveur HTTP livré avec le JRE</a> depuis Java 6.</p>
+
+<p>Restait l&#8217;hébergement du serveur. Pour ma première incursion dans le Cloud je me suis souvenu de la présentation <a href="http://blog-rd.ideotechnologies.com/?p=2943">Du legacy au cloud</a> donnée par David Gageot lors du dernier JUG Summer Camp. Il utilisait <a href="http://www.heroku.com/">Heroku</a> pour déployer son application car il est possible de lancer n&#8217;importe quel programme Java disposant d&#8217;un simple <code>main</code>. Le port du serveur est simplment fourni dans une variable d&#8217;environnement. La création d&#8217;une application dans Heroku se fait en moins de 5 minutes et un &#8220;git push master heroku&#8221; suffit pour recompiler et redéployer automatiquement l&#8217;application. Cerise sur la gâteau, il existe des dizaines de modules complémentaires pour le stockage des données, le logging, etc qu&#8217;il est possible d&#8217;ajouter à son application d&#8217;un simple click.</p>
+
+<h1>Premières questions</h1>
+
+<p>Les premières questions sont simples &#8220;Quelle est ton adresse email&#8221;, &#8220;Es tu content de participer à Code Story(OUI/NON)&#8221;&#8230; Elles permettent au bot Code Story de vérifier que le serveur est bien présent et lit et répond correctement aux requêtes.</p>
+
+<p>Les choses sérieuses commence avec l&#8217;arrivée d&#8217;une requête <code>POST</code> contenant l&#8217;énonce du premier exercice. J&#8217;interface alors le serveur avec Amazon S3 (merci à Amazon pour sa <a href="http://aws.amazon.com/fr/sdkforjava/">bibliothèque d&#8217;intégration</a>) pour stocker le contenu des requêtes POST qui arrivent, histoire de ne pas perdre l&#8217;énoncé.</p>
+
+<h1>L&#8217;échoppe de monade sur Scalaskel</h1>
+
+<p>Le premier énoncé s&#8217;appelle <em><a href="http://code-story.net/2013/01/22/scalaskel.html">L&#8217;échoppe de monade sur Scalaskel</a></em>. C&#8217;est un problème de rendu de monnaie : dénombrer toutes les façons possibles de partager une somme <code>S</code> avec des pièces de valeur <code>P1</code>, <code>P2</code>, <code>P3</code>, &#8230; <code>Pn</code>.</p>
+
+<p>Je commence classiquement en TDD par écrire des tests pour les premières valeurs : 1, rouge-vert-refactoring, 2, rouge-vert-refactoring&#8230; À partir de 8 les choses se compliquent un peu, il y a faut retourner deux solutions. Petit à petit je commence à voir l&#8217;algorithme se dessiner. Les nouveaux tests sont assez simples à trouver et les phases de refactoring ne posent pas non plus trop de problèmes.</p>
+
+<p>Finalement j&#8217;arrive à un algorithme contenant deux récursion : une première sur la valeur des pièces (on réduit le nombre de pièces différentes à chaque itération) et une seconde sur la somme à partionner.</p>
+
+<p>Je redéploie le serveur et je vois dans les logs les appels du bots pour les valeurs successives de 1 à 100 comme indiqué dans l&#8217;énoncé. Tous les tests passent. Joie :p</p>
+
+<p>Mon code : <a href="https://gist.github.com/jcsirot/4677917">https://gist.github.com/jcsirot/4677917</a></p>
+
+<h1>La calculatrice</h1>
+
+<p>Pas d&#8217;énoncé pour l&#8217;exercice suivant, les questions se suffisent à elles-même. D&#8217;abord ce sont de simples expressions <code>1+1</code>, <code>2+2</code>, etc ; progressivement elles deviennent plus compliquées : <code>(1+2)/2</code>. Bref, il va falloir écrire un solveur d&#8217;expressions arithmétques.</p>
+
+<p>Certains auront l&#8217;idée d&#8217;évaluer l&#8217;expression en emabarquant Groovy, une idée très maligne. Mais moi je suis ici en terrain connu. Ce problème, je le fais coder aux ingénieurs que je vois en entretien d&#8217;embauche alors je sais comment faire : <a href="http://en.wikipedia.org/wiki/Shunting-yard_algorithm">l&#8217;algorithme Shunting-yard</a> inventé par Dijkstra permet de transformer une expression en notation infixée en notation post-fixée (la notation polonaise inversée bien connu des possesseurs de HP48) ou en AST.</p>
+
+<p>Pour aller plus vite, pas (trop) de TDD. J&#8217;écris une liste de tests puis je code l&#8217;algorithme d&#8217;une traite. Comme on ne cherche à supporter que les quatres opérations et les parenthèses l&#8217;implémenter est assez courte. L&#8217;algorithme fonctionne (presque&#8230;) du premier coup.</p>
+
+<p>De nouvelles questions arrivant du bot demandent de supporter les nombres négatifs. J&#8217;ajoute un lexer pour découper l&#8217;expression en tokens car un simple StringTokenizer ne suffit plus.</p>
+
+<p>Finalement, sécurisé par l&#8217;ensemble des tests unitaires, je me lance dans un important refactoring pour utiliser un pattern visitor et rendre le code un peu plus objet, la contrepartie étant un nombre de classes plus important.</p>
+
+<p>Mon code : <a href="https://gist.github.com/jcsirot/4990325">https://gist.github.com/jcsirot/4990325</a></p>
+
+<h1>Location d’astronef sur Jajascript</h1>
+
+<p>Le troisième exercice est <em><a href="http://code-story.net/2013/02/02/jajascript.html">Location d’astronef sur Jajascript</a></em> et c&#8217;est sans doute celui qui m&#8217;a demandé le plus de travail.</p>
+
+<p>Tout commençait bien car j&#8217;avais déjà vu ce kata au Paris Scala User Group. J&#8217;ai donc rapidement produit une première version fonctionnelle. L&#8217;algorithme consite à parcourir de façon récursive l&#8217;arbre de toutes les combinaisons de locations possibles (c&#8217;est à dire en ne prenant que des vols qui ne chevauchent pas) et à garder la plus rentable.</p>
+
+<p>Assez rapidement je trouve une optimisation. L&#8217;algorithme passe en effet beaucoup de temps à recalculer le chemin optimal pour une liste commençant par un vol donné. On peut donc créer un cache qui associe un vol avec le chemin optimal à utiliser.</p>
+
+<p>Le premier déploiement (en fait le second, car j&#8217;avais oublié de trier les vols la première fois) fonctionne et va jusqu&#8217;à 1500 vols. Sauf que ma JVM comment à se sentir un peu à l&#8217;étroit dans les 512Mo de RAM accordés par Heroku et le processus commence à swapper. Impossible de répondre dans les 30 secondes impartis. Je pense que j&#8217;aurais pu améliorer les strucutures de données pour prendre moins de RAM mais je choisis une autre option.</p>
+
+<p>À la lecture des tweets qui s&#8217;échangeaient sur ce problème je décide de chercher un algorithme non récursif. Ça sera comme bien souvent en discutant du problème avec un collègue que je trouverai la solution. Le cache calculé dans l&#8217;agorithme récursif peut être généré de façon itérative en commançant par la fin de la liste et en remontant vers les premiers vols tout en utilisant les valeurs stockées dans le cache pour calculer à chaque fois le résultat optimal.</p>
+
+<p>Désormais mon algorithme passe la barre des 50000 vols (3,7 Mo de JSON tout de même) mais peine à le faire sous la barre des 30 secondes. Ma dernière idée me viendra un matin sous la douche :-) L&#8217;algorithme passe beaucoup de temps, en construisant les valeurs du cache, à copier des listes de chaînes de caractères. C&#8217;est en remplaçant ces copies par une simple implémentation de liste chaînée que j&#8217;obtiendrai la plus impressionnante amélioration de performance : le traitement d&#8217;une liste de 50000 vols passant de 17s à 20ms (oui, presque 1000 fois plus rapide).</p>
+
+<p>Mon code : <a href="https://gist.github.com/jcsirot/4990366">https://gist.github.com/jcsirot/4990366</a></p>
+
+<h1>Conclusion</h1>
+
+<p>Code Story, c&#8217;est fun. J&#8217;aurais certainement passé plus de temps que prévu mais toujours en y prennant beaucoup de plaisir. Et cela permet de jouer avec des petits problèmes d&#8217;algorithmiques qu&#8217;on ne voit pas forcément tous les jours. Finalement j&#8217;ai été sélectionné pour la phase finale qui aura lieu chez Google jeudi 21 février. Cela fera l&#8217;objet d&#8217;un second post.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Un mois avec IntelliJ - début de l'expérience]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/"/>
+    <updated>2012-12-21T19:42:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience</id>
+    <content type="html"><![CDATA[<p>Habituellement je suis utilisateur de <a href="http://netbeans.org/">NetBeans</a>. Quand je dis cela, mon propos est souvent accueillis avec un certaine incrédulité. C&#8217;est mon petit côté rebel. Et pourtant NetBeans est un excellent IDE qui s&#8217;intègre très bien avec les outils que j&#8217;utilise. En plus je commence à accumuler une certaine expérience dessus et les reproches que je pourrais lui faire sont mineurs. Cependant j&#8217;entends de plus en plus parler d&#8217;<a href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a> qui est un peu aux IDE ce que le Macbook Pro est aux ordinateurs : une marque distintive parmi les über-geek. S&#8217;il est toujours présenté comme bien supérieur à <a href="http://www.eclipse.org/">Eclipse</a> qu&#8217;en est il vis à vis de NetBeans ?</p>
+
+<p>Coup de chance, en l&#8217;honneur de la fin du monde (qui finalement n&#8217;est jamais que le début d&#8217;un autre), Jetbrains a réalisé un joli coup de pub en proposant une promotion sur la licence de son IDE star : 50€ au lieu des 189€ habituels. Comme beaucoup, si j&#8217;en juge par la difficulté à accéder au site pendant les premières heures, je me suis laissé tenté.</p>
+
+<p>C&#8217;est l&#8217;occasion de tester la version <em>Ultimate</em> d&#8217;IntelliJ et de la comparer à mon IDE habituel dans l&#8217;utilisation de que j&#8217;en fais tous les jours : développement Java, projets maven, javascript et HTML, un peu de python&#8230; L&#8217;expérience est simple, à partir d&#8217;aujourd&#8217;hui et pendant 30 jours je remplace NetBeans par IntelliJ. Qui sortira gagnant de ce duel ? Rendez-vous dans un mois&#8230;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Migration du blog vers Octopress/Github]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github/"/>
+    <updated>2012-09-30T07:34:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/09/30/migration-du-blog-vers-octopress-slash-github</id>
+    <content type="html"><![CDATA[<p>Voilà, succombant à l&#8217;effet de mode, j&#8217;ai moi aussi migré mon blog de Wordpress vers <a href="http://octopress.org/">Octopress</a>. Raz le bol de mon ancien hébergeur, des versions antédiluviennes de PHP, des mises à jour qui demandent un sacrifice rituel pour fonctionner et des tarifs exhorbitants. Désormais les pages sont statiques et c&#8217;est Github qui héberge.</p>
+
+<p>Ce qui m&#8217;a plu dans Octopress c&#8217;est sa puissance associée à une grande simplicité. Les plugins fournis en standard couvrent déjà une grande palette des besoins, allant de la mise en forme des posts à l&#8217;intégration des média sociaux. Sans une grande connaissance de Ruby j&#8217;ai pu sans difficulté écire une micro extension permettant d&#8217;intégrer les présentations issues de Slideshare. J&#8217;ai également été très rapidement capable modifier le <em>template</em> de base afin d&#8217;ajouter le support du bouton <em>Share</em> de LinkedIn.</p>
+
+<p>Le meilleur ce sont sûrement les quelques commandes bien pensées qui simplifient la vie du bloggueur : un coup de <code>rake new_post["…"]</code> et un nouveau template vierge est créé dans le répertoire contenant les posts. Je tape <code>rake generate</code> et le site est généré, <code>rake preview</code> le déploie sur un serveur web démarré pour l&#8217;occasion. Mais le plus fort est sans doute la commande <code>rake deploy</code> qui va magiquement générer puis publier le site sur github.</p>
+
+<p>Après un weekend passé à migrer manuellement tous les posts (car aucun des outils de migration testés ne fonctionnait correctement), migrer les commentaires, migrer les quelques pages statiques, mettre à jour les DNS, <em>coding-stories.com</em> a fait peau neuve. En espérant surtout trouver un peu plus de temps pour écrire.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mocker un serveur de mail avec Dumbster et JUnit]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit/"/>
+    <updated>2012-08-05T20:29:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/08/05/mocker-un-serveur-de-mail-avec-dumbster-et-junit</id>
+    <content type="html"><![CDATA[<p>Récemment, en écrivant des tests d’intégration j’ai rencontré un cas d’utilisation qui arrive fréquemment : un utilisateur s’inscrit à un service Web, un courriel lui est envoyé, il contient une URL permettant de confirmer son inscription. La question est comment tester ça automatiquement, par exemple dans un test <a href="http://seleniumhq.org/">Selenium</a> ?</p>
+
+<!--more-->
+
+
+<h1>La solution technique</h1>
+
+<p>Première idée : créer un compte mail dédié pour ce test qu’on va interroger avec une bibliothèque comme <a href="http://www.oracle.com/technetwork/java/javamail/index.html">javamail</a>. Cette solution présente toutefois quelques problèmes. D’abord il va falloir maintenir cette boîte mail dans le temps. Ensuite si le serveur SMTP ou le serveur POP/IMAP est indisponible le test va échouer. Et que va-t-il se passer si deux tests sont lancés en même temps ? Finalement une solution qui me semble bien fragile.</p>
+
+<p>Seconde idée : <em>mocker</em> un serveur SMTP qu’on ne lance que le temps du test. Après quelques rapides recherches j’ai trouvé <a href="http://quintanasoft.com/dumbster/">Dumbster</a>, un serveur qui répond aux requêtes SMTP mais sans relayer les messages envoyés. Ceux-ci sont stockés et peuvent ensuite être examinés.</p>
+
+<h1>Intégration avec JUnit</h1>
+
+<p>Pour intégrer Dumbster avec JUnit, j’ai écrit une <a href="http://kentbeck.github.com/junit/javadoc/latest/org/junit/rules/TestRule.html"><em>TestRule</em></a>. Les <code>TestRule</code> de JUnit sont des classes qui permettent de modifier la façon dont une méthode de test (ou un ensemble de méthodes) va se comporter en exécutant du code avant ou après le test. C’est un moyen très pratique de factoriser des comportements qu’on est amené à utiliser souvent dans les tests : par exemple <a href="http://kentbeck.github.com/junit/javadoc/latest/org/junit/rules/TemporaryFolder.html"><em>TemporaryFolder</em></a> permet de créer des répertoires et des fichiers temporaire et de les supprimer à la fin du test, <a href="http://kentbeck.github.com/junit/javadoc/latest/org/junit/rules/Timeout.html"><em>Timeout</em></a> s’assure que les tests ne dépasseront une durée maximale donnée…</p>
+
+<p>Pour le mock de serveur, j’ai créé une classe <code>MockSMTPRule</code> qui étend la classe abstraite <a href="http://kentbeck.github.com/junit/javadoc/latest/org/junit/rules/ExternalResource.html"><em>ExternalResource</em></a>. Cette classe fournit deux méthodes <code>before</code> et <code>after</code> qui s’exécutent respectivement avant et après la méthode de test ; parfait donc pour gérer des ressources externe au test.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MockSMTPRule</span> <span class="kd">extends</span> <span class="n">ExternalResource</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>     <span class="kd">public</span> <span class="n">SimpleSmtpServer</span> <span class="n">server</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/** Lance le serveur SMTP sur le port 2525 avant le test */</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">before</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">before</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">server</span> <span class="o">=</span> <span class="n">SimpleSmtpServer</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="mi">2525</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/** Arrête le serveur une fois le test terminé */</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">after</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="n">server</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">after</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Il faudra également configurer l’application web pour utiliser le serveur qui sera lancé sur localhost, port 2525.</p>
+
+<p>Ensuite, utiliser cette <code>TestRule</code> dans un test est extrêmement simple. Il suffit de créer une variable d’instance publique dans la classe de test et de la préfixer avec l’annotation <code>@Rule</code>.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RegistrationTest</span> <span class="kd">extends</span> <span class="n">JUnit4TestBase</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Rule</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">MockSMTPRule</span> <span class="n">smtp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MockSMTPRule</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/** Test the registration */</span>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">should_send_confirmation_email</span><span class="o">()</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>        <span class="cm">/* Ouvrir la page à tester */</span>
+</span><span class='line'>        <span class="n">openPage</span><span class="o">(</span><span class="s">&quot;http://localhost:8080/register/&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="cm">/* Saisir les informations sur le nouvel utilisateur */</span>
+</span><span class='line'>        <span class="cm">/* ... */</span>
+</span><span class='line'>        <span class="cm">/* On teste qu&#39;un mail a été reçu */</span>
+</span><span class='line'>        <span class="n">assertEquals</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">smtp</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">getReceivedEmailSize</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">SmtpMessage</span> <span class="n">msg</span> <span class="o">=</span> <span class="o">(</span><span class="n">SmtpMessage</span><span class="o">)</span> <span class="n">smtp</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">getReceivedEmail</span><span class="o">().</span><span class="na">next</span><span class="o">();</span>
+</span><span class='line'>        <span class="cm">/* On teste les champs To, From et Subject */</span>
+</span><span class='line'>        <span class="n">assertEquals</span><span class="o">(</span><span class="s">&quot;[Service Trop Bien] Confirmation de votre inscription&quot;</span><span class="o">,</span> <span class="n">msg</span><span class="o">.</span><span class="na">getHeaderValue</span><span class="o">(</span><span class="s">&quot;Subject&quot;</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">assertEquals</span><span class="o">(</span><span class="s">&quot;john@example.com&quot;</span><span class="o">,</span> <span class="n">msg</span><span class="o">.</span><span class="na">getHeaderValue</span><span class="o">(</span><span class="s">&quot;To&quot;</span><span class="o">));</span>
+</span><span class='line'>        <span class="n">assertEquals</span><span class="o">(</span><span class="s">&quot;no-reply@servicetropbien.com&quot;</span><span class="o">,</span> <span class="n">msg</span><span class="o">.</span><span class="na">getHeaderValue</span><span class="o">(</span><span class="s">&quot;From&quot;</span><span class="o">));</span>
+</span><span class='line'>        <span class="cm">/* On teste le corps du mail */</span>
+</span><span class='line'>        <span class="n">assertTrue</span><span class="o">(</span><span class="n">msg</span><span class="o">.</span><span class="na">getBody</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="s">&quot;Bienvenue&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le code complet de la classe est ici : <a href="https://gist.github.com/3246719">https://gist.github.com/3246719</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Exclure certaines classes de la couverture des tests unitaires]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires/"/>
+    <updated>2012-01-30T21:39:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/01/30/exclure-certaines-classes-de-la-couverture-des-tests-unitaires</id>
+    <content type="html"><![CDATA[<p>Dans nos projets on rencontre souvent ce cas de figure : certaines portions de code se prêtent mal au test unitaire. Ce sont les interfaces graphiques, le code qui manipule des fichiers, les connexions réseaux… Cela peut poser problème lorsqu’on configure Sonar pour lever des alertes quand la couverture de code est trop faible.</p>
+
+<!--more-->
+
+
+<p>Le problème a déjà été posé car Il y a un ticket dans le JIRA de Sonar (<a href="http://jira.codehaus.org/browse/SONAR-766">SONAR-766</a>). Quand il aura été résolu Sonar devrait permettre de configurer ce qui doit être exclu de l’analyse de couverture des tests.</p>
+
+<p>En attendant comment faire ? En posant la question il y a quelques mois sur Twitter j’avais reçu une réponse de Damien Gouyette :</p>
+
+<p><img class="center" src="http://coding-stories.github.com/coding-stories/images/posts/sonar-cobertura-tweet-20120130.png"></p>
+
+<p>J’ai fini par trouver le temps de tester et ça fonctionne ! Il est possible de régler ces règles d’exclusion en adaptant par la configuration du plugin cobertura dans le POM de notre projet :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>org.codehaus.mojo<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>cobertura-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;instrumentation&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;excludes&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;exclude&gt;</span>com/mycompany/gui/**/*.class<span class="nt">&lt;/exclude&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;exclude&gt;</span>com/mycompany/nontestable/**/*.class<span class="nt">&lt;/exclude&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/excludes&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/instrumentation&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plugin&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>De cette façon les classes correspondant au <em>pattern</em> indiqué sont exclues de l’analyse par cobertura et ainsi ignorées par Sonar. Le taux de couverture est donc calculé sur le code considéré comme testable. La métrique devient alors beaucoup plus intéressante pour l’évaluation de la qualité globale du projet.</p>
+
+<p><strong>Note</strong> : Attention, je parle bien sûr de test unitaire ; il ne faut pas confondre un code qui ne peut pas être testé unitairement avec un code pour lequel les tests sont possibles mais difficiles à écrire. En outre il est toujours possible de tester autrement, avec des tests d’intégration ou des tests de <em>user experience</em> par exemple.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Présentation de Dart par Gilad Bracha]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/01/26/presentation-de-dart-par-gilad-bracha/"/>
+    <updated>2012-01-26T23:00:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/01/26/presentation-de-dart-par-gilad-bracha</id>
+    <content type="html"><![CDATA[<p>À l’occasion d’une rencontre des utilisateurs de Javascript dans la région de San Fransisco, Gilad Bracha est venu présenter Dart, le nouveau langage pour web conçu par Google.</p>
+
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/Ka2iDlhBwYM "></iframe></div>
+
+
+<p>Gilad Bracha est ingénieur logiciel chez Google, co-auteur de la spécification du langage Dart. Chez Sun, il a également été co-auteur et mainteneur de la spécification du langage Java ainsi que de la JVM.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Couverture des tests d’intégration avec JaCoCo, Maven et Sonar]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar/"/>
+    <updated>2012-01-23T07:16:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/01/23/couverture-des-tests-dintegration-avec-jacoco-maven-et-sonar</id>
+    <content type="html"><![CDATA[<p>Sur certains de mes projets maven j’aimerai pouvoir séparer les tests unitaires des tests d’intégration. Les tests d’intégration sont souvent moins stables, pas toujours reproductibles et ils prennent souvent trop de temps pour être exécutés par les développeurs à chaque compilation.</p>
+
+<!-- more -->
+
+
+<h1>Déplacer les tests dans un module dédié</h1>
+
+<p>Première chose à faire, créer un module dédié dans le projet maven pour y mettre uniquement les tests d’intégration. Voilà la structure globale du projet :</p>
+
+<p>Error processing input, expected syntax: {% img [class name(s)] [http[s]:/]/path/to/image [width [height]] [title text | &#8220;title text&#8221; [&#8220;alt text&#8221;]] %}</p>
+
+<p>Ensuite pour empêcher que le module <code>libfoo-it</code> ne se lance à chaque compilation on crée un profil maven dédié aux test d’intégration dans le fichier <code>pom.xml</code> principal.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;id&gt;</span>run-its<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;modules&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;module&gt;</span>libfoo-it<span class="nt">&lt;/module&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/modules&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Utiliser maven-failsafe-plugin</h1>
+
+<p>Le <a href="http://maven.apache.org/plugins/maven-failsafe-plugin/">plugin failsafe</a> permet de lancer les test d’intégration lors d’un build maven tout comme le plugin surefire le fait avec les tests unitaires. Le plugin failsafe s’attache aux phases <em>integration-test</em> et <em>verify</em> du <a href="http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">cycle de vie du build</a>.</p>
+
+<p>Comme il n’est pas possible de configurer plusieurs répertoires contenant les tests dans maven, la discrimination entre tests unitaires et d’intégration se fait sur le nom des classes. Il ne faudra donc pas oublier de nommer correctement ses classes de test.</p>
+
+<p>Les <em>templates</em> par défaut sont les suivants :</p>
+
+<ul>
+<li><strong>tests unitaires</strong> : <strong>/*Test.java, </strong>/Test<em>.java, **/</em>TestCase.java</li>
+<li><strong>tests d’intégration</strong> : <strong>/*IT.java, </strong>/IT<em>.java, **/</em>ITCase.java</li>
+</ul>
+
+
+<p>On ajoute ensuite la configuration du plugin failsafe dans notre profil.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;id&gt;</span>run-its<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;modules&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;module&gt;</span>libfoo-it<span class="nt">&lt;/module&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/modules&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;pluginManagement&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.11<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>integration-test<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/pluginManagement&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/build&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le POM du sous-projet libfoo-it est également à mettre à jour. De cette façon, petite optimisation, le plugin failsafe ne sera lancé que dans le module qui contient les tests d’intégration.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[/~]$ mvn -Prun-its clean verify</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Couverture de code avec JaCoCo</h1>
+
+<p>Avoir des tests c’est bien, calculer la couverture de ces tests c’est mieux. Pour cela nous allons utiliser le moteur de couverture de code <a href="http://www.eclemma.org/jacoco/">JaCoCo</a> (Java Code Coverage), plus adapté aux tests d’intégration que le bien connu Cobertura.</p>
+
+<p>JaCoCo est fournit sous la forme d’un agent à lancer avec la JVM. Heureusement, il existe un plugin maven pour JaCoCo qui va nous aider à l’intégrer dans le build. Le plugin maven JaCoCo dispose d’un goal <em>prepare-agent</em> qui va dans un premier temps télécharger l’agent et dans un second temps créer une variable maven contenant la configuration de l’agent qu’il suffira de passer en paramètre au plugin failsafe.</p>
+
+<p>Voilà ce que donne la configuration du plugin (<strong>Nota</strong>: j’utilise la version 5.3 du plugin JaCoCo car les versions suivantes ne semblent pas fonctionner avec maven 2.2.1) :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;id&gt;</span>run-its<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;modules&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;module&gt;</span>libfoo-it<span class="nt">&lt;/module&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/modules&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;pluginManagement&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.jacoco<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-jacoco-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>0.5.3.201107060350<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;phase&gt;</span>pre-integration-test<span class="nt">&lt;/phase&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>prepare-agent<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;propertyName&gt;</span>it.failsafe.argLine<span class="nt">&lt;/propertyName&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;destFile&gt;</span>${it.jacoco.destFile}<span class="nt">&lt;/destFile&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.11<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>integration-test<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;argLine&gt;</span>${it.failsafe.argLine}<span class="nt">&lt;/argLine&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/pluginManagement&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/build&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;properties&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;it.jacoco.destFile&gt;</span>${java.io.tmpdir}/jacoco-foo.dump<span class="nt">&lt;/it.jacoco.destFile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/properties&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le plugin JaCoCo va générer la configuration de l’agent pour lancer les tests et la placer dans variable <code>it.failsafe.argLine</code>. Ensuite on configure le paramètre <code>argLine du plugin failsafe avec cette variable. On définit également le fichier qui va collecter les données de couverture (avec paramètre</code>destFile).</p>
+
+<p>Il faut également mettre à jour le POM du module contenant les tests :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;build&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;groupId&gt;</span>org.jacoco<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>maven-jacoco-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'><span class="nt">&lt;/build&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Couverture avec Sonar</h1>
+
+<p>Maintenant que nous avons nos données de couverture dans un fichier, il serait intéressant de les faire digérés à Sonar lors de son analyse. Depuis la version 2.12, <a href="http://www.sonarsource.org/">Sonar</a> est livré avec le plugin JaCoCo ; pour les précédentes il faudra l’installer depuis l’<em>update center</em>.</p>
+
+<p>Le plugin JaCoCo de Sonar attend à trouver le chemin vers le fichier de collecte des données dans la variable `sonar.jacoco.itReportPath. Il est possible de configurer ce chemin dans l’interface web de Sonar (menu <em>settings</em>, catégorie <em>JaCoCo</em>, paramètre <em>File with execution data for integration tests</em>) mais cette variable peut également être configurée dans le POM.</p>
+
+<p>Voilà donc la version définitive du profil :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;profiles&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;profile&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;id&gt;</span>run-its<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;modules&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;module&gt;</span>libfoo-it<span class="nt">&lt;/module&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/modules&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;build&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;pluginManagement&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;plugins&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;groupId&gt;</span>org.jacoco<span class="nt">&lt;/groupId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-jacoco-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>0.5.3.201107060350<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;phase&gt;</span>pre-integration-test<span class="nt">&lt;/phase&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>prepare-agent<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;propertyName&gt;</span>it.failsafe.argLine<span class="nt">&lt;/propertyName&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;destFile&gt;</span>${it.jacoco.destFile}<span class="nt">&lt;/destFile&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;plugin&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="nt">&lt;/artifactId&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;version&gt;</span>2.11<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;executions&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;execution&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;goals&gt;</span>
+</span><span class='line'>                  <span class="nt">&lt;goal&gt;</span>integration-test<span class="nt">&lt;/goal&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;/goals&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;/execution&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/executions&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;configuration&gt;</span>
+</span><span class='line'>              <span class="nt">&lt;argLine&gt;</span>${it.failsafe.argLine}<span class="nt">&lt;/argLine&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/configuration&gt;</span>
+</span><span class='line'>          <span class="nt">&lt;/plugin&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/plugins&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;/pluginManagement&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/build&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;properties&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;it.jacoco.destFile&gt;</span>${java.io.tmpdir}/jacoco-foo.dump<span class="nt">&lt;/it.jacoco.destFile&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;sonar.jacoco.itReportPath&gt;</span>${it.jacoco.destFile}<span class="nt">&lt;/sonar.jacoco.itReportPath&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/properties&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/profile&gt;</span>
+</span><span class='line'><span class="nt">&lt;/profiles&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Il ne reste plus qu’à lancer l’analyse avec Sonar :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[/~]$ mvn -Prun-its clean verify sonar:sonar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finalement, après avoir ajouté le widget Integration test coverage dans le dashboard, on obtient ce résultat :</p>
+
+<p><img class="center" src="http://coding-stories.github.com/coding-stories/images/posts/sonar-coverage-it-20120123.png" title="'Code coverage avec Sonar'" ></p>
+
+<h1>Pistes d’améliorations</h1>
+
+<p>Cette solution est un peu brute de décoffrage et pour dire vrai entre le début de l’écriture de ce post et maintenant j’ai eu quelques idées pour l’améliorer :</p>
+
+<ul>
+<li>Passer la configuration du profil dans un super POM dont héritent tous les projets. En effet, mis à part le paramètre `destFile il n’y a rien de spécifique dans cette configuration. On pourrait même imaginer la génération d’un nom de fichier aléatoire à chaque lancement.</li>
+<li>Utiliser plusieurs modules de tests d’intégration. Pour cela il faut mettre le paramètre supplémentaire <code>append</code> à <em>true</em> dans le plugin maven JaCoCo afin que les données d’exécution de tous les modules soient collectées dans le même fichier.</li>
+</ul>
+
+
+<p>Et si vous avez d’autres idées, n’hésitez pas à les poster dans les commentaires.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Les classes internes ou la tambouille du compilateur Java]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java/"/>
+    <updated>2011-12-26T23:54:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/12/26/les-classes-internes-ou-la-tambouille-du-compilateur-java</id>
+    <content type="html"><![CDATA[<p>Il y a quelques mois Olivier Croisier a publié sur son blog <a href="http://thecodersbreakfast.net/">The Coder’s Breakfast</a> (que tout développeur Java se doit de suivre) un article intitulé <a href="Inner%20classes%20and%20the%20myth%20of%20the%20default%20constructor">Inner classes and the myth of the default constructor</a>. Dans cet article il est question des classes internes et des constructeurs « cachés » ajoutés lors de la phase de compilation.</p>
+
+<!--more-->
+
+
+<p>Prenons ce morceau de code :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">new</span> <span class="nf">Inner</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Et regardons le bytecode des constructeurs généré par le compilateur :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    4: new Outer$Inner
+</span><span class='line'>    7: dup
+</span><span class='line'>    8: aload $0
+</span><span class='line'>    9: invokespecial Outer$Inner.&lt;init> {(Outer) -> void}
+</span><span class='line'>   12: pop
+</span><span class='line'>   13: return
+</span><span class='line'>
+</span><span class='line'>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>    5: aload $0
+</span><span class='line'>    6: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    9: return</span></code></pre></td></tr></table></div></figure>
+
+
+<p>La class <code>Inner</code> s’est vue ajouter un constructeur qui prend un paramètre de type <code>Outer</code> et quand <code>Outer</code> appelle ce constructeur il passe this en paramètre (l’instruction <code>aload $0</code> charge <code>this</code> sur la pile juste avant l’appel du constructeur).</p>
+
+<p>En fait la classe interne est vue comme n’importe quelle autre classe. Pour lui permettre d’accès à la classe englobante il lui faut un pointeur vers l’instance de cette classe. Ce pointeur lui est passé en paramètre dans un constructeur ajouté à la compilation.</p>
+
+<p>Allons un peu plus loin. Si la classe interne n’est pas différente des autres classes alors que ce passe-t-il quand la classe englobante veut accéder à une méthode <code>private</code> de la classe interne ?</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Inner</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">inner</span><span class="o">.</span><span class="na">hello</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">hello</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello World&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Et le bytecode :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    4: new Outer$Inner
+</span><span class='line'>    7: dup
+</span><span class='line'>    8: aload $0
+</span><span class='line'>    9: invokespecial Outer$Inner.&lt;init> {(Outer) -> void}
+</span><span class='line'>   12: astore $1
+</span><span class='line'>   13: aload $1
+</span><span class='line'>   14: invokestatic Outer$Inner.access$000 {(Outer$Inner) -> void}
+</span><span class='line'>   17: return
+</span><span class='line'>
+</span><span class='line'>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>    5: aload $0
+</span><span class='line'>    6: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    9: return
+</span><span class='line'>
+</span><span class='line'>**** hello () -> void
+</span><span class='line'>    0: getstatic java/lang/System.out {java.io.PrintStream}
+</span><span class='line'>    3: ldc "Hello World"
+</span><span class='line'>    5: invokevirtual java/io/PrintStream.println {(java.lang.String) -> void}
+</span><span class='line'>    8: return
+</span><span class='line'>
+</span><span class='line'>**** access$000 (Outer$Inner) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial Outer$Inner.hello {() -> void}
+</span><span class='line'>    4: return</span></code></pre></td></tr></table></div></figure>
+
+
+<p>La méthode <code>hello</code> est privée et donc Outer ne peut pas l&#8217;appeler directement. Dans ce le compilateur a ajouté une méthode package statique void <code>access$000(Inner)</code> qui sert alors de proxy. Cette méthode se contente alors de rediriger l&#8217;appel vers le méthode <code>hello</code>. Dans le code de l&#8217;appelant l&#8217;appel à la méthode privée est simplement remplacé par un appel à la méthode statique correspondante.</p>
+
+<p>Dans le cas de l&#8217;accès à un champ privé, le résultat est très similaire :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Inner</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">hello</span> <span class="o">=</span> <span class="n">inner</span><span class="o">.</span><span class="na">hello</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="n">String</span> <span class="n">hello</span> <span class="o">=</span> <span class="s">&quot;Hello World&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    4: new Outer$Inner
+</span><span class='line'>    7: dup
+</span><span class='line'>    8: aload $0
+</span><span class='line'>    9: invokespecial Outer$Inner.&lt;init> {(Outer) -> void}
+</span><span class='line'>   12: astore $1
+</span><span class='line'>   13: aload $1
+</span><span class='line'>   14: invokestatic Outer$Inner.access$000 {(Outer$Inner) -> java.lang.String}
+</span><span class='line'>   17: astore $2
+</span><span class='line'>   18: return
+</span><span class='line'>
+</span><span class='line'>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>    5: aload $0
+</span><span class='line'>    6: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    9: aload $0
+</span><span class='line'>   10: ldc "Hello World"
+</span><span class='line'>   12: putfield Outer$Inner.hello {java.lang.String}
+</span><span class='line'>   15: return
+</span><span class='line'>
+</span><span class='line'>**** access$000 (Outer$Inner) -> java.lang.String
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: getfield Outer$Inner.hello {java.lang.String}
+</span><span class='line'>    4: areturn</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Dans ce cas aussi, l&#8217;accès au champ privé <code>hello</code> n&#8217;est pas possible directement. Le compiltateur a donc ajouté une méthode package statique <code>String access$000(Inner)</code> qui lit le champ (opcode <code>getfield</code>) et le renvoie à l&#8217;appelant.</p>
+
+<p>Et dans le cas d&#8217;un constructeur privé ? Vat-t-on se retrouver avec une méthode statique de type <em>factory</em> qui va instancier l&#8217;object qu&#8217;on cherche à construire ? Non, ici le compilateur opte pour une autre stratégie :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Outer</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Outer</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Inner</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Inner</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">private</span> <span class="nf">Inner</span><span class="o">()</span> <span class="o">{}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Outer.class
+</span><span class='line'>**** &lt;init> () -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    4: new Outer$Inner
+</span><span class='line'>    7: dup
+</span><span class='line'>    8: aload $0
+</span><span class='line'>    9: aconst_null
+</span><span class='line'>   10: invokespecial Outer$Inner.&lt;init> {(Outer, Outer$1) -> void}
+</span><span class='line'>   13: astore $1
+</span><span class='line'>   14: return
+</span><span class='line'>
+</span><span class='line'>// Outer$Inner.class
+</span><span class='line'>**** &lt;init> (Outer) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: putfield Outer$Inner.this$0 {Outer}
+</span><span class='line'>    5: aload $0
+</span><span class='line'>    6: invokespecial java/lang/Object.&lt;init> {() -> void}
+</span><span class='line'>    9: return
+</span><span class='line'>
+</span><span class='line'>**** &lt;init> (Outer, Outer$1) -> void
+</span><span class='line'>    0: aload $0
+</span><span class='line'>    1: aload $1
+</span><span class='line'>    2: invokespecial Outer$Inner.&lt;init> {(Outer) -> void}
+</span><span class='line'>    5: return</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Le compilateur ajoute un second constructeur qui prend deux paramètres : le pointeur vers l&#8217;instance de la classe englobante et un paramètre de type <code>Outer$1</code>. Quelle est ce type ? Il s&#8217;agit d&#8217;une interface sans méthode créée automatiquement à la compilation. Cette interface sert simplement différencier les deux constructeurs (le second constructeur se contente d&#8217;appeler le premier). Lors de l&#8217;appel de ce constructeur ce second paramètre est mis à null (<code>null</code> est chargé sur la pile par l&#8217;opcode <code>aconst_null</code>).</p>
+
+<p>Le problème principal de ces différentes <em>ruses</em> du compilateur est que cela peut rendre les stacktraces difficilement lisibles si on fait un usage immodéré des classes internes. Il vaut mieux également éviter d&#8217;appeler des méthodes privées depuis la classe englobante. L&#8217;analyseur de code <a href="http://pmd.sourceforge.net/">PMD</a> définit d&#8217;ailleurs une règle <a href="http://pmd.sourceforge.net/rules/design.html">AccessorClassGeneration</a> qui lève une alerte quand un constructeur privé est appelé depuis la classe englobante.</p>
+
+<p>Et que se passe-t-il si on tente d&#8217;accéder à une méthode privée de la classe englobante depuis la classe interne ? Je vous laisse expérimenter :D.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Video : Deep Dive into Android Security]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/26/video-deep-dive-into-android-security/"/>
+    <updated>2011-11-26T09:24:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/26/video-deep-dive-into-android-security</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://coding-stories.github.com/coding-stories/images/posts/android-security-20111126.jpg"></p>
+
+<p>Si vous chercher à mieux comprendre le fonctionnement du modèle de sécurité Android je vous conseille fortement de regarder cette vidéo. Dans cette excellente session de la conférence <a href="http://www.andevcon.com/">AndDevCon II</a> <a href="http://marakana.com/expert/aleksandar_gargenta,1.html">Aleksandar Gargenta</a> présente différents aspects liés à la sécurité sur Android (le <em>sandboxing</em> des applications, le fonctionnement du système de permissions, le chiffrement et la protection des données, etc) mais il parle également des limites du modèle et des contre-mesures contre les menaces (signature des applications, <em>rooting</em> &amp; <em>rootkits</em>, SE-Linux, etc).</p>
+
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/tKJiSjVk8NA "></iframe></div>
+
+
+
+
+<iframe src="http://fr.slideshare.net/slideshow/embed_code/10123665 " width="599" height="487" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[GTAC 2011 : les vidéos sont en ligne]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/24/gtac-2011-les-videos-sont-en-ligne/"/>
+    <updated>2011-11-24T08:54:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/24/gtac-2011-les-videos-sont-en-ligne</id>
+    <content type="html"><![CDATA[<p>Intéressés par la qualité et le test logiciel ? Les vidéos des différentes sessions de la conférence GTAC 2011 sont désormais disponibles sur <a href="http://www.gtac.biz/talks">http://www.gtac.biz/talks</a> ou sur la chaîne Youtube <a href="http://www.youtube.com/user/GoogleTechTalks">Google Tech Talks</a>. Bon visionnage !</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Améliorer la sécurité du développement avec Git]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/11/21/ameliorer-la-securite-du-developpement-avec-git/"/>
+    <updated>2011-11-21T09:01:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/11/21/ameliorer-la-securite-du-developpement-avec-git</id>
+    <content type="html"><![CDATA[<p>Quand on développe un produit de sécurité (firewall, VPN, application de chiffrement…) on cherche a donner confiance dans son produit et on est bien souvent amené pour cela à passer des certifications (<a href="http://www.ssi.gouv.fr/fr/certification-qualification/cspn/">CSPN</a>, <a href="http://www.commoncriteriaportal.org/">Critères Communs</a>, etc) et à ainsi prouver qu’on applique de «bonnes pratiques» de matière développement : gestion des bugs, tests, utilisation d’un SCM. Un point important est de montrer que le code source du produit est maîtrisé, c’est à dire qu’aucune modification, intentionnelle ou non, ne peut être intégrée au produit sans avoir été validé. Et pour cela <a href="http://git-scm.com/">Git</a> est un outil qui peut réellement aider.</p>
+
+<!-- more -->
+
+
+<p>Subversion, probablement le SCM le plus utilisé aujourd’hui, impose un modèle de développement centralisé. Tous les développeurs poussent leurs modifications vers un unique dépôt central partagé. Ce modèle a plusieurs inconvénients quand on désire tracer les modifications dans la base de code.</p>
+
+<p>D’abord il faut donner aux développeurs des droits d’accès suffisamment fins pour qu’ils puissent <em>commiter</em> dans le dépôt, sans pour autant les autoriser à avoir accès à toute la base de code, tant en écriture qu’en lecture. Ensuite il faut suivre les modifications apportées au code par les équipes de développement. Il est possible de développer les nouvelles fonctionnalités ou corriger les bugs dans des branches, avec tous les problèmes de <em>merge</em> qui peuvent survenir. On peut également forcer l’utilisation du numéros de référence d’un ticket du <em>bugtracker</em> dans les messages de commits. Dans ce cas il faudra bien sûr compter avec les erreurs sur le numéro du ticket ou les oublis mais également avec la relecture de complexes et multiples <em>diff</em>… Et je ne parle pas de l’historique du dépôt qui devient simplement illisible.</p>
+
+<p>Avec Git, le problème du workflow disparaît car vous pouvez l’adapter à votre façon de développer. On peut illustrer ça avec l’exemple du <a href="http://fr.wikipedia.org/wiki/Processus_de_d%C3%A9veloppement_de_Linux">modèle de développement du noyau Linux</a> (schéma ci-dessous) : un développeur privilégié (le dictateur) est autorisé à écrire dans le dépôt de référence (<em>blessed repository</em>). Les développeurs clonent ce dépôt, et poussent leurs patchs vers des «développeurs de confiance» (les lieutenants). Les lieutenants valident ces modifications, le dictateur peut alors venir les chercher auprès des lieutenants. Le dictateur décide alors d’intégrer ou non ces modifications dans le dépôt de référence.</p>
+
+<p><img class="center" src="http://coding-stories.github.com/coding-stories/images/posts/workflow-git-20111121.png"></p>
+
+<p>En outre, avec Git finis les multiples <em>commits</em> pour implémenter une fonctionnalité : grâce au merge de branches et au rebase, le développeur est en mesure de ne livrer qu’un unique <em>commit</em>. De cette façon l’historique du dépôt est clair et propre mais surtout cela simplifie énormément la revue de code.</p>
+
+<p>Pour finir j’ajoute également que Git permet de signer les <em>tags</em> permettant ainsi de garantir l’origine de toutes les modifications du code importées dans le dépôt de référence.</p>
+
+<p>En conclusion je terminerai sur le fait que ce que je raconte ici sur Git est également vrai pour d’autres DVCS tels que <a href="http://mercurial.selenic.com/">Mercurial</a> ou <a href="http://bazaar.canonical.com/">Bazaar</a> (à vérifier tout de même pour la signature des tags).</p>
+
+<p>Quelques références :</p>
+
+<ul>
+<li><a href="http://nvie.com/posts/a-successful-git-branching-model/">A successful Git branching model</a></li>
+<li><a href="http://fr.whygitisbetterthanx.com/">Pourquoi Git est Meilleur Que X</a> (d’où est issu le schéma d’exemple de workflow)</li>
+<li><a href="http://fr.wikipedia.org/wiki/Processus_de_d%C3%A9veloppement_de_Linux">Processus de développement de Linux</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Changement du thème]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/09/26/changement-du-theme/"/>
+    <updated>2011-09-26T16:51:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/09/26/changement-du-theme</id>
+    <content type="html"><![CDATA[<p>Ne soyez pas étonnés si le site à changé de tête ; suite à une mise à jour hasardeuse (faire une mise à jour sans réfléchir est presque aussi stupide que que ne pas la faire) le thème que j’utilisais n’est plus compatible avec la version actuelle.</p>
+
+<p>Bref, plutôt que garder un thème dégradé j’ai préféré basculer sur le thème par défaut de WordPress… Le temps de régler le problème. Mais finalement, ce thème, je l’aime bien ; il est sobre et lisible même s’il lui manque toutefois quelques fonctionnalités que je trouvais bien pratique comme l’ouverture des images dans un popup javascript.</p>
+
+<p>Finalement, garder le thème actuel, remettre l’ancien, régler les problèmes de la mise à jour ou installer une tout nouveau thème ? La décision n’est pas encore prise, je verrai à l’usage.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[La cryptographie à clé publique par ses inventeurs]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/08/06/la-cryptographie-a-cle-publique-par-ses-inventeurs/"/>
+    <updated>2011-08-06T16:53:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/08/06/la-cryptographie-a-cle-publique-par-ses-inventeurs</id>
+    <content type="html"><![CDATA[<p><a href="http://fr.wikipedia.org/wiki/Ronald_Rivest">Ron Rivest</a>, <a href="http://fr.wikipedia.org/wiki/Adi_Shamir">Adi Shamir</a>, <a href="http://fr.wikipedia.org/wiki/Leonard_Adleman">Leonard Adleman</a>, <a href="http://fr.wikipedia.org/wiki/Whitfield_Diffie">Whitfield Diffie</a>, <a href="http://fr.wikipedia.org/wiki/Martin_Hellman">Martin Hellman</a>, <a href="http://fr.wikipedia.org/wiki/Ralph_Merkle">Ralph Merkle</a>. Dans les années 70 en découvrant la cryptographie à clé publique ils ont révolutionné le monde. Télécommunications, commerce électronique, cartes bancaires, téléphonie mobile, VIGIK®… Nous utilisons tous et tous les jours leurs découvertes, souvent même sans le savoir.</p>
+
+<p>Dans cette courte vidéo diffusée à l’ouverture de la <a href="http://www.rsaconference.com/2011/usa/">conférence RSA 2011</a>, les acteurs de cette révolution en racontent la genèse.</p>
+
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/mvOsb9vNIWM "></iframe></div>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SSL/TLS : un problème fréquent]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/23/ssltls-un-probleme-frequent/"/>
+    <updated>2011-07-23T16:59:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/23/ssltls-un-probleme-frequent</id>
+    <content type="html"><![CDATA[<p>Je viens de lire un post très intéressant sur le blog de <a href="http://www.ippon.fr/">Ippon Technologies</a> qui met en lumière l’importance de la notion de chaîne de certificats.</p>
+
+<p>Le <a href="http://fr.wikipedia.org/wiki/X.509">standard X.509</a> est basé sur un modèle de confiance pyramidal :</p>
+
+<p><img class="center" src="http://coding-stories.github.com/coding-stories/images/posts/X509TrustModel-20110723.png"></p>
+
+<p>En haut ce sont les racines de confiance (<em>trust anchors</em>), en bas les certificats des utilisateurs finaux (<em>end entity</em>) et au milieu on trouve les certificats des autorités de certification intermédiaires. Il faut garder à l’esprit que celui qui valide un certificat ne possède en général que la racine de confiance ; mais pour effectuer la validation il faut disposer de la chaîne de certificats au complet, c’est à dire le certificat final avec l’ensemble des certificats des autorités intermédiaires. Moralité : un certificat seul ne sert à rien, il faut toujours considérer la chaîne dans son ensemble.</p>
+
+<p>L’article sur le blog de Ippon : <a href="http://blog.ippon.fr/2011/07/23/pourquoi-firefox-ou-java-ne-reconnaissent-pas-ce-certificat-ssl-si-cherement-payee/">http://blog.ippon.fr/2011/07/23/pourquoi-firefox-ou-java-ne-reconnaissent-pas-ce-certificat-ssl-si-cherement-payee/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git pour les imbéciles comme moi]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/17/git-pour-les-imbeciles-comme-moi/"/>
+    <updated>2011-07-17T17:26:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/17/git-pour-les-imbeciles-comme-moi</id>
+    <content type="html"><![CDATA[<p>Git, je n’y comprenais rien. Et puis j’ai vu la présentation de Sébastien Douche (<a href="http://twitter.com/sdouche">twitter</a>, <a href="http://douche.name/blog/">blog</a>) au Paris JUG et les choses alors sont devenues beaucoup plus claires. Cette présentation doit absolument être vue par tous les développeurs qui utilisent un logiciel de gestion de source (donc <strong>tous</strong> les développeurs). Ce qui me désole le plus c’est qu’avant j’étais heureux dans l’ignorance ; désormais je souffre quand je dois utiliser subversion…</p>
+
+<h1>Les concepts</h1>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=2366"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=2366" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+
+<h1>La pratique</h1>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=2368"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=2368" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Java 7 : les nouveautés côté sécurité]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/14/java-7-les-nouveautes-cote-securite/"/>
+    <updated>2011-07-14T17:35:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/14/java-7-les-nouveautes-cote-securite</id>
+    <content type="html"><![CDATA[<p>La sortie de Java 7 est imminente et on a déjà beaucoup parlé des grandes nouveautés de cette version (multi-catch, opérateur diamant, Fork/Join, opcode <em>invokedynamic</em>…). Mais Java 7 arrive également des tas de petites améliorations, nouveautés et corrections de bugs. Voilà donc un petit résumé des principales nouveautés de Java 7, côté sécurité.</p>
+
+<!-- more -->
+
+
+<h1>Cryptographie sur les Courbes Elliptiques</h1>
+
+<p>Java 7 est désormais livré avec le provider <code>SunEC</code> (<code>sun.security.ec.SunEC</code>) dédie à la cryptographie sur courbes elliptiques et fournissant un support natif à travers la bibliothèque <code>sunecc</code>. Jusqu’à présent la cryptographie sur courbes elliptique n’était disponible que par le provider <code>SunPKCS11</code> sous réserve de posséder un dispositif supportant ces algorithmes (carte à puce…) ou en utilisant le provider <a href="http://www.bouncycastle.org/">Bouncy Castle</a>.</p>
+
+<p>Par exemple, obtenir un objet <code>Signature</code> pour l’algorithme ECDSA se fait de la façon suivante :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Signature</span> <span class="n">sg</span> <span class="o">=</span> <span class="n">Signature</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;SHA1withECDSA&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sg</span><span class="o">.</span><span class="na">getProvider</span><span class="o">());</span> <span class="c1">// affiche &quot;SunEC version 1.7&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>SSL/TLS</h1>
+
+<h2>Attaque contre les algorithmes en mode CBC</h2>
+
+<p>L’implémentation TLS 1.1 a été mise à jour pour se protéger contre l’attaque décrite dans ce <a href="http://www.openssl.org/~bodo/tls-cbc.txt">document</a>.</p>
+
+<h2>Contrôle de la session TLS</h2>
+
+<p>De nouvelles classes et méthodes donnent un contrôle plus fin sur la connection TLS :</p>
+
+<ul>
+<li><a href="http://download.java.net/jdk7/docs/api/index.html?javax/net/ssl/X509ExtendedTrustManager.html">X509ExtendedTrustManager</a> (une implémentation de <code>TrsutManager</code>) permet d’accéder aux paramètres de la connection TLS pendant le <em>handshake</em>.</li>
+<li><a href="http://download.java.net/jdk7/docs/api/javax/net/ssl/SSLParameters.html#setEndpointIdentificationAlgorithm(java.lang.String">SSLParameters.setEndpointIdentificationAlgorithm</a>) permet de définir un algorithme de vérification de l’identité du serveur lors du <em>handshake</em>. Dans les versions précédentes, cette vérification ne se faisait que pour le protocole HTTPS et passait par l’interface <code>HostnameVerifier</code>. Désormais on peut l’effectuer au niveau de la couche TLS ; la bibliothèque standard fournit deux algorithmes de vérification : <code>HTTPS</code> et <code>LDAPS</code>. Malheureusement il ne semble pas possible d’ajouter d’autres algorithmes de vérification.</li>
+<li>L’utilisation des algorithmes rendus obsolètes (et déconseillés) dans les <a href="http://www.ietf.org/rfc/rfc4346.txt">RFC 4346</a>, <a href="http://www.ietf.org/rfc/rfc5246.txt">RFC 5246</a> et <a href="http://www.ietf.org/rfc/rfc5469.txt">RFC 5469</a> est désormais désactivée par défaut.</li>
+</ul>
+
+
+<h2>Support de SNI</h2>
+
+<p>SNI (Server Name Indication) est une extension ajoutée au protocole TLS et définie dans la <a href="http://www.ietf.org/rfc/rfc6066.txt">RFC 6066</a>. Cette extension contient le nom du serveur auquel le client veut accéder dans le message <em>ClientHello</em>. De cette façon le serveur sait immédiatement quel nom a été demandé et peut donc choisir quel certificat envoyer au client. Cela permet de configurer des <em>VirtuatHosts</em> en HTTPS comme on le fait en HTTP. Auparavant chaque serveur HTTPS devait posséder sa propre adresse IP.</p>
+
+<p>Il est facile de vérifier si l’extension SNI est supportée en envoyant une requête à l’URL <a href="https://sni.velox.ch">https://sni.velox.ch</a> :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="s">&quot;https://alice.sni.velox.ch&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">HttpsURLConnection</span> <span class="n">con</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpsURLConnection</span><span class="o">)</span><span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">con</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()));</span>
+</span><span class='line'>    <span class="n">FileWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWriter</span><span class="o">(</span><span class="s">&quot;index.html&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">line</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">writer</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">line</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">writer</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ouvrez ensuite le fichier <code>index.html</code> dans votre navigateur. On change l’URL de la requête en <code>bob.sni.velox.ch</code> ; avec Java 7 cela fonctionne correctement mais Java 6 lève une exception :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception in thread "main" javax.net.ssl.SSLHandshakeException: java.security.cert.CertificateException: No subject alternative DNS name matching bob.sni.velox.ch found.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>En effet, <code>bob.sni.velox.ch</code> est un hôte virtuel, si l’extension SNI n’est pas envoyée lors du <em>handshake</em> alors le serveur utilise l’hôte par défaut qui est <code>alice.sni.velox.ch</code> ; avec java 6 le code client échoue car le nom de l&#8217;hôte ne correspond pas au nom dans le certificat, ce qui explique l’erreur obtenue.</p>
+
+<p>Des questions, des remarques, des éclaircissements ? N’hésitez pas poster un commentaire.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Security Stack Exchange]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/12/security-stack-exchange/"/>
+    <updated>2011-07-12T17:52:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/12/security-stack-exchange</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://coding-stories.github.com/coding-stories/images/posts/ITSecurity-e1310503676421-300x135-20110712.png"></p>
+
+<p>Le site de questions/réponses <a href="http://security.stackexchange.com/">Security Stack Exchange</a> vient de sortir de sa phase de béta test et devient donc officiellement le 28e site du réseau <a href="http://stackexchange.com/sites">Stack Exchange</a> (dont la tête de pont est le célèbre <a href="http://stackoverflow.com/">Stack Overflow</a>, le site de questions/réponses dédié aux programmeurs de tout poil).</p>
+
+<p>Nouveau design donc pour le site qui abandonne les couleurs de la béta, mais également ouverture d’un <a href="http://security.blogoverflow.com/">blog</a> et d’un <a href="https://twitter.com/StackSecurity">compte twitter</a>. Si vous avez des questions sur la sécurité des applications web, sur la certification des PKI, sur les cartes à puce, sur les standards cryptographiques… vous êtes au bon endroit.</p>
+
+<p>À noter également l’ouverture (mais pour le moment en béta privée) d’un autre site dédié spécifiquement aux questions touchant la cryptographie.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Code comparé : SHA-1 sur Android &amp; iOS]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/07/code-compare-sha-1-sur-android-ios/"/>
+    <updated>2011-07-07T17:57:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/07/code-compare-sha-1-sur-android-ios</id>
+    <content type="html"><![CDATA[<p>Problème : on dispose d’un bloc de données dont on désire calculer l’empreinte SHA-1. Deux solutions, sur Android et iOS.</p>
+
+<h1>Android</h1>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">java.security.MessageDigest</span><span class="o">;</span>
+</span><span class='line'><span class="cm">/* ... */</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">computeSHA1</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">input</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">MessageDigest</span> <span class="n">dg</span> <span class="o">=</span> <span class="n">MessageDigest</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;SHA-1&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">dg</span><span class="o">.</span><span class="na">digest</span><span class="o">(</span><span class="n">input</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>iOS</h1>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;CommonCrypto/CommonDigest.h&gt;</span>
+</span><span class='line'><span class="cm">/* ... */</span>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">NSData</span><span class="o">*</span><span class="p">)</span> <span class="nf">computeSHA1:</span><span class="p">(</span><span class="n">NSData</span><span class="o">*</span><span class="p">)</span><span class="nv">input</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">output</span><span class="p">[</span><span class="n">CC_SHA1_DIGEST_LENGTH</span><span class="p">];</span>
+</span><span class='line'>    <span class="n">CC_SHA1</span><span class="p">([</span><span class="n">input</span> <span class="n">bytes</span><span class="p">],</span> <span class="p">(</span><span class="n">CC_LONG</span><span class="p">)[</span><span class="n">input</span> <span class="n">length</span><span class="p">],</span> <span class="n">output</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">[</span><span class="n">NSData</span> <span class="nl">dataWithBytes:</span><span class="n">output</span> <span class="nl">length:</span><span class="n">CC_SHA1_DIGEST_LENGTH</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SSL/TLS en Java – Partie 1]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/07/02/ssltls-en-java-partie-1/"/>
+    <updated>2011-07-02T21:45:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/07/02/ssltls-en-java-partie-1</id>
+    <content type="html"><![CDATA[<p>J’ai pensé appeler cet article «<em>Pourquoi SSL ne marche pas ?</em>». En effet j’ai lu beaucoup de questions sur des forums posées par des développeurs qui n’arrivaient pas à faire fonctionner SSL entre le serveur et les clients ; le plus souvent le développeur ne sait pas très bien comment fonctionne le protocole et il n’arrive pas à diagnostiquer les problèmes ; j’espère que cette série article aidera ceux qui se battent encore avec les erreurs du type <code>alert=42</code> (si si, je vous assure que c’est une vraie erreur :)).</p>
+
+<!-- more -->
+
+
+<h1>SSL en quelques mot</h1>
+
+<p>D’abord un peu de vocabulaire, on lis souvent SSL, TLS ou encore SSL/TLS. Pour faire court, tout ça c’est la même chose. Pour entrer un peu dans les détails, SSL a été inventé par Netscape qui publia SSL 2.0 en 1995 puis SSL 3.0 en 1996. Puis ce fut le <a href="http://datatracker.ietf.org/wg/tls/">TLS Working Group</a> membre de l’IETF qui repris le standard en publiant TLS 1.0 (aussi appelé SSL 3.1) en 1999, TLS 1.1 en 2006 et TLS 1.2 en 2008. Pour la petite histoire, SSL apparait toujours dans TLS car la structure de données contenant le numéro de version du protocole vaut 3.1 pour TLS 1.0, 3.2 pour TLS 1.1 et 3.3 pour TLS 1.2.</p>
+
+<p>Mais finalement à quoi ça sert exactement ? SSL fournit un canal sécurisé entre un client et un serveur en fournissant les services suivants :</p>
+
+<ul>
+<li>chiffrement des messages</li>
+<li>intégrité des message (utilisation d’un <a href="http://fr.wikipedia.org/wiki/Code_d%27authentification_de_message"><em>Message Authentication Code</em></a>)</li>
+<li>authentification du serveur (basée sur des certificats X.509)</li>
+<li>authentification du client (optionnelle)</li>
+</ul>
+
+
+<p>À noter que, <em>stricto sensu</em>, le serveur n’est pas obligé de s’authentifier auprès du client et que l’usage de certificats X.509 n’est pas obligatoire. Cependant il s’agit de cas d’utilisation marginaux.</p>
+
+<h1>Un peu de Java</h1>
+
+<p>Le support de SSL en Java a d’abord été fournit sous forme d’une extension la <em>Java Secure Socket Extension</em> ou JSSE ; à partir de Java 1.4, la JSSE a été incluse dans la bibliothèque standard. L’API de la JSSE est couverte par les packages java suivants : javax.net, javax.net.ssl et javax.security.cert.</p>
+
+<p>Alors, comment s’en sert on ? L’API JSSE a introduit la classe javax.net.ssl.SSLSocket, une sous-classe de java.net.Socket qui encapsule toute la complexité du protocole SSL. On ne peut pas instancier directement de <code>SSLSocket</code> car son constructeur est <em>protected</em>, il faut aller passer par une autre class de la JSSE <code>javax.net.ssl.SSLSocketFactory</code>.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">SocketFactory</span> <span class="n">sf</span> <span class="o">=</span> <span class="n">SSLContext</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">getSocketFactory</span><span class="o">();</span>
+</span><span class='line'><span class="n">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="na">createSocket</span><span class="o">(</span><span class="s">&quot;www.example.com&quot;</span><span class="o">,</span> <span class="mi">443</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sur le web on va plutôt utiliser le <a href="http://fr.wikipedia.org/wiki/Https#HTTPS">protocole HTTP/S</a> ; la JSSE fournit le handler <code>javax.net.ssl.HttpsURLConnection</code> qui permet de gérer ces URL en <code>https://</code>. L’utilisation devient alors complètement transparente :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="s">&quot;https://www.example.com&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">URLConnection</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="na">openConnection</span><span class="o">();</span>
+</span><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">conn</span> <span class="k">instanceof</span> <span class="n">HttpsURLConnection</span><span class="o">);</span> <span class="c1">// affiche &quot;true&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Voilà un schéma tiré de la documentation officielle d’Oracle qui montre les relations entre les classes de la JSSE.</p>
+
+<p><img class="center" src="http://coding-stories.github.com/coding-stories/images/posts/jsseclasses-20110702.jpg"></p>
+
+<p>La classe centrale est <a href="http://download.oracle.com/javase/6/docs/api/javax/net/ssl/SSLContext.html">SSLContext</a> et c’est par cette classe que passe la configuration de SSL. Le code va alors ressembler à ça :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">SSLContext</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">SSLContext</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;TLS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* ici on configure le contexte SSL */</span>
+</span><span class='line'><span class="c1">// ctx.init(... parameters ...);</span>
+</span><span class='line'><span class="n">SSLSocketFactory</span> <span class="n">sf</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">getSSLSocketFactory</span><span class="o">();</span>
+</span><span class='line'><span class="cm">/* on configure la socket factory utilisée pour les connexions aux URLs en https:// */</span>
+</span><span class='line'><span class="n">HttpsURLConnection</span><span class="o">.</span><span class="na">setDefaultSSLSocketFactory</span><span class="o">(</span><span class="n">sf</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Question de confiance</h1>
+
+<p>Avec SSL tout est une question de confiance. Lors du <em>handshake</em> le serveur envoie son certificat (pour être plus précis, une chaîne de certificat qui contient également toutes les autorités de certification intermédiaires) au client qui doit le valider. La validation de ce certificat implique de relier la chaîne de certificats du serveur à une racine de confiance (ou <em>trust anchor</em>).</p>
+
+<p>La bibliothèque standard Java est livrée avec une liste de d’autorités racines qui se trouve un fichier de type <code>KeyStore</code>. Sur ma machine (un Mac) le fichier se trouve là :
+<code>/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/security/cacerts</code></p>
+
+<p>On peut obtenir la liste de ces autorités avec l’outil <code>keytool</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>keytool -list -keystore cacerts</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ici le mot de passe demandé ne sert qu’à vérifier l’intégrité du fichier, il n’y a pas de clés dont il faut protéger la confidentialité ; et par défaut le mot de passe est changeit.</p>
+
+<p>Cependant il peut arriver que le serveur contacté n’ait pas de certificat signé par une autorité reconnue (test, application sur un intranet, pas d’argent pour s’acheter un certificat…). Arrive alors inéluctablement cette erreur :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception in thread "main" javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Que s’est il passé ? Le message de l’erreur nous indique qu’il a été impossible de trouver un chemin de certificats valide pour le certificat du serveur.</p>
+
+<p>Le mécanisme de validation d’une chaîne de certificat est accessible via un <code>TrustManager</code>, et la classe <code>TrustManagerFactory</code> permet d’en créer une instance. Pour régler notre problème il faut donc un <code>TrustManager</code> qui prenne en compte notre nouvelle autorité racine.</p>
+
+<p>Première solution, ajouter l’autorité au fichier <code>cacerts</code>. Dans ce cas l’autorité racine pourra être utilisée par le <code>TrustManager</code> par défaut. Pas terrible pour faire des tests mais c’est une solution envisageable quand on a une PKI interne.</p>
+
+<p>Seconde solution : utiliser un <code>TrustManager</code> dédié qui fait confiance à notre nouvelle autorité. D’abord il faut créer un <code>KeyStore</code> contenant notre racine. Cela se fait simplement avec <code>keytool</code> :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>keytool -importcert -trustcacerts -noprompt -alias myTrustAnchor -file /path/to/my/root.crt -keystore /path/to/my/keystore</span></code></pre></td></tr></table></div></figure>
+
+
+<p>L’option <code>-trustcacerts</code> permet de créer une entrée de type <code>TrustedCertificateEntry</code> dans le <em>key store</em>.</p>
+
+<p>Ensuite, il existe deux options. Soit on demande au <code>TrustManager</code> par défaut d’utiliser notre <em>key store</em> ; dans ce cas on le déclare en passant une variable d’environnement à la JVM :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>java -Djavax.net.ssl.trustStore=/path/to/my/keystore -jar ...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Seconde solution, on instancie un TrustManager configuré avec notre key store de façon programmatique :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/* instancier le KeyStore */</span>
+</span><span class='line'><span class="n">KeyStore</span> <span class="n">ks</span> <span class="o">=</span> <span class="n">KeyStore</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;JKS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">ks</span><span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">&quot;/path/to/my/keystore&quot;</span><span class="o">),</span> <span class="kc">null</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* initialiser une TrustManagerFactory avec ce KeyStore */</span>
+</span><span class='line'><span class="n">TrustManagerFactory</span> <span class="n">tmf</span> <span class="o">=</span> <span class="n">TrustManagerFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;PKIX&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">tmf</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="n">ks</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* créer un SSLContext utilisant cette TrustManagerFactory */</span>
+</span><span class='line'><span class="n">SSLContext</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">SSLContext</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;TLS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">ctx</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">tmf</span><span class="o">.</span><span class="na">getTrustManagers</span><span class="o">(),</span> <span class="kc">null</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Prenez le contrôle</h1>
+
+<p>Jusqu’à présent on a pu configurer la source des racines de confiance ; on peut donc utiliser des certificats émis par n’importe qui. Mais alors que vous venez de finir cette configuration voilà une nouvelle erreur :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception in thread "main" javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path validation failed: java.security.cert.CertPathValidatorException: revocation statut check failed: no CRL found</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Et oui, le certificat auto-signé que vous aviez bricolé sur le coin d’une console ne contient pas les informations permettant de le valider ; en l&#8217;occurence impossible ici de déterminer si ce certificat a été révoqué ou non. Le problème est que le comportement par défaut du <code>TrustManager</code> et de rejeter tout certificat dont le statut de révocation n’a pu être établi.</p>
+
+<p>Pour passer outre ce comportement et pouvoir utiliser notre certificat de test il faudrait pouvoir désactiver cette vérification du statut de révocation du certificat dans le <code>TrustManager</code>. L’API permet une configuration plus fine des paramètres de validation, cela passe par la classe <a href="http://download.oracle.com/javase/6/docs/api/java/security/cert/PKIXBuilderParameters.html">PKIXBuilderParameters</a>.</p>
+
+<p><code>PKIXBuilderParameters</code> permet de configurer le comportement de la validation de chaînes de certificats en lui passant un certain nombre de paramètres parmi lesquels :</p>
+
+<ul>
+<li>la liste des racines de confiance (sous forme d’un <code>KeyStore</code> ou d’un <code>Set</code> de <code>`TrustAnchor</code>)</li>
+<li>la date à laquelle on fait la validation (par défaut, la validation est faite à la date courante)</li>
+<li>si on doit vérifier le statut de révocation des certificats</li>
+<li>des magasins de certificats et de listes de révocation supplémentaires au cas où (par exemple un serveur LDAP ou seraient publiées des listes de révocation)</li>
+<li>et d’autres…</li>
+</ul>
+
+
+<p>Comment régler notre problème de vérification du statut de révocation ? En construisant un <code>PKIXBuilderParameters</code> qui ne fait pas cette validation :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">KeyStore</span> <span class="n">st</span> <span class="o">=</span> <span class="n">KeyStore</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;JKS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* ... */</span>
+</span><span class='line'><span class="n">PKIXBuilderParameters</span> <span class="n">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PKIXBuilderParameters</span><span class="o">(</span><span class="n">ks</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+</span><span class='line'><span class="cm">/* désactivation la révocation */</span>
+</span><span class='line'><span class="n">params</span><span class="o">.</span><span class="na">setRevocationEnabled</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+</span><span class='line'><span class="n">TrustManagerFactory</span> <span class="n">tmf</span> <span class="o">=</span> <span class="n">TrustManagerFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;PKIX&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">tmf</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="k">new</span> <span class="n">CertPathTrustManagerParameters</span><span class="o">(</span><span class="n">params</span><span class="o">));</span>
+</span><span class='line'><span class="n">SSLContext</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">SSLContext</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;TLS&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="n">ctx</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">tmf</span><span class="o">.</span><span class="na">getTrustManagers</span><span class="o">(),</span> <span class="kc">null</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Dans cet exemple la vérification du statut de révocation a été désactivée ; c’est acceptable dans le cas d’un test mais fortement déconseillé dans un contexte de production. Dans le cas courant l’algorithme de validation va chercher dans le certificat l’URL où il peut télécharger la liste de révocation de l’autorité qui a émis ce certificat. La liste de révocation (CRL pour <em>Certificate Revocation List</em> en anglais) contient, pour simplifier, la liste des numéros de série des certificats qui n’ont pas encore expirés mais qui ont été révoqués par leur porteur. Pour certaines autorités émettant beaucoup de certificats ces CRL peuvent atteindre plusieurs Mo, voire plusieurs dizaines de Mo.</p>
+
+<p>Pour réduire la consommation de bande passante, le standard OCSP (<em>Online Certificate Status Protocol</em>, spécifié dans la <a href="http://tools.ietf.org/html/rfc2560">RFC 2560</a>) a été inventé. Il s’agit d’un protocole qui permet de demander à une serveur (habituellement appelé <em>répondeur OCSP</em>) de façon interactive le statut de révocation d’un unique certificat. La réponse peut être « valide », « invalide » ou « inconnu » (comprendre que le serveur n’a pas l’information pour répondre).</p>
+
+<p>Par défaut OCSP n’est pas utilisé pour la validation. Pour l’activer il faut soit modifier le fichier <code>java.security</code>, soit l’activer de façon programmatique dans le code :</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Security</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&quot;ocsp.enabled&quot;</span><span class="o">,</span> <span class="s">&quot;true&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Si OCSP est activé alors l’algorithme de validation essaie d’abord de l’utiliser et repasse sur les CRL en cas d’échec, par exemple si le certificat n’indique pas de répondeur OCSP à contacter. Il est également possible de préciser l’une URL d’un répondeur OCSP à toujours contacter ; cela peut être utile dans le cas d’un répondeur OCSP installé en proxy dans une entreprise.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Security</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&quot;ocsp.responderURL&quot;</span><span class="o">,</span> <span class="s">&quot;http://ocsp.example.net&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Conclusion temporaire</h1>
+
+<p>J’ai fait le tour, un peu succinctement j’avoue, sur la validation du certificat du serveur. Mais il reste beaucoup à dire sur SSL : authentification du client, les <em>ciphers suites</em>, d’autres APIs… Ce sera l’objet d&#8217;une seconde partie.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Audit automatique avec Play Framework]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2011/05/05/audit-automatique-avec-play-framework/"/>
+    <updated>2011-05-05T07:40:00+02:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2011/05/05/audit-automatique-avec-play-framework</id>
+    <content type="html"><![CDATA[<p>J’aime beaucoup l’annotation @With de Play framework, elle permet d’étendre le comportement d’un <em>Controller</em> en y ajoutant simplement des intercepteurs. Par exemple il est possible d’écrire un <em>Controller</em> générique dont le travail est de logguer des appels et d’ajouter ce comportement sur d’autre <em>Controller</em> avec une simple annotation.</p>
+
+<!-- more -->
+
+
+<p>On commence par définir une annotation qui servira à taguer les méthodes dont les appels seront loggués:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">controllers</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.ElementType</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Retention</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.RetentionPolicy</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.annotation.Target</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Target</span><span class="o">(</span><span class="n">ElementType</span><span class="o">.</span><span class="na">METHOD</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="nd">@interface</span> <span class="n">Audit</span> <span class="o">{</span> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ensuite on va rechercher toutes les méthodes taguées avec cette annotation et on ajoute une ligne de log contenant des informations pertinentes.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">controllers</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.reflect.Method</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.Logger</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.mvc.ActionInvoker</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.mvc.Finally</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.mvc.Controller</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.mvc.Http</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">play.utils.Java</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AuditTrail</span> <span class="kd">extends</span> <span class="n">Controller</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Finally</span>
+</span><span class='line'>    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">log</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">getActionAnnotation</span><span class="o">(</span><span class="n">Audit</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">audit</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">audit</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+</span><span class='line'>        <span class="cm">/* Get the method name */</span>
+</span><span class='line'>        <span class="n">Object</span><span class="o">[]</span> <span class="n">action</span> <span class="o">=</span> <span class="n">ActionInvoker</span><span class="o">.</span><span class="na">getActionMethod</span><span class="o">(</span><span class="n">Http</span><span class="o">.</span><span class="na">Request</span><span class="o">.</span><span class="na">current</span><span class="o">().</span><span class="na">action</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Class</span> <span class="n">c</span> <span class="o">=</span> <span class="o">(</span><span class="n">Class</span><span class="o">)</span><span class="n">action</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">Method</span> <span class="n">m</span> <span class="o">=</span> <span class="o">(</span><span class="n">Method</span><span class="o">)</span><span class="n">action</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+</span><span class='line'>        <span class="cm">/* Get the method parameters name... */</span>
+</span><span class='line'>        <span class="n">String</span><span class="o">[]</span> <span class="n">names</span> <span class="o">=</span> <span class="n">Java</span><span class="o">.</span><span class="na">parameterNames</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+</span><span class='line'>        <span class="cm">/* ... and the values */</span>
+</span><span class='line'>        <span class="n">Object</span><span class="o">[]</span> <span class="n">args</span> <span class="o">=</span> <span class="n">ActionInvoker</span><span class="o">.</span><span class="na">getActionMethodArgs</span><span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">names</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">params</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">names</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="s">&quot;=&quot;</span> <span class="o">+</span> <span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="cm">/* Get the username if Secure module is used */</span>
+</span><span class='line'>        <span class="n">String</span> <span class="n">username</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;username&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">username</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">username</span> <span class="o">=</span> <span class="s">&quot;Anonymous User&quot;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="cm">/* Log the action */</span>
+</span><span class='line'>        <span class="n">Logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;&lt;%s&gt; called contoller action &lt;%s.%s&gt; with parameters &lt;%s&gt; at &lt;%s&gt;&quot;</span><span class="o">,</span>
+</span><span class='line'>            <span class="n">username</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">(),</span> <span class="n">m</span><span class="o">.</span><span class="na">getName</span><span class="o">(),</span> <span class="n">params</span><span class="o">,</span> <span class="k">new</span> <span class="n">Date</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Enfin, pour utiliser notre <em>Audit Trail</em>, rien de plus simple, il suffit d’ajouter un <code>@With(AuditTrail.class)</code> sur un <em>Controller</em> et d’annoter avec `@Audit les méthodes à auditer.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@With</span><span class="o">({</span><span class="n">Secure</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">AuditTrail</span><span class="o">.</span><span class="na">class</span><span class="o">})</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Issues</span> <span class="kd">extends</span> <span class="n">Controller</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Audit</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">showTicket</span><span class="o">(</span><span class="kt">long</span> <span class="n">ticketId</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="cm">/* Do some stuff */</span>
+</span><span class='line'>        <span class="n">render</span><span class="o">(...);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Et dans les logs on pourra alors trouver une ligne qui ressemble à ça :</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>17:45:53,867 INFO  ~ &lt;johndoe> called contoller action &lt;Issues.showTicket> with parameters &lt;[ticketId: 11484]> at &lt;Mon May 02 17:45:53 CEST 2011></span></code></pre></td></tr></table></div></figure>
+
+
+<p>Beaucoup d’améliorations sont possibles comme par exemple indiquer le Logger à utiliser comme paramètre de l’annotation `@Audit ou encore mettre les logs dans la base de donnée pour faire des recherches.</p>
+]]></content>
+  </entry>
+  
+</feed>

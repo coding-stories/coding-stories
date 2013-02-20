@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Uncle Bob | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/uncle-bob/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Sommes-nous des professionnels ?]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2010/11/22/sommes-nous-des-professionnels/"/>
+    <updated>2010-11-22T08:11:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2010/11/22/sommes-nous-des-professionnels</id>
+    <content type="html"><![CDATA[<p>Les vidéos de la conférence Devoxx 2009 sont désormais toutes <a href="http://parleys.com/#id=74957&amp;st=4">librement accessibles</a> ; j’en profite donc pour inciter toute personne travaillant dans le développement logiciel à regarder la <em>keynote</em> de <a href="http://en.wikipedia.org/wiki/Robert_Cecil_Martin">Robert Martin</a> (alias oncle Bob) sur ce que devrait être, et devrait faire, un professionnel du développement logiciel. À Lire également, l’article de wikipedia <a href="http://en.wikipedia.org/wiki/Software_craftsmanship">Software craftsmanship</a>.</p>
+
+<p>Alors certes, rien de bien nouveau dans le discours ; mais il est toujours bon de rappeler les évidences, ne serait-ce que pour nous montrer qu’il nous reste une marge de progression…</p>
+
+<object width="395" height="395">
+  <param name="movie" value="http://www.parleys.com/dist/share/parleysshare.swf"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="wmode" value="direct"/>
+  <param name="bgcolor" value="#222222"/>
+  <param name="flashVars" value="sv=true&amp;pageId=1491"/>
+  <embed src="http://www.parleys.com/dist/share/parleysshare.swf" type="application/x-shockwave-flash" flashVars="sv=true&amp;pageId=1491" allowfullscreen="true" bgcolor="#222222" width="395" height="395"/>
+</object>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: IntelliJ | Coding Stories]]></title>
+  <link href="http://coding-stories.github.com/coding-stories/blog/categories/intellij/atom.xml" rel="self"/>
+  <link href="http://coding-stories.github.com/coding-stories/"/>
+  <updated>2013-02-20T09:05:57+01:00</updated>
+  <id>http://coding-stories.github.com/coding-stories/</id>
+  <author>
+    <name><![CDATA[Jean-Christophe Sirot]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Un mois avec IntelliJ - début de l'expérience]]></title>
+    <link href="http://coding-stories.github.com/coding-stories/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience/"/>
+    <updated>2012-12-21T19:42:00+01:00</updated>
+    <id>http://coding-stories.github.com/coding-stories/blog/2012/12/21/un-mois-avec-intellij-debut-de-lexperience</id>
+    <content type="html"><![CDATA[<p>Habituellement je suis utilisateur de <a href="http://netbeans.org/">NetBeans</a>. Quand je dis cela, mon propos est souvent accueillis avec un certaine incrédulité. C'est mon petit côté rebel. Et pourtant NetBeans est un excellent IDE qui s'intègre très bien avec les outils que j'utilise. En plus je commence à accumuler une certaine expérience dessus et les reproches que je pourrais lui faire sont mineurs. Cependant j'entends de plus en plus parler d'<a href="http://www.jetbrains.com/idea/">IntelliJ IDEA</a> qui est un peu aux IDE ce que le Macbook Pro est aux ordinateurs : une marque distintive parmi les über-geek. S'il est toujours présenté comme bien supérieur à <a href="http://www.eclipse.org/">Eclipse</a> qu'en est il vis à vis de NetBeans ?</p>
+
+<p>Coup de chance, en l'honneur de la fin du monde (qui finalement n'est jamais que le début d'un autre), Jetbrains a réalisé un joli coup de pub en proposant une promotion sur la licence de son IDE star : 50€ au lieu des 189€ habituels. Comme beaucoup, si j'en juge par la difficulté à accéder au site pendant les premières heures, je me suis laissé tenté.</p>
+
+<p>C'est l'occasion de tester la version <em>Ultimate</em> d'IntelliJ et de la comparer à mon IDE habituel dans l'utilisation de que j'en fais tous les jours : développement Java, projets maven, javascript et HTML, un peu de python... L'expérience est simple, à partir d'aujourd'hui et pendant 30 jours je remplace NetBeans par IntelliJ. Qui sortira gagnant de ce duel ? Rendez-vous dans un mois...</p>
+]]></content>
+  </entry>
+  
+</feed>
