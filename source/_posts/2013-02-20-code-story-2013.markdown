@@ -1,0 +1,80 @@
+---
+layout: post
+title: "Code Story 2013 : la phase de sélection"
+date: 2013-02-20 08:02
+comments: true
+categories:
+---
+
+Quand j'ai lu début janvier l'annonce du lancement de la saison 2013 de Code Story j'ai trouvé le principe de sélection amusant. Cette année, c'est décidé je participe à Code Story. Code Story 2013 me voilà...
+
+<!-- more -->
+
+Choix des technologies
+======================
+
+Cette année la sélection consistait à mettre en place un serveur web répondant aux questions du bot de Code Story. Quand la réponse envoyée est fausse, le bot continue à poser la question régulièrement jusqu'à obtenir une réponse correcte. De temps un temps un petit reboot du bot lui fait poser une nouvelle fois toutes les questions depuis le début. Gare alors aux régressions...
+
+Pour le choix du langage, après avoir hésité à choisir un langage "alternatif" (Dart ? Ceylon ?), j'ai préféré partir sur une valeur sûre et maitrisée : Java.
+
+Côté serveur web, il y a pléthore de choix : du [serveur HTTP réécrit from scratch](https://github.com/jnizet/CodeStory2013) à partir de `java.net.ServerSocket au full-fledge framework comme Play 2 en passant par Jetty et Tomcat. J'ai choisi la voie moyenne en utilisant le [serveur HTTP livré avec le JRE](http://docs.oracle.com/javase/6/docs/jre/api/net/httpserver/spec/index.html?com/sun/net/httpserver/package-summary.html) depuis Java 6.
+
+Restait l'hébergement du serveur. Pour ma première incursion dans le Cloud je me suis souvenu de la présentation [Du legacy au cloud](http://blog-rd.ideotechnologies.com/?p=2943) donnée par David Gageot lors du dernier JUG Summer Camp. Il utilisait [Heroku](http://www.heroku.com/) pour déployer son application car il est possible de lancer n'importe quel programme Java disposant d'un simple `main`. Le port du serveur est simplment fourni dans une variable d'environnement. La création d'une application dans Heroku se fait en moins de 5 minutes et un "git push master heroku" suffit pour recompiler et redéployer automatiquement l'application. Cerise sur la gâteau, il existe des dizaines de modules complémentaires pour le stockage des données, le logging, etc qu'il est possible d'ajouter à son application d'un simple click.
+
+Premières questions
+===================
+
+Les premières questions sont simples "Quelle est ton adresse email", "Es tu content de participer à Code Story(OUI/NON)"... Elles permettent au bot Code Story de vérifier que le serveur est bien présent et lit et répond correctement aux requêtes.
+
+Les choses sérieuses commence avec l'arrivée d'une requête `POST` contenant l'énonce du premier exercice. J'interface alors le serveur avec Amazon S3 (merci à Amazon pour sa [bibliothèque d'intégration](http://aws.amazon.com/fr/sdkforjava/)) pour stocker le contenu des requêtes POST qui arrivent, histoire de ne pas perdre l'énoncé.
+
+
+L'échoppe de monade sur Scalaskel
+=================================
+
+Le premier énoncé s'appelle _[L'échoppe de monade sur Scalaskel](http://code-story.net/2013/01/22/scalaskel.html)_. C'est un problème de rendu de monnaie : dénombrer toutes les façons possibles de partager une somme `S` avec des pièces de valeur `P1`, `P2`, `P3`, ... `Pn`.
+
+Je commence classiquement en TDD par écrire des tests pour les premières valeurs : 1, rouge-vert-refactoring, 2, rouge-vert-refactoring... À partir de 8 les choses se compliquent un peu, il y a faut retourner deux solutions. Petit à petit je commence à voir l'algorithme se dessiner. Les nouveaux tests sont assez simples à trouver et les phases de refactoring ne posent pas non plus trop de problèmes.
+
+Finalement j'arrive à un algorithme contenant deux récursion : une première sur la valeur des pièces (on réduit le nombre de pièces différentes à chaque itération) et une seconde sur la somme à partionner.
+
+Je redéploie le serveur et je vois dans les logs les appels du bots pour les valeurs successives de 1 à 100 comme indiqué dans l'énoncé. Tous les tests passent. Joie :p
+
+Mon code : [https://gist.github.com/jcsirot/4677917](https://gist.github.com/jcsirot/4677917)
+
+La calculatrice
+===============
+
+Pas d'énoncé pour l'exercice suivant, les questions se suffisent à elles-même. D'abord ce sont de simples expressions `1+1`, `2+2`, etc ; progressivement elles deviennent plus compliquées : `(1+2)/2`. Bref, il va falloir écrire un solveur d'expressions arithmétques.
+
+Certains auront l'idée d'évaluer l'expression en emabarquant Groovy, une idée très maligne. Mais moi je suis ici en terrain connu. Ce problème, je le fais coder aux ingénieurs que je vois en entretien d'embauche alors je sais comment faire : [l'algorithme Shunting-yard](http://en.wikipedia.org/wiki/Shunting-yard_algorithm) inventé par Dijkstra permet de transformer une expression en notation infixée en notation post-fixée (la notation polonaise inversée bien connu des possesseurs de HP48) ou en AST.
+
+Pour aller plus vite, pas (trop) de TDD. J'écris une liste de tests puis je code l'algorithme d'une traite. Comme on ne cherche à supporter que les quatres opérations et les parenthèses l'implémenter est assez courte. L'algorithme fonctionne (presque...) du premier coup.
+
+De nouvelles questions arrivant du bot demandent de supporter les nombres négatifs. J'ajoute un lexer pour découper l'expression en tokens car un simple StringTokenizer ne suffit plus.
+
+Finalement, sécurisé par l'ensemble des tests unitaires, je me lance dans un important refactoring pour utiliser un pattern visitor et rendre le code un peu plus objet, la contrepartie étant un nombre de classes plus important.
+
+Mon code : [https://gist.github.com/jcsirot/4990325](https://gist.github.com/jcsirot/4990325)
+
+Location d’astronef sur Jajascript
+==================================
+
+Le troisième exercice est _[Location d’astronef sur Jajascript](http://code-story.net/2013/02/02/jajascript.html)_ et c'est sans doute celui qui m'a demandé le plus de travail.
+
+Tout commençait bien car j'avais déjà vu ce kata au Paris Scala User Group. J'ai donc rapidement produit une première version fonctionnelle. L'algorithme consite à parcourir de façon récursive l'arbre de toutes les combinaisons de locations possibles (c'est à dire en ne prenant que des vols qui ne chevauchent pas) et à garder la plus rentable.
+
+Assez rapidement je trouve une optimisation. L'algorithme passe en effet beaucoup de temps à recalculer le chemin optimal pour une liste commençant par un vol donné. On peut donc créer un cache qui associe un vol avec le chemin optimal à utiliser.
+
+Le premier déploiement (en fait le second, car j'avais oublié de trier les vols la première fois) fonctionne et va jusqu'à 1500 vols. Sauf que ma JVM comment à se sentir un peu à l'étroit dans les 512Mo de RAM accordés par Heroku et le processus commence à swapper. Impossible de répondre dans les 30 secondes impartis. Je pense que j'aurais pu améliorer les strucutures de données pour prendre moins de RAM mais je choisis une autre option.
+
+À la lecture des tweets qui s'échangeaient sur ce problème je décide de chercher un algorithme non récursif. Ça sera comme bien souvent en discutant du problème avec un collègue que je trouverai la solution. Le cache calculé dans l'agorithme récursif peut être généré de façon itérative en commançant par la fin de la liste et en remontant vers les premiers vols tout en utilisant les valeurs stockées dans le cache pour calculer à chaque fois le résultat optimal.
+
+Désormais mon algorithme passe la barre des 50000 vols (3,7 Mo de JSON tout de même) mais peine à le faire sous la barre des 30 secondes. Ma dernière idée me viendra un matin sous la douche :-) L'algorithme passe beaucoup de temps, en construisant les valeurs du cache, à copier des listes de chaînes de caractères. C'est en remplaçant ces copies par une simple implémentation de liste chaînée que j'obtiendrai la plus impressionnante amélioration de performance : le traitement d'une liste de 50000 vols passant de 17s à 20ms (oui, presque 1000 fois plus rapide).
+
+Mon code : [https://gist.github.com/jcsirot/4990366](https://gist.github.com/jcsirot/4990366)
+
+Conclusion
+==========
+
+Code Story, c'est fun. J'aurais certainement passé plus de temps que prévu mais toujours en y prennant beaucoup de plaisir. Et cela permet de jouer avec des petits problèmes d'algorithmiques qu'on ne voit pas forcément tous les jours. Finalement j'ai été sélectionné pour la phase finale qui aura lieu chez Google jeudi 21 février. Cela fera l'objet d'un second post.
