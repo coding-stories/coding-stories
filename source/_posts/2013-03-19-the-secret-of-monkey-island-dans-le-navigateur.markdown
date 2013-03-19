@@ -6,7 +6,7 @@ comments: true
 categories: [dart, dartlang, SCUMM, ScummVM, SCUMMDart]
 ---
 
-Il y a environ un an, pour apprendre Dart, je me suis lancé dans un projet un peu fou : réécrire un moteur [SCUM](http://en.wikipedia.org/wiki/SCUMM) en Dart en portant le code source du projet open-source [ScummVM](https://github.com/scummvm/scummvm). L'objectif est de pouvoir jouer à Monkey Island (version française CD, SCUMM version 5) directement dans le navigateur.
+Il y a environ un an, pour apprendre [Dart](http://www.dartlang.org/), je me suis lancé dans un projet un peu fou : réécrire un moteur [SCUM](http://en.wikipedia.org/wiki/SCUMM) en Dart en portant le code source du projet open-source [ScummVM](https://github.com/scummvm/scummvm). L'objectif est de pouvoir jouer à Monkey Island (version française CD, SCUMM version 5) directement dans le navigateur.
 
 J'ai fait une longue pause en attendant que le langage se stabilise et j'ai repris le code récemment. Voilà une courte vidéo (désolé pour la faible qualité, c'est mon premier post sur youtube) qui montre ce qui fonctionne pour le moment (pour faire court, le générique du jeu).
 
