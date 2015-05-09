@@ -7,7 +7,7 @@ css: ssl-security
 categories: [SSL, TLS, security]
 ---
 
-Il y a quelques jours l'expert en sécurité Troy Hunt [publiait sur son blog](http://www.troyhunt.com/2015/05/do-you-really-want-bank-grade-security.html) un état des lieu de l'utilisation de SSL par les banques australiennes.
+Il y a quelques jours l'expert en sécurité Troy Hunt [publiait sur son blog](http://www.troyhunt.com/2015/05/do-you-really-want-bank-grade-security.html) un état des lieux de l'utilisation de SSL par les banques australiennes.
 
 Et qu'en est-il des banques françaises ? En utilisant le service [SSL Labs](https://www.ssllabs.com/) de Qualys, voici les résultats obtenus.
 
