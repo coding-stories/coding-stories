@@ -1,0 +1,70 @@
+th.rotate {
+  border:none;
+  background:none;
+  height: 140px;
+  white-space: nowrap;
+}
+
+th.rotate > div {
+  transform:
+    translate(22px, 51px)
+    rotate(315deg);
+  width: 30px;
+}
+th.rotate > div > span {
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+}
+
+.pass {
+    color: white;
+    background-color: green;
+}
+.pass:before {
+    content: "Pass";
+}
+
+.fail {
+    color: white;
+    background-color: red;
+}
+.fail:before {
+    content: "Fail";
+}
+
+.info {
+    color: white;
+    background-color: gray;
+}
+
+.yes:before {
+    content: "YES";
+}
+
+.no:before {
+    content: "NO";
+}
+
+.name {
+    font-size: small;
+}
+
+.grade {
+    font-weight: bold;
+}
+
+.A {
+    background-color: rgb(124, 252, 0);
+}
+
+.B {
+    background-color: rgb(255, 165, 0);
+}
+
+.C {
+    background-color: rgb(255, 255, 0);
+}
+
+.F {
+    background-color: rgb(255, 0, 0);
+}

@@ -1,1 +1,5 @@
 {% include custom/header.html %}
+{% if page.css %}
+<link href="/stylesheets/{{ page.css }}.css" media="screen, projection" rel="stylesheet" type="text/css" />
+{% endif %}
+<link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
