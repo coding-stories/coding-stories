@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "La sécurité SSL des banques"
+title: "SSL et les banques"
 date: 2015-05-09 11:46
 comments: true
 css: ssl-security
