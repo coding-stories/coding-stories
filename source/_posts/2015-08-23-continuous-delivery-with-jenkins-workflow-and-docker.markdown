@@ -6,15 +6,16 @@ comments: true
 categories: [Continuous Delivery, Jenkins, Jenkins workflow, maven, Docker, devops, test, en]
 ---
 
-Recently Cloudbees releases the [CloudBees Docker Workflow Plugin](https://wiki.jenkins-ci.org/display/JENKINS/CloudBees+Docker+Workflow+Plugin) to make as easy as possible the integration of Docker with Jenkins workflows. So now deploying a continuous delivery pipeline is straightforward. Here is a simple but comprehensive example.
+Recently Cloudbees releases the [CloudBees Docker Workflow Plugin](https://wiki.jenkins-ci.org/display/JENKINS/CloudBees+Docker+Workflow+Plugin) to make the integration of Docker with Jenkins workflows as easy as possible. Now, deploying a continuous delivery pipeline is (almost) straightforward. Here is a simple but comprehensive example.
 
 <!-- more -->
+
+__Disclaimer__: I'm using a maven project for this example because maven a tool I'm comfortable with. This post could be adapted to python, rails or whatever-you-want project with minor efforts.
 
 First of all, we need to install the required plugins in Jenkins:
 
 - Workflow: Aggregator
 - CloudBees Docker Workflow
-- GIT plugin (... if not already installed)
 
 This sample workflow is simple and composed of 4 steps:
 
@@ -22,7 +23,6 @@ This sample workflow is simple and composed of 4 steps:
 2. Build Docker image
 3. Acceptance Tests
 4. Push Docker image
-
 
 Build and unit tests
 ====================
@@ -48,14 +48,14 @@ node {
 }
 ```
 
-Now we have built the binaries and we are ready to build the Docker image.
+This short script runs maven to build the jars and to execute the unit tests. Now we are ready to build the Docker image.
 
 Build Docker image
 ==================
 
-The CloudBees Docker Workflow Plugin provides a global variable `docker` which offers access to the common docker functions. For a comprehensive description of the plugin, you can look at the [Cloudbees guide](http://documentation.cloudbees.com/docs/cje-user-guide/docker-workflow.html).
+The CloudBees Docker Workflow Plugin provides a global variable `docker` which offers access to the common Docker functions in workflow scripts. For a comprehensive description of the plugin and the available commands, look at the [plugin guide](http://documentation.cloudbees.com/docs/cje-user-guide/docker-workflow.html).
 
-To build the image we call `build` on the `docker` variable. We pass two parameters: the image name (with the docker notation `[registry/]image[:tag]`) and the directory where is located the `Dockerfile`.
+To build the image we call `build` on the `docker` variable. Two parameters are passed: the image name (with the Docker notation `[registry/]image[:tag]`) and the directory where is located the `Dockerfile`.
 
 ```groovy
 node {
@@ -65,14 +65,14 @@ node {
 }
 ```
 
-The call returns a handle on the built image so you can work with it.
+The call returns a handle on the built image so we can work with it.
 
 Acceptance Tests
 ================
 
-For the acceptance tests we need to run a container from our newly built image. The `withRun` method can be invoked on the image handle. It is possible to pass the `docker run` parameters like port mapping (in the example) or volumes.
+In order to execute the acceptance tests we wants to run a container from our newly built image. The `withRun` method can be invoked on the image handle. It is possible to pass the `docker run` parameters like port mapping or volumes configuration.
 
-`withRun` also takes a code block. The container is started at the begining of the block, the code in the block is executed and the container is stopped at the end of a block. Note that the block is executed on the Jenkins node, not inside the container. Use the `inside` method on the image handle to run the block inside the container.
+`withRun` also takes a code block. The container is started at the begining of the block, then the code in the block is executed and the container is stopped at the end of the block. Note that the block is executed on the Jenkins node, __not inside the container__. Use the `inside` method on the image handle to execute code inside the container.
 
 ```groovy
 node {
@@ -81,6 +81,7 @@ node {
     image.withRun('-p 8181:8181') {c ->
         sh "${mvnHome}/bin/mvn verify"
     }
+    /* Archive acceptance tests results */
     step([$class: 'JUnitResultArchiver', testResults: '**/target/failsafe-reports/TEST-*.xml'])
 }
 ```
@@ -88,9 +89,9 @@ node {
 Push Docker image
 =================
 
-The last step consists in pushing the image to docker registry. It can be done with the method `push`.
+The last step consists in pushing the image to a Docker registry. It can be done with the method `push`.
 
-In order to configure the Docker registry credentials, go the Jenkins Manager Credentials page. Add a new username/password entry and enter your registry login and password. Click on __Advanced__ to show the ID field and enter a unique identifier.
+In order to configure the registry credentials, go the Jenkins Manager Credentials page. Add a new username/password entry and enter your registry login and password. Click on __Advanced__ to show the ID field and enter a unique identifier.
 
 {% img center /images/posts/jenkins-docker-credentials-20150823.png 'Docker Hub Credentials' %}
 
@@ -106,12 +107,12 @@ node {
 }
 ```
 
-And the image is pushed and, unless you pushed the a custom registry, should be available on the docker hub.
+The image is pushed and, unless you pushed it to a custom registry, should be available on the [Docker hub](https://hub.docker.com/).
 
 What's next?
 ============
 
-This example is far from being perfect. Feel free to share suggestions or questions in the comments.
+This example is simple and far from being perfect. Feel free to share suggestions or questions in the comments.
 
 - The project I used for this sample: [https://github.com/jcsirot/atmosphere-calculator](https://github.com/jcsirot/atmosphere-calculator)
 - The workflow script: [https://gist.github.com/jcsirot/4de001d280998f27aa82](https://gist.github.com/jcsirot/4de001d280998f27aa82)
